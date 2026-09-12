@@ -40,7 +40,7 @@ export function MatrixApp() {
                 </h1>
                 <p className="mt-2 text-sm text-muted">
                   Forty vulnerability classes across the agent lifecycle — MCP, A2A, and ANP vectors
-                  mapped to CVEs, incidents, and validated defense-in-depth.
+                  mapped to CVEs, incidents, and documented defensive controls.
                 </p>
               </div>
               <nav
@@ -80,7 +80,7 @@ export function MatrixApp() {
 
         <footer className="mx-auto w-full max-w-7xl px-4 pb-10 text-xs text-subtle sm:px-6 lg:px-8">
           Mappings follow OWASP ASI01–ASI10, MCP01–MCP10 (2025), and public CVE/incident records
-          through September 2026. Treat this catalog as a threat-model aid, not a scanner.
+          through September 2026. Treat this catalog as a threat-model aid, not a scanner or certification.
         </footer>
       </div>
       <ClassDetail attackClass={selected} onClose={() => setSelectedId(null)} />
