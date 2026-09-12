@@ -1,6 +1,16 @@
 import type { ChangelogEntry } from "./types.ts";
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    "version": "2026.09.1",
+    "date": "2026-09-12",
+    "changes": [
+      "Canonical taxonomy IDs: AAC-01…AAC-40 only (AX-* retained as legacy aliases)",
+      "Eliminated dual AX/AAC ID system in matrix source",
+      "Assemble prefers TS source of truth; catalog-meta records taxonomyId=AAC",
+      "AAC-41…AAC-44 reserved pending editorial research (not yet published)"
+    ]
+  },
+  {
     "version": "2026.09.0",
     "date": "2026-09-12",
     "changes": [
