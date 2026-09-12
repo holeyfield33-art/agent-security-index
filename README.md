@@ -13,10 +13,15 @@ This is a **draft research product**, not a scanner, certification, or peer-revi
 | File | Contents |
 |------|----------|
 | `types.ts` | Lifecycle, protocol, AttackClass shapes |
-| `classes.ts` | Index re-exporting parts 1–14 |
-| `classes-part-1.ts` … `classes-part-14.ts` | **AX-01 … AX-40** (complete) |
+| `classes.ts` | Canonical runtime index; normalizes legacy AX labels to AAC primary IDs |
+| `classes-part-1.ts` … `classes-part-14.ts` | Source fragments for 40 classes; some legacy AX labels remain internally |
 | `mitigations.ts` | 22 controls (`validated: false` pending independent review) |
 | `catalog.ts` | Filters, high-risk, stats |
+
+**Published taxonomy:** `AAC-01 … AAC-40`.
+Legacy `AX-*` labels are retained only as aliases/source-fragment identifiers during migration. UI and assembled export consumers receive AAC primary IDs.
+
+`AAC-41 … AAC-44` remain reserved for the broader research taxonomy and are not published in this draft until their evidence records are normalized.
 
 ### Matrix UI (`src/components/matrix/`)
 
@@ -32,16 +37,19 @@ This is a **draft research product**, not a scanner, certification, or peer-revi
 
 ### Export & CI
 
-- `public/export/` — AAC-oriented JSON chunks (partial; regenerate from matrix source)
-- `scripts/check-catalog-invariant.mjs` — credibility CI gate
-- `scripts/assemble-catalog.mjs` — assemble full catalog snapshot
+- `public/export/` — research JSON chunks plus generated `asi-catalog.json`
+- `scripts/assemble-catalog.mjs` — canonicalizes IDs, checks duplicate/gap errors, assembles snapshot
+- `scripts/assert-aac-ids.mjs` — verifies the source normalizes to unique contiguous AAC IDs
+- `scripts/check-catalog-invariant.mjs` — credibility gate for evidence and claims
+- `.github/workflows/catalog.yml` — typecheck, taxonomy/catalog tests, and build on PR/push
 
 ## Principles
 
 - Attack classes are not CVEs. CVEs and incidents are *evidence* attached to classes.
 - Mitigations are not `validated` unless a public reproduction package exists.
-- Publisher products appear only as **unverified vendor claims**.
+- Publisher products appear only as **unverified vendor claims** unless external evidence supports a stronger status.
 - Missing evidence is shown as missing — never filled with synthetic confidence.
+- Aletheia does not attempt to detect every attack; the research asks whether small deterministic security invariants can prevent whole attack families from producing consequential actions.
 
 ## Evidence tiers
 
@@ -56,20 +64,24 @@ This is a **draft research product**, not a scanner, certification, or peer-revi
 
 ```bash
 npm install
-npm run dev
-npm run check:catalog
+npm run typecheck
 npm test
+npm run build
+npm run dev
 ```
 
+Catalog-only checks:
+
 ```bash
-node scripts/assemble-catalog.mjs
-node scripts/check-catalog-invariant.mjs          # draft: placeholders warn
-node scripts/check-catalog-invariant.mjs --strict # placeholders fail
+npm run check:catalog
+npm run check:catalog:strict
 ```
+
+`check:catalog:strict` is expected to fail while draft incident records still contain placeholder primary-source URLs. Those placeholders must be resolved before the catalog is promoted to `public-review` or `stable`.
 
 ## Disclosure
 
-Aletheia develops Aegis and Lite. Those products are listed only under vendor claims and are evaluated with the same rules as any other vendor.
+Aletheia develops Aegis and Lite. Those products are listed only under vendor claims and are evaluated with the same published rules as any other vendor. They are not hard-coded to the top of any ranking.
 
 ## License
 
