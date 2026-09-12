@@ -2,25 +2,27 @@
 
 **Version:** 0.2.0-draft · **Status:** draft · **Independent review:** pending
 
-Evidence-tiered research index of AI agent attack classes (AAC-01…AAC-40), incidents, mitigations, and vendor claims.
+Evidence-tiered research index of AI agent attack classes, incidents, mitigations, and vendor claims.
 
 This is a **draft research product**, not a scanner, certification, or peer-reviewed ranking.
 
-## What’s in the repo
+## Source of truth
 
-| Area | Status |
-|------|--------|
-| AAC export chunks 01–02 | Present |
-| AAC export chunks 03–04 + incidents 02–03 | Partially restored; regenerate from matrix source |
-| Matrix source of truth (`src/lib/matrix/`) | types, catalog helpers present; **classes.ts + mitigations.ts still being pushed** |
-| CI gate (`scripts/check-catalog-invariant.mjs`) | Present |
-| Assemble / decode helpers | Present |
+Working matrix under `src/lib/matrix/`:
+
+| File | Contents |
+|------|----------|
+| `types.ts` | Lifecycle, protocol, AttackClass shapes |
+| `classes.ts` | Index re-exporting parts 1–14 |
+| `classes-part-1.ts` … `classes-part-14.ts` | **AX-01 … AX-40** (complete) |
+| `mitigations.ts` | 22 controls (`validated: false` pending independent review) |
+| `catalog.ts` | Filters, high-risk, stats |
 
 ## Principles
 
 - Attack classes are not CVEs. CVEs and incidents are *evidence* attached to classes.
 - Mitigations are not `validated` unless a public reproduction package exists.
-- Publisher products (Aletheia Aegis / Lite) appear only as **unverified vendor claims**.
+- Publisher products appear only as **unverified vendor claims**.
 - Missing evidence is shown as missing — never filled with synthetic confidence.
 
 ## Evidence tiers
@@ -32,17 +34,6 @@ This is a **draft research product**, not a scanner, certification, or peer-revi
 | T2 · Field incident | Production impact or CVE + advisory |
 | T3 · Widespread | Multiple independent field cases |
 
-## Source of truth
-
-The working matrix lives under `src/lib/matrix/`:
-
-- `types.ts` — lifecycle, protocol, AttackClass shapes
-- `catalog.ts` — filters, high-risk, stats
-- `classes.ts` — AX-01…AX-40 (to be pushed / already in local workspace zip)
-- `mitigations.ts` — mitigation catalog
-
-Export JSON under `public/export/` is derived from that source (AAC ids + evidence tiers).
-
 ## Machine-readable export
 
 ```bash
@@ -50,6 +41,8 @@ node scripts/assemble-catalog.mjs
 node scripts/check-catalog-invariant.mjs          # draft: placeholders warn
 node scripts/check-catalog-invariant.mjs --strict # placeholders fail
 ```
+
+Export chunks under `public/export/` (AAC taxonomy) can be regenerated from the AX matrix source.
 
 ## Local development
 
@@ -62,7 +55,7 @@ npm test
 
 ## Disclosure
 
-Aletheia develops Aegis and Lite. Those products are listed only under vendor claims (`unverified_vendor_claim`) and are evaluated with the same rules as any other vendor.
+Aletheia develops Aegis and Lite. Those products are listed only under vendor claims and are evaluated with the same rules as any other vendor.
 
 ## License
 
