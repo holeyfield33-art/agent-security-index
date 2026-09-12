@@ -79,18 +79,32 @@ function loadClassesFromTs() {
   });
 }
 
-function assertCanonicalClasses(classes) {
+function assertCanonicalClasses(classes, declaredCount) {
+  if (!Number.isInteger(declaredCount) || declaredCount <= 0) {
+    throw new Error(`catalog-meta.classCount must be a positive integer, got ${declaredCount}`);
+  }
+
   const ids = classes.map((c) => c.id);
   const bad = ids.filter((id) => !/^AAC-\d{2}$/.test(id));
   if (bad.length) throw new Error(`non-canonical attack IDs: ${bad.join(", ")}`);
+
   const unique = new Set(ids);
   if (unique.size !== ids.length) throw new Error("duplicate attack class IDs after canonicalization");
-  const expected = ids.map((_, i) => `AAC-${String(i + 1).padStart(2, "0")}`);
+
+  if (ids.length !== declaredCount) {
+    throw new Error(`catalog class count mismatch: declared ${declaredCount}, observed ${ids.length}`);
+  }
+
+  const expected = Array.from(
+    { length: declaredCount },
+    (_, i) => `AAC-${String(i + 1).padStart(2, "0")}`,
+  );
   const missing = expected.filter((id) => !unique.has(id));
   if (missing.length) throw new Error(`catalog has gaps: ${missing.join(", ")}`);
 }
 
 const sourceMeta = JSON.parse(readFileSync(join(dir, "catalog-meta.json"), "utf8"));
+const declaredClassCount = sourceMeta.classCount;
 let attacks = loadJsonChunks("attack-classes");
 const fromTs = existsSync(partsDir) ? loadClassesFromTs() : [];
 if (fromTs.length >= attacks.length && fromTs.length > 0) {
@@ -101,7 +115,7 @@ if (fromTs.length >= attacks.length && fromTs.length > 0) {
 } else {
   attacks = attacks.map((c) => ({ ...c, id: canonicalId(c.id) }));
 }
-assertCanonicalClasses(attacks);
+assertCanonicalClasses(attacks, declaredClassCount);
 
 const incidents = loadJsonChunks("incidents");
 const mitigations = JSON.parse(readFileSync(join(dir, "mitigations.json"), "utf8"));
