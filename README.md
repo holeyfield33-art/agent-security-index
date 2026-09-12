@@ -1,10 +1,20 @@
 # Agent Security Index (ASI Catalog)
 
-**Version:** 2026.09.0 · **Status:** draft · **Independent review:** pending
+**Version:** 0.2.0-draft · **Status:** draft · **Independent review:** pending
 
 Evidence-tiered research index of AI agent attack classes (AAC-01…AAC-40), incidents, mitigations, and vendor claims.
 
 This is a **draft research product**, not a scanner, certification, or peer-reviewed ranking.
+
+## What’s in the repo
+
+| Area | Status |
+|------|--------|
+| AAC export chunks 01–02 | Present |
+| AAC export chunks 03–04 + incidents 02–03 | Partially restored; regenerate from matrix source |
+| Matrix source of truth (`src/lib/matrix/`) | types, catalog helpers present; **classes.ts + mitigations.ts still being pushed** |
+| CI gate (`scripts/check-catalog-invariant.mjs`) | Present |
+| Assemble / decode helpers | Present |
 
 ## Principles
 
@@ -22,12 +32,21 @@ This is a **draft research product**, not a scanner, certification, or peer-revi
 | T2 · Field incident | Production impact or CVE + advisory |
 | T3 · Widespread | Multiple independent field cases |
 
+## Source of truth
+
+The working matrix lives under `src/lib/matrix/`:
+
+- `types.ts` — lifecycle, protocol, AttackClass shapes
+- `catalog.ts` — filters, high-risk, stats
+- `classes.ts` — AX-01…AX-40 (to be pushed / already in local workspace zip)
+- `mitigations.ts` — mitigation catalog
+
+Export JSON under `public/export/` is derived from that source (AAC ids + evidence tiers).
+
 ## Machine-readable export
 
-- [`public/export/asi-catalog.json`](public/export/asi-catalog.json) — full catalog snapshot
-- Credibility CI gate: `npm run check:catalog`
-
 ```bash
+node scripts/assemble-catalog.mjs
 node scripts/check-catalog-invariant.mjs          # draft: placeholders warn
 node scripts/check-catalog-invariant.mjs --strict # placeholders fail
 ```
@@ -43,7 +62,7 @@ npm test
 
 ## Disclosure
 
-Aletheia develops Aegis and Lite. Those products are listed only under vendor claims (`unverified_vendor_claim`) and are evaluated with the same rules as any other vendor. They are not hard-coded to the top of any ranking.
+Aletheia develops Aegis and Lite. Those products are listed only under vendor claims (`unverified_vendor_claim`) and are evaluated with the same rules as any other vendor.
 
 ## License
 
