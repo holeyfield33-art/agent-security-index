@@ -1,0 +1,14 @@
+export const EVIDENCE_TIERS = ["T0_theoretical","T1_lab_poc","T2_field_incident","T3_widespread"] as const;
+export type EvidenceTier = (typeof EVIDENCE_TIERS)[number];
+export const MITIGATION_STATUS = ["proposed","established_practice","paper_evaluated","reproduced","aletheia_tested"] as const;
+export type MitigationStatus = (typeof MITIGATION_STATUS)[number];
+export const CONFIDENCE = ["low","medium","high"] as const;
+export type Confidence = (typeof CONFIDENCE)[number];
+export const DECISIONS = ["COVER_NOW","RESEARCH","DEFER","OUT_OF_SCOPE"] as const;
+export type Decision = (typeof DECISIONS)[number];
+export type PrimarySource = { title: string; url: string; kind: "advisory"|"cve"|"blog"|"paper"|"report"|"other"; accessed?: string };
+export type Mitigation = { id: string; name: string; summary: string; status: MitigationStatus; validated: boolean; reproductionPackageUrl?: string; notes?: string };
+export type Incident = { id: string; name: string; date: string; year: number; summary: string; actor?: string; affectedProduct?: string; affectedVersions?: string; fixedIn?: string; attackClassIds: string[]; cveIds: string[]; evidenceTier: EvidenceTier; confidence: Confidence; primarySource: PrimarySource; additionalSources?: PrimarySource[] };
+export type AttackClass = { id: string; legacyId?: string; name: string; aliases: string[]; family: string; oneLine: string; description: string; protocols: string[]; evidenceTier: EvidenceTier; evidenceConfidence: Confidence; decision: Decision; cveIds: string[]; incidentIds: string[]; proposedMitigationIds: string[]; validatedMitigationIds: string[]; primarySources: PrimarySource[]; owasp?: string[] };
+export type VendorClaim = { productId: string; productName: string; vendor: string; isPublisherProduct: boolean; summary: string; deployment: ("local"|"self-hosted"|"cloud")[]; claimStatus: "unverified_vendor_claim"|"third_party_evaluated"; claimedClassIds: string[]; claimText?: string; evidenceUrl?: string; limitations: string[] };
+export type ChangelogEntry = { version: string; date: string; changes: string[] };
