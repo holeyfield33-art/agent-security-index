@@ -1,8 +1,11 @@
 {
-  "id": "agent-security-index",
-  "name": "Agent Security Index",
-  "version": "2026.09.0",
-  "schemaVersion": "1.0.0",
-  "released": "2026-09-12",
-  "status": "draft"
+  "version": "0.2.0-draft",
+  "status": "draft",
+  "independentReview": {
+    "pending": true,
+    "note": "Independent review not yet commissioned"
+  },
+  "generatedAt": "2026-09-12",
+  "classCount": 40,
+  "incidentCount": 46
 }
