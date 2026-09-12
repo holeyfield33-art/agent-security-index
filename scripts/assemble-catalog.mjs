@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Assemble public/export/asi-catalog.json from JSON chunks.
- * If attack-class JSON chunks are incomplete, fall back to src/lib/matrix/classes-part-*.ts.
+ * Canonical IDs are AAC-01…AAC-NN (source: src/lib/matrix/classes-part-*.ts).
+ * If JSON chunks are incomplete, fall back to TS class parts.
  */
 import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -36,10 +37,10 @@ function loadClassesFromTs() {
     classes.push(...arr);
   }
   return classes.map((c) => ({
-    id: String(c.id).replace(/^AX-/, "AAC-"),
-    legacyId: c.id,
+    id: c.id,
+    legacyId: (c.aka && String(c.aka).match(/AX-\d+/)?.[0]) || undefined,
     name: c.name,
-    aliases: c.aka ? [c.id, c.aka] : [c.id],
+    aliases: [c.id, ...(c.aka ? String(c.aka).split(/;\s*/) : [])].filter(Boolean),
     family: c.vector,
     oneLine: c.summary,
     description: c.description,
@@ -63,12 +64,12 @@ function loadClassesFromTs() {
 
 const meta = JSON.parse(readFileSync(join(dir, "catalog-meta.json"), "utf8"));
 let attacks = loadJsonChunks("attack-classes");
-if (attacks.length < 40 && existsSync(partsDir)) {
-  const fromTs = loadClassesFromTs();
-  if (fromTs.length > attacks.length) {
+const fromTs = existsSync(partsDir) ? loadClassesFromTs() : [];
+if (fromTs.length >= attacks.length && fromTs.length > 0) {
+  if (attacks.length !== fromTs.length) {
     console.log(`json chunks had ${attacks.length} classes; using TS source (${fromTs.length})`);
-    attacks = fromTs;
   }
+  attacks = fromTs;
 }
 const incidents = loadJsonChunks("incidents");
 const mitigations = JSON.parse(readFileSync(join(dir, "mitigations.json"), "utf8"));
@@ -77,6 +78,9 @@ const changelog = JSON.parse(readFileSync(join(dir, "changelog.json"), "utf8"));
 
 meta.classCount = attacks.length;
 meta.incidentCount = incidents.length;
+meta.taxonomyId = "AAC";
+meta.taxonomyRange = `AAC-01…AAC-${String(attacks.length).padStart(2, "0")}`;
+meta.legacyTaxonomy = "AX (Agent Attack matrix labels; retained as aliases only)";
 
 const exp = {
   catalog: meta,
@@ -88,4 +92,4 @@ const exp = {
 };
 writeFileSync(join(dir, "asi-catalog.json"), JSON.stringify(exp));
 writeFileSync(join(dir, "catalog-meta.json"), JSON.stringify(meta, null, 2) + "\n");
-console.log("assembled", attacks.length, "classes", incidents.length, "incidents");
+console.log("assembled", attacks.length, "classes", incidents.length, "incidents", meta.taxonomyRange);
