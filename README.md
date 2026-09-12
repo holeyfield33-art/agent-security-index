@@ -6,9 +6,9 @@ Evidence-tiered research index of AI agent attack classes, incidents, mitigation
 
 This is a **draft research product**, not a scanner, certification, or peer-reviewed ranking.
 
-## Source of truth
+## What’s on main
 
-Working matrix under `src/lib/matrix/`:
+### Matrix source (`src/lib/matrix/`)
 
 | File | Contents |
 |------|----------|
@@ -17,6 +17,24 @@ Working matrix under `src/lib/matrix/`:
 | `classes-part-1.ts` … `classes-part-14.ts` | **AX-01 … AX-40** (complete) |
 | `mitigations.ts` | 22 controls (`validated: false` pending independent review) |
 | `catalog.ts` | Filters, high-risk, stats |
+
+### Matrix UI (`src/components/matrix/`)
+
+| Component | Role |
+|-----------|------|
+| `matrix-app.tsx` | Shell: views, filters, detail |
+| `matrix-table.tsx` | Sortable desktop table + mobile cards |
+| `filter-bar.tsx` | Search, high-risk, protocol/domain chips, sheet |
+| `lifecycle-map.tsx` | Stage histogram + heatmap |
+| `exposure-view.tsx` | High-risk list + impact×complexity grid |
+| `class-detail.tsx` | Detail sheet (CVEs, incidents, mitigations) |
+| `labels.tsx` / `kpi-strip.tsx` | Badges and KPI strip |
+
+### Export & CI
+
+- `public/export/` — AAC-oriented JSON chunks (partial; regenerate from matrix source)
+- `scripts/check-catalog-invariant.mjs` — credibility CI gate
+- `scripts/assemble-catalog.mjs` — assemble full catalog snapshot
 
 ## Principles
 
@@ -34,16 +52,6 @@ Working matrix under `src/lib/matrix/`:
 | T2 · Field incident | Production impact or CVE + advisory |
 | T3 · Widespread | Multiple independent field cases |
 
-## Machine-readable export
-
-```bash
-node scripts/assemble-catalog.mjs
-node scripts/check-catalog-invariant.mjs          # draft: placeholders warn
-node scripts/check-catalog-invariant.mjs --strict # placeholders fail
-```
-
-Export chunks under `public/export/` (AAC taxonomy) can be regenerated from the AX matrix source.
-
 ## Local development
 
 ```bash
@@ -51,6 +59,12 @@ npm install
 npm run dev
 npm run check:catalog
 npm test
+```
+
+```bash
+node scripts/assemble-catalog.mjs
+node scripts/check-catalog-invariant.mjs          # draft: placeholders warn
+node scripts/check-catalog-invariant.mjs --strict # placeholders fail
 ```
 
 ## Disclosure
