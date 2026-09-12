@@ -1,12 +1,9 @@
 node_modules/
-.vercel/
-.grok/
 dist/
-.output/
-*.log
+.DS_Store
+*.local
 .env
 .env.*
-.DS_Store
-artifacts/
-screenshots/
-package-lock.json
+!.env.example
+*.log
+.vite/
