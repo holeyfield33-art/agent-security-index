@@ -1,0 +1,61 @@
+import type { AttackClass } from "./types";
+
+export const ATTACK_CLASSES_PART_8: AttackClass[] = [
+  {
+    "id": "AX-22",
+    "name": "Agent Impersonation / A2A Shadowing",
+    "summary": "A malicious agent registers a name or skill nearly identical to a trusted peer and intercepts tasks.",
+    "description": "A2A shadowing is ARP-spoofing for agents. Combined with exaggerated capabilities (AITM), the impersonator “wins” the router. Distinct from MCP tool shadowing: here the whole peer is fake, not just a description contaminating a sibling tool.",
+    "vector": "communication",
+    "protocols": ["A2A", "ANP"],
+    "domains": ["identity", "network"],
+    "lifecycle": ["discover", "coordinate", "execute"],
+    "impact": "high",
+    "complexity": "medium",
+    "architecturalImpact": "Routing is description-similarity, not authenticated identity. The cluster’s load balancer is an LLM.",
+    "technicalVector": "Near-duplicate names, cloned skills, higher self-declared success rates, registry without uniqueness constraints.",
+    "owasp": ["ASI07", "ASI10"],
+    "cves": [],
+    "incidents": [{"name": "SpiderLabs AITM follow-on", "year": 2025, "summary": "Compromised node republishes an inflated card and becomes the default destination."}],
+    "mitigations": ["mtls-a2a", "signed-cards", "capability-attest", "telemetry"],
+    "riskScore": 82
+  },
+  {
+    "id": "AX-23",
+    "name": "Capability Cloaking",
+    "summary": "The card advertises a benign skill while the backend exposes hidden, more powerful tools.",
+    "description": "ANP evaluations scored capability cloaking at 1.00 success. The declared surface is a formatter; the live surface includes shell and payments. Hash-pinning the card without attesting the backend leaves the cloak intact. Pair with rug pulls when hidden tools appear after review.",
+    "vector": "trust",
+    "protocols": ["ANP", "A2A", "MCP"],
+    "domains": ["tools", "identity"],
+    "lifecycle": ["discover", "invoke", "update"],
+    "impact": "high",
+    "complexity": "medium",
+    "architecturalImpact": "Advertisement ≠ attestation. Security reviews of cards are reviews of marketing copy.",
+    "technicalVector": "Divergent live schema vs published card; extra MCP tools mounted after handshake; undocumented RPC methods.",
+    "owasp": ["ASI04", "ASI07", "MCP03"],
+    "cves": [],
+    "incidents": [{"name": "ANP cloaking eval", "year": 2026, "summary": "Capability cloaking transferred at 1.00 in published ANP attack-pattern tests."}],
+    "mitigations": ["capability-attest", "abom-hash", "drift-detect", "tool-sandbox"],
+    "riskScore": 80
+  },
+  {
+    "id": "AX-24",
+    "name": "Insecure Inter-Agent Communication",
+    "summary": "Spoofing, replay, or MITM on A2A/ANP messages changes intent mid-flight (ASI07).",
+    "description": "Multi-agent fabrics often skip mutual auth, sequence numbers, and payload integrity. A replayed “approve transfer” or a mutated task artifact cascades. This class is the protocol-security bucket sitting under card poisoning and impersonation.",
+    "vector": "communication",
+    "protocols": ["A2A", "ANP"],
+    "domains": ["network", "identity"],
+    "lifecycle": ["coordinate", "execute", "oversee"],
+    "impact": "high",
+    "complexity": "medium",
+    "architecturalImpact": "The mesh is only as trustworthy as its least-authenticated hop. One plaintext JSON-RPC link undoes app-layer policy.",
+    "technicalVector": "Unsigned task objects, missing replay protection, DNS rebinding against agent ports, session fixation on SSE (CVE-2026-33946).",
+    "owasp": ["ASI07"],
+    "cves": [{"id": "CVE-2026-33946", "product": "MCP Ruby SDK SSE session fixation", "cvss": 7.5, "year": 2026}],
+    "incidents": [{"name": "MCP Inspector DNS rebinding", "year": 2025, "summary": "CVE-2025-49596 combined CSRF + DNS rebinding against a local inspector (CVSS 9.4)."}],
+    "mitigations": ["mtls-a2a", "provenance", "telemetry", "signed-cards"],
+    "riskScore": 81
+  }
+];
