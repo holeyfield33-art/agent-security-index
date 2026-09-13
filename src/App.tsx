@@ -113,18 +113,22 @@ function usePublicCatalog() {
 }
 
 function PageShell({ children }: { children: React.ReactNode }) {
+  const currentPath = window.location.hash || "#/";
   return (
-    <div className="min-h-dvh bg-bg text-fg">
-      <header className="border-b border-border bg-bg/95">
+    <div className="publication min-h-dvh bg-bg text-fg">
+      <div className="edition-bar"><span>ASI / RESEARCH & INTELLIGENCE</span><span>PUBLIC CATALOG · DRAFT EDITION</span></div>
+      <header className="publication-header border-b border-border bg-bg/95">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-          <a href="#/" className="text-lg font-medium tracking-tight text-fg">
-            Agent Security Index
+          <a href="#/" className="publication-brand" aria-label="Agent Security Index home">
+            <span className="brand-mark" aria-hidden="true">a<span>si</span><i /></span>
+            <span>Agent Security<br />Index</span>
           </a>
           <nav aria-label="Primary" className="flex flex-wrap gap-1">
             {NAV.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
+                aria-current={(item.href === "#/" ? currentPath === item.href : currentPath.startsWith(item.href)) ? "page" : undefined}
                 className="rounded-md px-3 py-2 text-sm text-muted hover:bg-muted hover:text-fg"
               >
                 {item.label}
@@ -134,6 +138,7 @@ function PageShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
       {children}
+      <footer className="publication-footer"><a href="#/">ASI / Agent Security Index</a><span>Evidence before assurance.</span><a href="#/methodology">Methodology & disclosures ↗</a></footer>
     </div>
   );
 }
@@ -148,7 +153,7 @@ function PageHeader({
   children: React.ReactNode;
 }) {
   return (
-    <div className="border-b border-border">
+    <div className="publication-page-heading border-b border-border">
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <p className="font-mono text-[0.6875rem] tracking-[0.18em] text-accent uppercase">
           {eyebrow}
@@ -180,38 +185,32 @@ function HomePage({ incidents }: { incidents: Incident[] }) {
 
   return (
     <>
-      <PageHeader eyebrow="Static research publication" title="Agent Security Index">
-        <p>
-          Independent research into how AI agents fail, which controls help, and where products
-          leave gaps.
-        </p>
-      </PageHeader>
-      <Content className="grid gap-6">
-        <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            ["AAC classes", counts.classes],
-            ["Incidents", counts.incidents],
-            ["Mitigations", counts.mitigations],
-            ["Products", counts.products],
-          ].map(([label, value]) => (
-            <div key={label} className="rounded-md bg-surface p-4 shadow-border">
-              <p className="font-mono text-2xl tabular-nums text-fg">{value}</p>
-              <p className="mt-1 text-sm text-muted">{label}</p>
-            </div>
-          ))}
+      <main className="publication-home">
+        <section className="editorial-hero">
+          <div className="hero-copy">
+            <p className="overline"><span className="small-square" /> THE AGENT SECURITY REFERENCE</p>
+            <h1>More autonomy.<br />More exposure.<br /><em>Better evidence.</em></h1>
+            <p className="hero-description">A research index of how AI agents fail, which controls help, and where product claims meet the evidence.</p>
+            <div className="hero-actions"><a className="primary-link" href="#/matrix">Explore the attack matrix <span>↗</span></a><a className="text-link" href="#/methodology">Our methodology <span>↗</span></a></div>
+            <p className="hero-note">Open taxonomy. Traceable sources. Explicit limitations.</p>
+          </div>
+          <aside className="index-plate" aria-label="Attack class index preview">
+            <div className="plate-heading"><span>FIG. 01 / ATTACK SURFACE</span><span>AAC</span></div>
+            <div className="attack-grid">{ATTACK_CLASSES.map((attack, index) => <a key={attack.id} href={`#/attacks/${attack.id}`} title={`${attack.id}: ${attack.name}`} aria-label={`${attack.id}: ${attack.name}`}><span>{String(index + 1).padStart(2, "0")}</span><i aria-hidden="true" /></a>)}</div>
+            <div className="plate-caption"><span>{counts.classes} classes.<br /><strong>One connected threat landscape.</strong></span><span className="plate-arrow" aria-hidden="true">↗</span></div>
+            <p className="plate-note">A navigable index, not a risk ranking.</p>
+          </aside>
         </section>
-        <section className="grid gap-3 sm:grid-cols-3">
-          <Button asChild>
-            <a href="#/matrix">Explore Attack Matrix</a>
-          </Button>
-          <Button asChild variant="outline">
-            <a href="#/products">Browse Products</a>
-          </Button>
-          <Button asChild variant="outline">
-            <a href="#/methodology">Read Methodology</a>
-          </Button>
+        <section className="catalog-totals" aria-label="Catalog at a glance"><p className="overline">THE INDEX<br /><span>AT A GLANCE</span></p>{[["Attack classes", counts.classes], ["Incident records", counts.incidents || "—"], ["Mitigations", counts.mitigations], ["Product profiles", counts.products]].map(([label, value]) => <div key={label}><strong>{value}</strong><span>{label}</span></div>)}</section>
+        <section className="editorial-sections">
+          <div className="directory-section"><div className="section-label"><span>01 / EXPLORE THE INDEX</span><span>RESEARCH TO REFERENCE</span></div>{[
+            { number: "01", title: "Attack matrix", description: "Trace attack classes across protocols, agent lifecycles, and defensive controls.", href: "#/matrix" },
+            { number: "02", title: "Incident records", description: "Examine reported failures and follow the sources behind each record.", href: "#/incidents" },
+            { number: "03", title: "Product coverage", description: "Inspect documented coverage, evidence status, and declared limitations.", href: "#/products" },
+          ].map(item => <a className="directory-row" href={item.href} key={item.number}><span className="row-number">{item.number}</span><div><h2>{item.title}</h2><p>{item.description}</p></div><span className="row-arrow">↗</span></a>)}</div>
+          <aside className="editorial-note"><p className="overline">02 / THE EVIDENCE STANDARD</p><h2>A claim is a<br />starting point.<br /><em>Not a conclusion.</em></h2><p>Source existence and source quality are different questions. We make evidence status visible so you can judge what a coverage claim actually supports.</p><a className="text-link" href="#/methodology">Read the methodology <span>↗</span></a><div className="note-footnote">No vendor rankings. No implied certification.<br />Publisher-owned products are disclosed.</div></aside>
         </section>
-      </Content>
+      </main>
     </>
   );
 }
