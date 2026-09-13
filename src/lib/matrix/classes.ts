@@ -14,7 +14,7 @@ import { ATTACK_CLASSES_PART_12 } from "./classes-part-12";
 import { ATTACK_CLASSES_PART_13 } from "./classes-part-13";
 import { ATTACK_CLASSES_PART_14 } from "./classes-part-14";
 
-export const ATTACK_CLASSES: AttackClass[] = [
+const RAW_ATTACK_CLASSES: AttackClass[] = [
   ...ATTACK_CLASSES_PART_1,
   ...ATTACK_CLASSES_PART_2,
   ...ATTACK_CLASSES_PART_3,
@@ -30,3 +30,26 @@ export const ATTACK_CLASSES: AttackClass[] = [
   ...ATTACK_CLASSES_PART_13,
   ...ATTACK_CLASSES_PART_14,
 ];
+
+function canonicalId(id: string): string {
+  const match = /^(?:AX|AAC)-(\d{2})$/.exec(id);
+  return match ? `AAC-${match[1]}` : id;
+}
+
+function canonicalizeAttackClass(c: AttackClass): AttackClass {
+  const id = canonicalId(c.id);
+  const legacyId = /^AX-\d{2}$/.test(c.id) ? c.id : c.aka?.match(/AX-\d{2}/)?.[0];
+  const aliases = [
+    ...(c.aka ? c.aka.split(/;\s*/).filter(Boolean) : []),
+    ...(legacyId ? [legacyId] : []),
+  ];
+  const aka = aliases.length ? [...new Set(aliases)].join("; ") : undefined;
+  return { ...c, id, aka };
+}
+
+/**
+ * Canonical runtime catalog.
+ * Legacy AX-* identifiers may still appear in source fragments, but every consumer
+ * receives AAC-* primary IDs from this boundary.
+ */
+export const ATTACK_CLASSES: AttackClass[] = RAW_ATTACK_CLASSES.map(canonicalizeAttackClass);

@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 /**
- * Assemble public/export/asi-catalog.json from JSON chunks.
- * Canonical IDs are AAC-01…AAC-NN (source: src/lib/matrix/classes-part-*.ts).
- * If JSON chunks are incomplete, fall back to TS class parts.
+ * Assemble public/export/asi-catalog.json.
+ * Canonical IDs are AAC-01…AAC-NN. Legacy AX-* labels are preserved as aliases.
  */
 import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -12,6 +11,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
 const dir = join(root, "public/export");
 const partsDir = join(root, "src/lib/matrix");
+
+function canonicalId(id) {
+  const match = /^(?:AX|AAC)-(\d{2})$/.exec(String(id));
+  return match ? `AAC-${match[1]}` : String(id);
+}
 
 function loadJsonChunks(prefix) {
   const out = [];
@@ -36,33 +40,71 @@ function loadClassesFromTs() {
     const arr = Function(`"use strict"; return (${m[1]})`)();
     classes.push(...arr);
   }
-  return classes.map((c) => ({
-    id: c.id,
-    legacyId: (c.aka && String(c.aka).match(/AX-\d+/)?.[0]) || undefined,
-    name: c.name,
-    aliases: [c.id, ...(c.aka ? String(c.aka).split(/;\s*/) : [])].filter(Boolean),
-    family: c.vector,
-    oneLine: c.summary,
-    description: c.description,
-    vector: c.vector,
-    protocols: c.protocols,
-    domains: c.domains,
-    lifecycle: c.lifecycle,
-    impact: c.impact,
-    complexity: c.complexity,
-    architecturalImpact: c.architecturalImpact,
-    technicalVector: c.technicalVector,
-    owasp: c.owasp ?? [],
-    cves: c.cves ?? [],
-    incidents: c.incidents ?? [],
-    mitigations: c.mitigations ?? [],
-    riskScore: c.riskScore,
-    evidenceTier: "T1_lab_poc",
-    validatedMitigationIds: [],
-  }));
+
+  return classes.map((c) => {
+    const rawId = String(c.id);
+    const id = canonicalId(rawId);
+    const legacyFromAka = c.aka && String(c.aka).match(/AX-\d{2}/)?.[0];
+    const legacyId = /^AX-\d{2}$/.test(rawId) ? rawId : legacyFromAka;
+    const aliases = [
+      id,
+      ...(legacyId ? [legacyId] : []),
+      ...(c.aka ? String(c.aka).split(/;\s*/) : []),
+    ].filter(Boolean);
+
+    return {
+      id,
+      legacyId,
+      name: c.name,
+      aliases: [...new Set(aliases)],
+      family: c.vector,
+      oneLine: c.summary,
+      description: c.description,
+      vector: c.vector,
+      protocols: c.protocols,
+      domains: c.domains,
+      lifecycle: c.lifecycle,
+      impact: c.impact,
+      complexity: c.complexity,
+      architecturalImpact: c.architecturalImpact,
+      technicalVector: c.technicalVector,
+      owasp: c.owasp ?? [],
+      cves: c.cves ?? [],
+      incidents: c.incidents ?? [],
+      mitigations: c.mitigations ?? [],
+      riskScore: c.riskScore,
+      evidenceTier: "T1_lab_poc",
+      validatedMitigationIds: [],
+    };
+  });
 }
 
-const meta = JSON.parse(readFileSync(join(dir, "catalog-meta.json"), "utf8"));
+function assertCanonicalClasses(classes, declaredCount) {
+  if (!Number.isInteger(declaredCount) || declaredCount <= 0) {
+    throw new Error(`catalog-meta.classCount must be a positive integer, got ${declaredCount}`);
+  }
+
+  const ids = classes.map((c) => c.id);
+  const bad = ids.filter((id) => !/^AAC-\d{2}$/.test(id));
+  if (bad.length) throw new Error(`non-canonical attack IDs: ${bad.join(", ")}`);
+
+  const unique = new Set(ids);
+  if (unique.size !== ids.length) throw new Error("duplicate attack class IDs after canonicalization");
+
+  if (ids.length !== declaredCount) {
+    throw new Error(`catalog class count mismatch: declared ${declaredCount}, observed ${ids.length}`);
+  }
+
+  const expected = Array.from(
+    { length: declaredCount },
+    (_, i) => `AAC-${String(i + 1).padStart(2, "0")}`,
+  );
+  const missing = expected.filter((id) => !unique.has(id));
+  if (missing.length) throw new Error(`catalog has gaps: ${missing.join(", ")}`);
+}
+
+const sourceMeta = JSON.parse(readFileSync(join(dir, "catalog-meta.json"), "utf8"));
+const declaredClassCount = sourceMeta.classCount;
 let attacks = loadJsonChunks("attack-classes");
 const fromTs = existsSync(partsDir) ? loadClassesFromTs() : [];
 if (fromTs.length >= attacks.length && fromTs.length > 0) {
@@ -70,17 +112,24 @@ if (fromTs.length >= attacks.length && fromTs.length > 0) {
     console.log(`json chunks had ${attacks.length} classes; using TS source (${fromTs.length})`);
   }
   attacks = fromTs;
+} else {
+  attacks = attacks.map((c) => ({ ...c, id: canonicalId(c.id) }));
 }
+assertCanonicalClasses(attacks, declaredClassCount);
+
 const incidents = loadJsonChunks("incidents");
 const mitigations = JSON.parse(readFileSync(join(dir, "mitigations.json"), "utf8"));
 const vendorClaims = JSON.parse(readFileSync(join(dir, "vendor-claims.json"), "utf8"));
 const changelog = JSON.parse(readFileSync(join(dir, "changelog.json"), "utf8"));
 
-meta.classCount = attacks.length;
-meta.incidentCount = incidents.length;
-meta.taxonomyId = "AAC";
-meta.taxonomyRange = `AAC-01…AAC-${String(attacks.length).padStart(2, "0")}`;
-meta.legacyTaxonomy = "AX (Agent Attack matrix labels; retained as aliases only)";
+const meta = {
+  ...sourceMeta,
+  classCount: attacks.length,
+  incidentCount: incidents.length,
+  taxonomyId: "AAC",
+  taxonomyRange: `AAC-01…AAC-${String(attacks.length).padStart(2, "0")}`,
+  legacyTaxonomy: "AX (legacy labels retained as aliases only)",
+};
 
 const exp = {
   catalog: meta,
@@ -91,5 +140,4 @@ const exp = {
   changelog,
 };
 writeFileSync(join(dir, "asi-catalog.json"), JSON.stringify(exp));
-writeFileSync(join(dir, "catalog-meta.json"), JSON.stringify(meta, null, 2) + "\n");
 console.log("assembled", attacks.length, "classes", incidents.length, "incidents", meta.taxonomyRange);
