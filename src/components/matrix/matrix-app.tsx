@@ -17,6 +17,15 @@ const VIEWS: { id: View; label: string }[] = [
   { id: "exposure", label: "Exposure" },
 ];
 
+const PUBLICATION_NAV = [
+  { label: "Home", href: "#/" },
+  { label: "Attack Matrix", href: "#/matrix" },
+  { label: "Products", href: "#/products" },
+  { label: "Incidents", href: "#/incidents" },
+  { label: "Methodology", href: "#/methodology" },
+  { label: "Research", href: "#/research" },
+];
+
 export function MatrixApp() {
   const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS);
   const [view, setView] = useState<View>("matrix");
@@ -30,6 +39,22 @@ export function MatrixApp() {
       <div className="min-h-dvh bg-bg text-fg">
         <header className="border-b border-border">
           <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <a href="#/" className="text-lg font-medium tracking-tight text-fg">
+                Agent Security Index
+              </a>
+              <nav aria-label="Primary" className="flex flex-wrap gap-1">
+                {PUBLICATION_NAV.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className="rounded-md px-3 py-2 text-sm text-muted hover:bg-muted hover:text-fg"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </nav>
+            </div>
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-2xl">
                 <p className="font-mono text-[0.6875rem] tracking-[0.18em] text-accent uppercase">
