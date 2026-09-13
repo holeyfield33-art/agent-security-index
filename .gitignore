@@ -7,3 +7,4 @@ dist/
 !.env.example
 *.log
 .vite/
+public/export/asi-catalog.json
