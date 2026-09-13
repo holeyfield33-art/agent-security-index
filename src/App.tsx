@@ -32,7 +32,8 @@ type Route =
   | { name: "incidents" }
   | { name: "methodology" }
   | { name: "research" }
-  | { name: "attack"; id: string };
+  | { name: "attack"; id: string }
+  | { name: "not-found" };
 
 const NAV = [
   { label: "Home", href: "#/" },
@@ -43,9 +44,17 @@ const NAV = [
   { label: "Research", href: "#/research" },
 ];
 
+function safeDecodeRoutePart(value: string): string {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return "";
+  }
+}
+
 function parseRoute(hash: string): Route {
   const path = (hash.replace(/^#/, "") || "/").replace(/\/+$/, "") || "/";
-  const parts = path.split("/").filter(Boolean);
+  const parts = path.split("/").filter(Boolean).map(safeDecodeRoutePart);
 
   if (parts[0] === "matrix") return { name: "matrix" };
   if (parts[0] === "products" && parts[1]) return { name: "product", id: parts[1] };
@@ -54,7 +63,8 @@ function parseRoute(hash: string): Route {
   if (parts[0] === "methodology") return { name: "methodology" };
   if (parts[0] === "research") return { name: "research" };
   if (parts[0] === "attacks" && parts[1]) return { name: "attack", id: parts[1].toUpperCase() };
-  return { name: "home" };
+  if (parts.length === 0) return { name: "home" };
+  return { name: "not-found" };
 }
 
 function useHashRoute() {
@@ -71,23 +81,31 @@ function useHashRoute() {
 
 function usePublicIncidents() {
   const [incidents, setIncidents] = useState<Incident[]>([]);
+  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
 
   useEffect(() => {
     let active = true;
+    setStatus("loading");
     fetch("/export/asi-catalog.json")
       .then((response) => (response.ok ? response.json() : Promise.reject(response.statusText)))
       .then((catalog) => {
-        if (active) setIncidents(catalog.incidents ?? []);
+        if (active) {
+          setIncidents(catalog.incidents ?? []);
+          setStatus("ready");
+        }
       })
       .catch(() => {
-        if (active) setIncidents([]);
+        if (active) {
+          setIncidents([]);
+          setStatus("error");
+        }
       });
     return () => {
       active = false;
     };
   }, []);
 
-  return incidents;
+  return { incidents, status };
 }
 
 function PageShell({ children }: { children: React.ReactNode }) {
@@ -363,13 +381,30 @@ function ProductDetailPage({ id }: { id: string }) {
   );
 }
 
-function IncidentsPage({ incidents }: { incidents: Incident[] }) {
+function IncidentsPage({
+  incidents,
+  status,
+}: {
+  incidents: Incident[];
+  status: "loading" | "ready" | "error";
+}) {
   return (
     <>
       <PageHeader eyebrow="Incidents" title="Incident catalog">
         <p>Existing incident records with primary source status. Severity is not inferred.</p>
       </PageHeader>
       <Content>
+        {status === "error" ? (
+          <div className="mb-4 rounded-md border border-border bg-surface p-4 text-sm text-muted shadow-border">
+            Incident records could not be loaded from the generated catalog. Run the catalog
+            assembly step and refresh this page.
+          </div>
+        ) : null}
+        {status === "loading" ? (
+          <div className="mb-4 rounded-md border border-border bg-surface p-4 text-sm text-muted shadow-border">
+            Loading incident records from the generated catalog.
+          </div>
+        ) : null}
         <div className="grid gap-3">
           {incidents.map((incident) => (
             <article key={incident.id} className="rounded-md bg-surface p-4 shadow-border">
@@ -538,7 +573,7 @@ function NotFound({
 
 export function App() {
   const route = useHashRoute();
-  const incidents = usePublicIncidents();
+  const { incidents, status: incidentStatus } = usePublicIncidents();
   const page = useMemo(() => {
     switch (route.name) {
       case "matrix":
@@ -548,17 +583,19 @@ export function App() {
       case "product":
         return <ProductDetailPage id={route.id} />;
       case "incidents":
-        return <IncidentsPage incidents={incidents} />;
+        return <IncidentsPage incidents={incidents} status={incidentStatus} />;
       case "methodology":
         return <MethodologyPage />;
       case "research":
         return <ResearchPage />;
       case "attack":
         return <AttackDetailPage id={route.id} />;
+      case "not-found":
+        return <NotFound title="Page not found" backHref="#/" backLabel="Back to home" />;
       default:
         return <HomePage incidents={incidents} />;
     }
-  }, [incidents, route]);
+  }, [incidents, incidentStatus, route]);
 
   if (route.name === "matrix") return page;
 
