@@ -1,3 +1,5 @@
+import type { MitigationStatus } from "@/data/types";
+
 export const LIFECYCLES = [
   "provision",
   "discover",
@@ -55,6 +57,12 @@ export type Mitigation = {
   name: string;
   summary: string;
   validated: boolean;
+  status?: MitigationStatus;
+  sourceIds?: string[];
+  reproductionPackageUrl?: string;
+  appliesTo?: string[];
+  limitations?: string[];
+  lastReviewedAt?: string;
 };
 
 export type AttackClass = {
