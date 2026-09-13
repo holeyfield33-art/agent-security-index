@@ -11,7 +11,8 @@ import {
   SOURCE_TYPE_HIERARCHY,
 } from "@/data/methodology";
 import { PRODUCTS } from "@/data/products";
-import type { Incident } from "@/data/types";
+import { SOURCES } from "@/data/sources";
+import type { Incident, Source, SourceId } from "@/data/types";
 import { MITIGATION_LIST } from "@/lib/matrix/mitigations";
 import { ATTACK_CLASSES, classMitigations } from "@/lib/matrix/catalog";
 import {
@@ -79,8 +80,9 @@ function useHashRoute() {
   return route;
 }
 
-function usePublicIncidents() {
+function usePublicCatalog() {
   const [incidents, setIncidents] = useState<Incident[]>([]);
+  const [sources, setSources] = useState<Source[]>([]);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
 
   useEffect(() => {
@@ -91,12 +93,14 @@ function usePublicIncidents() {
       .then((catalog) => {
         if (active) {
           setIncidents(catalog.incidents ?? []);
+          setSources(catalog.sources ?? []);
           setStatus("ready");
         }
       })
       .catch(() => {
         if (active) {
           setIncidents([]);
+          setSources([]);
           setStatus("error");
         }
       });
@@ -105,7 +109,7 @@ function usePublicIncidents() {
     };
   }, []);
 
-  return { incidents, status };
+  return { incidents, sources, status };
 }
 
 function PageShell({ children }: { children: React.ReactNode }) {
@@ -313,6 +317,7 @@ function ProductsPage() {
 
 function ProductDetailPage({ id }: { id: string }) {
   const product = PRODUCTS.find((item) => item.id === id);
+  const sourceById = new Map(SOURCES.map((source) => [source.id, source]));
 
   if (!product) return <NotFound title="Product not found" backHref="#/products" backLabel="Back to products" />;
 
@@ -358,14 +363,11 @@ function ProductDetailPage({ id }: { id: string }) {
                     Mitigations:{" "}
                     <span className="font-mono text-fg">{coverage.mitigationIds.join(", ")}</span>
                   </p>
-                  <p className="mt-2 text-sm text-muted">
-                    Evidence source IDs:{" "}
-                    {coverage.evidenceSourceIds.length ? (
-                      <span className="font-mono text-fg">{coverage.evidenceSourceIds.join(", ")}</span>
-                    ) : (
-                      <span className="text-accent">No independent evidence linked yet.</span>
-                    )}
-                  </p>
+                  <SourceLinks
+                    title="Evidence sources"
+                    sourceIds={coverage.evidenceSourceIds}
+                    sourceById={sourceById}
+                  />
                   <ul className="mt-3 grid gap-1 text-sm text-muted">
                     {coverage.limitations.map((item) => (
                       <li key={item}>{item}</li>
@@ -381,13 +383,51 @@ function ProductDetailPage({ id }: { id: string }) {
   );
 }
 
+function SourceLinks({
+  title,
+  sourceIds,
+  sourceById,
+}: {
+  title: string;
+  sourceIds: SourceId[];
+  sourceById: Map<SourceId, Source>;
+}) {
+  const sources = sourceIds.map((sourceId) => sourceById.get(sourceId)).filter(Boolean) as Source[];
+
+  return (
+    <div className="mt-3">
+      <h4 className="font-mono text-[0.6875rem] tracking-wider text-subtle uppercase">{title}</h4>
+      {sources.length ? (
+        <ul className="mt-2 grid gap-2 text-sm leading-6 text-muted">
+          {sources.map((source) => (
+            <li key={source.id}>
+              <a href={source.url} target="_blank" rel="noreferrer" className="text-accent hover:underline">
+                {source.title}
+              </a>{" "}
+              <span className="text-subtle">
+                ({source.sourceType}; {source.publisher})
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-2 text-sm text-accent">No independent evidence linked yet.</p>
+      )}
+    </div>
+  );
+}
+
 function IncidentsPage({
   incidents,
+  sources,
   status,
 }: {
   incidents: Incident[];
+  sources: Source[];
   status: "loading" | "ready" | "error";
 }) {
+  const sourceById = new Map(sources.map((source) => [source.id, source]));
+
   return (
     <>
       <PageHeader eyebrow="Incidents" title="Incident catalog">
@@ -416,17 +456,25 @@ function IncidentsPage({
                 </div>
                 <Badge>{incident.year}</Badge>
               </div>
-              <div className="mt-3 flex flex-wrap gap-2 text-sm text-muted">
-                <Badge tone="muted">{incident.primarySource.kind}</Badge>
-                <a
-                  href={incident.primarySource.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="break-all text-accent hover:underline"
-                >
-                  {incident.primarySource.title}
-                </a>
-              </div>
+              {incident.primarySourceId ? (
+                <SourceLinks
+                  title="Primary source"
+                  sourceIds={[incident.primarySourceId]}
+                  sourceById={sourceById}
+                />
+              ) : (
+                <div className="mt-3 flex flex-wrap gap-2 text-sm text-muted">
+                  <Badge tone="muted">{incident.primarySource.kind}</Badge>
+                  <a
+                    href={incident.primarySource.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="break-all text-accent hover:underline"
+                  >
+                    {incident.primarySource.title}
+                  </a>
+                </div>
+              )}
             </article>
           ))}
         </div>
@@ -435,9 +483,22 @@ function IncidentsPage({
   );
 }
 
-function AttackDetailPage({ id }: { id: string }) {
+function AttackDetailPage({
+  id,
+  incidents,
+  sources,
+}: {
+  id: string;
+  incidents: Incident[];
+  sources: Source[];
+}) {
   const attack = ATTACK_CLASSES.find((item) => item.id === id || item.aka === id);
   const mitigations = attack ? classMitigations(attack) : [];
+  const sourceById = new Map(sources.map((source) => [source.id, source]));
+  const relatedIncidents = incidents.filter((incident) => incident.attackClassIds.includes(id as `AAC-${string}`));
+  const relatedSourceIds = relatedIncidents
+    .map((incident) => incident.primarySourceId)
+    .filter(Boolean) as SourceId[];
 
   if (!attack) return <NotFound title="Attack class not found" backHref="#/matrix" backLabel="Back to matrix" />;
 
@@ -480,6 +541,12 @@ function AttackDetailPage({ id }: { id: string }) {
           empty="No incidents are currently attached."
           records={attack.incidents.map((incident) => `${incident.name} (${incident.year}) - ${incident.summary}`)}
         />
+        {relatedSourceIds.length ? (
+          <section className="rounded-md bg-surface p-4 shadow-border">
+            <h2 className="text-xl font-medium text-fg">Resolved source records</h2>
+            <SourceLinks title="Incident sources" sourceIds={relatedSourceIds} sourceById={sourceById} />
+          </section>
+        ) : null}
         <RecordList
           title="Mitigations"
           empty="No mitigations are currently attached."
@@ -573,7 +640,7 @@ function NotFound({
 
 export function App() {
   const route = useHashRoute();
-  const { incidents, status: incidentStatus } = usePublicIncidents();
+  const { incidents, sources, status: catalogStatus } = usePublicCatalog();
   const page = useMemo(() => {
     switch (route.name) {
       case "matrix":
@@ -583,19 +650,19 @@ export function App() {
       case "product":
         return <ProductDetailPage id={route.id} />;
       case "incidents":
-        return <IncidentsPage incidents={incidents} status={incidentStatus} />;
+        return <IncidentsPage incidents={incidents} sources={sources} status={catalogStatus} />;
       case "methodology":
         return <MethodologyPage />;
       case "research":
         return <ResearchPage />;
       case "attack":
-        return <AttackDetailPage id={route.id} />;
+        return <AttackDetailPage id={route.id} incidents={incidents} sources={sources} />;
       case "not-found":
         return <NotFound title="Page not found" backHref="#/" backLabel="Back to home" />;
       default:
         return <HomePage incidents={incidents} />;
     }
-  }, [incidents, incidentStatus, route]);
+  }, [catalogStatus, incidents, route, sources]);
 
   if (route.name === "matrix") return page;
 
