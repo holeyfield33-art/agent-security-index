@@ -37,10 +37,21 @@ export const ALLOWED_PRODUCT_EVIDENCE_STATUS = new Set([
   "reproduced",
   "aletheia-tested",
 ]);
-export const PRODUCT_EVIDENCE_REQUIRES_SOURCES = new Set([
-  "third-party-evaluated",
-  "reproduced",
-  "aletheia-tested",
+export const ALLOWED_SOURCE_TYPES = new Set([
+  "vendor-advisory",
+  "cve-nvd",
+  "academic-paper",
+  "public-poc",
+  "primary-disclosure",
+  "credible-secondary",
+  "background",
+]);
+export const INDEPENDENT_SOURCE_TYPES = new Set([
+  "academic-paper",
+  "public-poc",
+  "primary-disclosure",
+  "credible-secondary",
+  "cve-nvd",
 ]);
 export const ALLOWED_PRODUCT_COVERAGE = new Set(["full", "partial", "adjacent", "unknown"]);
 
@@ -78,6 +89,7 @@ export function evaluateCatalog(catalog, opts = {}) {
   const mitigations = Array.isArray(mitigationsRaw) ? mitigationsRaw : Object.values(mitigationsRaw);
   const vendorClaims = catalog.vendorClaims ?? catalog.VENDOR_CLAIMS ?? [];
   const products = catalog.products ?? catalog.PRODUCTS ?? [];
+  const sources = catalog.sources ?? catalog.SOURCES ?? [];
 
   if (!ALLOWED_STATUS.has(catStatus)) {
     addFinding(errors, "error", "catalog.status.invalid", `Unknown catalog status: ${catStatus}`);
@@ -85,6 +97,7 @@ export function evaluateCatalog(catalog, opts = {}) {
 
   const mitById = new Map(mitigations.map((m) => [m.id, m]));
   const classIds = new Set(attackClasses.map((c) => c.id));
+  const sourceById = new Map();
   let validatedCount = 0;
   let placeholderIncidentCount = 0;
 
@@ -180,6 +193,60 @@ export function evaluateCatalog(catalog, opts = {}) {
     }
   }
 
+  for (const source of sources) {
+    const loc = `sources.${source?.id ?? "unknown"}`;
+    if (!source || typeof source !== "object") {
+      addFinding(errors, "error", "source.invalid", "Source entry must be an object", loc);
+      continue;
+    }
+    if (!source.id || typeof source.id !== "string") {
+      addFinding(errors, "error", "source.missing_id", "Source missing id", loc);
+    } else if (sourceById.has(source.id)) {
+      addFinding(errors, "error", "source.duplicate_id",
+        `Duplicate source id "${source.id}"`, loc);
+    } else {
+      sourceById.set(source.id, source);
+    }
+    if (!ALLOWED_SOURCE_TYPES.has(source.sourceType)) {
+      addFinding(errors, "error", "source.type.invalid",
+        `Source "${source.id}" has invalid sourceType "${source.sourceType}"`, loc);
+    }
+    try {
+      const url = new URL(source.url);
+      if (!["http:", "https:"].includes(url.protocol)) throw new Error("expected http(s)");
+      if (PLACEHOLDER_URL_RE.test(source.url)) throw new Error("placeholder URL");
+    } catch {
+      addFinding(errors, "error", "source.url.invalid",
+        `Source "${source.id}" has invalid URL "${source.url}"`, loc);
+    }
+    for (const attackClassId of source.supports?.attackClassIds ?? []) {
+      if (!classIds.has(attackClassId)) {
+        addFinding(errors, "error", "source.supports.unknown_attack_class",
+          `Source "${source.id}" references unknown attack class "${attackClassId}"`, loc);
+      }
+    }
+    for (const mitigationId of source.supports?.mitigationIds ?? []) {
+      if (!mitById.has(mitigationId)) {
+        addFinding(errors, "error", "source.supports.unknown_mitigation",
+          `Source "${source.id}" references unknown mitigation "${mitigationId}"`, loc);
+      }
+    }
+  }
+
+  for (const inc of incidents) {
+    const loc = `incidents.${inc.id ?? inc.name}`;
+    if (inc.primarySourceId && !sourceById.has(inc.primarySourceId)) {
+      addFinding(errors, "error", "incident.primary_source_id.unknown",
+        `Incident "${inc.id}" references unknown primarySourceId "${inc.primarySourceId}"`, loc);
+    }
+    for (const sourceId of inc.additionalSourceIds ?? []) {
+      if (!sourceById.has(sourceId)) {
+        addFinding(errors, "error", "incident.additional_source_id.unknown",
+          `Incident "${inc.id}" references unknown additionalSourceId "${sourceId}"`, loc);
+      }
+    }
+  }
+
   const productIds = new Set();
   for (const product of products) {
     const loc = `products.${product?.id ?? "unknown"}`;
@@ -249,9 +316,55 @@ export function evaluateCatalog(catalog, opts = {}) {
       if (!Array.isArray(coverage.evidenceSourceIds)) {
         addFinding(errors, "error", "product.coverage.sources.invalid",
           `Product "${product.id}" coverage evidenceSourceIds must be an array`, covLoc);
-      } else if (PRODUCT_EVIDENCE_REQUIRES_SOURCES.has(coverage.evidenceStatus) && coverage.evidenceSourceIds.length === 0) {
-        addFinding(errors, "error", "product.coverage.sources.required",
-          `Product "${product.id}" coverage "${coverage.evidenceStatus}" requires evidenceSourceIds`, covLoc);
+      } else {
+        const coverageSources = [];
+        for (const sourceId of coverage.evidenceSourceIds) {
+          const source = sourceById.get(sourceId);
+          if (!source) {
+            addFinding(errors, "error", "product.coverage.source.unknown",
+              `Product "${product.id}" references unknown evidence source "${sourceId}"`, covLoc);
+          } else {
+            coverageSources.push(source);
+          }
+        }
+
+        if (coverage.evidenceStatus === "documented") {
+          if (!coverageSources.some((source) => source.sourceType === "vendor-advisory")) {
+            addFinding(errors, "error", "product.coverage.documented.no_vendor_source",
+              `Product "${product.id}" documented coverage requires a vendor-advisory source`, covLoc);
+          }
+        }
+        if (coverage.evidenceStatus === "third-party-evaluated") {
+          if (!coverageSources.some((source) =>
+            INDEPENDENT_SOURCE_TYPES.has(source.sourceType) &&
+            String(source.publisher).toLowerCase() !== String(product.vendor).toLowerCase()
+          )) {
+            addFinding(errors, "error", "product.coverage.third_party.no_independent_source",
+              `Product "${product.id}" third-party-evaluated coverage requires an independent source`, covLoc);
+          }
+        }
+        if (coverage.evidenceStatus === "reproduced") {
+          if (!coverageSources.some((source) => source.sourceType === "public-poc")) {
+            addFinding(errors, "error", "product.coverage.reproduced.no_poc_source",
+              `Product "${product.id}" reproduced coverage requires a public-poc source`, covLoc);
+          }
+        }
+        if (coverage.evidenceStatus === "aletheia-tested") {
+          if (!coverageSources.some((source) => String(source.publisher).toLowerCase() === "aletheia")) {
+            addFinding(errors, "error", "product.coverage.aletheia.no_test_source",
+              `Product "${product.id}" aletheia-tested coverage requires an Aletheia source`, covLoc);
+          }
+        }
+      }
+    }
+  }
+
+  for (const source of sources) {
+    const loc = `sources.${source?.id ?? "unknown"}`;
+    for (const productId of source.supports?.productIds ?? []) {
+      if (!productIds.has(productId)) {
+        addFinding(errors, "error", "source.supports.unknown_product",
+          `Source "${source.id}" references unknown product "${productId}"`, loc);
       }
     }
   }
@@ -267,7 +380,7 @@ export function evaluateCatalog(catalog, opts = {}) {
     attackClasses: attackClasses.length, incidents: incidents.length,
     mitigations: mitigations.length, validatedMitigations: validatedCount,
     placeholderIncidents: placeholderIncidentCount, vendorClaims: vendorClaims.length,
-    products: products.length,
+    products: products.length, sources: sources.length,
     errors: errors.length, warnings: warnings.length,
   };
 

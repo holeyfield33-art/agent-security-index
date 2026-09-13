@@ -49,6 +49,15 @@ function loadProductsFromTs() {
   )(disclosure);
 }
 
+function loadSourcesFromTs() {
+  const src = readFileSync(join(root, "src/data/sources.ts"), "utf8");
+  const sourcesMatch = src.match(/export const SOURCES(?::[\s\S]*?)?=\s*(\[[\s\S]*\]);?\s*$/);
+  if (!sourcesMatch) {
+    throw new Error("Could not parse src/data/sources.ts");
+  }
+  return Function(`"use strict"; return (${sourcesMatch[1]});`)();
+}
+
 function loadClassesFromTs() {
   const parts = readdirSync(partsDir)
     .filter((n) => /^classes-part-\d+\.ts$/.test(n))
@@ -138,7 +147,21 @@ if (fromTs.length >= attacks.length && fromTs.length > 0) {
 }
 assertCanonicalClasses(attacks, declaredClassCount);
 
-const incidents = loadJsonChunks("incidents");
+const sources = loadSourcesFromTs();
+writeFileSync(join(dir, "sources.json"), JSON.stringify(sources, null, 2));
+const sourceIdByUrl = new Map(sources.map((source) => [source.url, source.id]));
+const incidents = loadJsonChunks("incidents").map((incident) => {
+  const primarySourceId = sourceIdByUrl.get(incident.primarySource?.url);
+  const additionalSourceIds = (incident.additionalSources ?? [])
+    .map((source) => sourceIdByUrl.get(source.url))
+    .filter(Boolean);
+
+  return {
+    ...incident,
+    ...(primarySourceId ? { primarySourceId } : {}),
+    ...(additionalSourceIds.length ? { additionalSourceIds } : {}),
+  };
+});
 const mitigations = JSON.parse(readFileSync(join(dir, "mitigations.json"), "utf8"))
   .map((m) => ({ ...m, status: normalizeMitigationStatus(m.status) }));
 const vendorClaims = JSON.parse(readFileSync(join(dir, "vendor-claims.json"), "utf8"));
@@ -162,6 +185,7 @@ const exp = {
   mitigations,
   vendorClaims,
   products,
+  sources,
   changelog,
 };
 writeFileSync(join(dir, "asi-catalog.json"), JSON.stringify(exp));

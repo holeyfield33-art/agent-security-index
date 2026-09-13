@@ -241,5 +241,281 @@
     "publisherProduct": true,
     "disclosure": "Aletheia products are developed by the publisher of Agent Security Index. Their coverage is evaluated using the same published methodology as other products.",
     "lastReviewedAt": "2026-09-13"
+  },
+  {
+    "id": "promptfoo-red-teaming",
+    "name": "Promptfoo Red Teaming",
+    "vendor": "Promptfoo",
+    "description": "External product entry for Promptfoo's LLM and agent red-team testing workflows. Coverage is mapped as documented evaluation capability, not runtime prevention.",
+    "deployment": [
+      "local",
+      "cloud"
+    ],
+    "categories": [
+      "red-team-testing",
+      "agent-evaluation",
+      "mcp-testing"
+    ],
+    "homepageUrl": "https://www.promptfoo.dev/",
+    "docsUrl": "https://www.promptfoo.dev/docs/red-team/",
+    "pricingModel": "commercial",
+    "coverages": [
+      {
+        "attackClassId": "AAC-01",
+        "mitigationIds": [
+          "trajectory"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-promptfoo-owasp-agentic-ai",
+          "src-promptfoo-agents"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "Documents testing for goal-hijack behavior; does not claim runtime blocking."
+        ]
+      },
+      {
+        "attackClassId": "AAC-03",
+        "mitigationIds": [
+          "trajectory"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-promptfoo-mcp-plugin"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "MCP coverage is a red-team plugin mapping, not a tool-descriptor firewall."
+        ]
+      },
+      {
+        "attackClassId": "AAC-06",
+        "mitigationIds": [
+          "trajectory"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-promptfoo-agents"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "Memory-poisoning coverage depends on configured scenarios and target integration."
+        ]
+      },
+      {
+        "attackClassId": "AAC-38",
+        "mitigationIds": [
+          "trajectory"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-promptfoo-owasp-agentic-ai",
+          "src-promptfoo-agents"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "Excessive-agency tests can expose consequential-action paths but do not enforce gates."
+        ]
+      },
+      {
+        "attackClassId": "AAC-39",
+        "mitigationIds": [
+          "trajectory"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-promptfoo-mcp-plugin"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "System-prompt extraction coverage is documented as a test vector only."
+        ]
+      }
+    ],
+    "publisherProduct": false,
+    "lastReviewedAt": "2026-09-13"
+  },
+  {
+    "id": "checkpoint-ai-guardrails",
+    "name": "Check Point AI Guardrails",
+    "vendor": "Check Point",
+    "description": "External product entry for Check Point AI Security / AI Guardrails runtime controls across prompts, outputs, and agent tool interactions.",
+    "deployment": [
+      "cloud",
+      "self-hosted"
+    ],
+    "categories": [
+      "ai-guardrails",
+      "runtime-protection",
+      "data-leakage-prevention"
+    ],
+    "homepageUrl": "https://docs.lakera.ai/introduction",
+    "docsUrl": "https://docs.lakera.ai/docs/agent-security",
+    "pricingModel": "commercial",
+    "coverages": [
+      {
+        "attackClassId": "AAC-01",
+        "mitigationIds": [
+          "content-firewall",
+          "untrusted-io"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-checkpoint-agent-security",
+          "src-checkpoint-quickstart"
+        ],
+        "coverage": "partial",
+        "limitations": [
+          "Prompt-attack detection is documented; bypass resistance is not independently evaluated here."
+        ]
+      },
+      {
+        "attackClassId": "AAC-02",
+        "mitigationIds": [
+          "content-firewall",
+          "untrusted-io"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-checkpoint-agent-security"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "Tool-call and tool-response screening maps to indirect-injection boundaries, not full prevention."
+        ]
+      },
+      {
+        "attackClassId": "AAC-15",
+        "mitigationIds": [
+          "output-dlp",
+          "untrusted-io"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-checkpoint-agent-security",
+          "src-checkpoint-data-leakage-prevention"
+        ],
+        "coverage": "partial",
+        "limitations": [
+          "DLP scope depends on configured detectors, entities, and deployment coverage."
+        ]
+      },
+      {
+        "attackClassId": "AAC-38",
+        "mitigationIds": [
+          "trajectory",
+          "content-firewall"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-checkpoint-agent-security"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "Agent behavior defense is documented but not mapped to a complete consequential-action gate."
+        ]
+      },
+      {
+        "attackClassId": "AAC-39",
+        "mitigationIds": [
+          "output-dlp"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-checkpoint-data-leakage-prevention"
+        ],
+        "coverage": "partial",
+        "limitations": [
+          "System-prompt detection is documented as a leakage detector; it is not a universal secrecy guarantee."
+        ]
+      }
+    ],
+    "publisherProduct": false,
+    "lastReviewedAt": "2026-09-13"
+  },
+  {
+    "id": "invariant-mcp-scan",
+    "name": "Invariant MCP-Scan",
+    "vendor": "Invariant Labs",
+    "description": "External product entry for Invariant Labs MCP-Scan, mapped narrowly to MCP server discovery and scanning coverage.",
+    "deployment": [
+      "local"
+    ],
+    "categories": [
+      "mcp-scanning",
+      "server-discovery",
+      "agent-security-testing"
+    ],
+    "homepageUrl": "https://invariantlabs.ai/",
+    "docsUrl": "https://github.com/invariantlabs-ai/mcp-scan",
+    "pricingModel": "unknown",
+    "coverages": [
+      {
+        "attackClassId": "AAC-03",
+        "mitigationIds": [
+          "telemetry",
+          "allowlist-servers"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-invariant-home",
+          "src-invariant-mcp-scan-github"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "Scanner coverage can surface MCP risk but is not a runtime metadata firewall."
+        ]
+      },
+      {
+        "attackClassId": "AAC-05",
+        "mitigationIds": [
+          "drift-detect",
+          "hash-pin"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-invariant-mcp-scan-github"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "Mapped to scanner-assisted descriptor risk visibility, not automatic rug-pull prevention."
+        ]
+      },
+      {
+        "attackClassId": "AAC-10",
+        "mitigationIds": [
+          "allowlist-servers",
+          "telemetry"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-invariant-home",
+          "src-invariant-mcp-scan-github"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "MCP server scanning supports supply-chain review but does not replace provenance enforcement."
+        ]
+      },
+      {
+        "attackClassId": "AAC-14",
+        "mitigationIds": [
+          "allowlist-servers",
+          "telemetry"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-invariant-home",
+          "src-invariant-mcp-scan-github"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "Discovery and scanning can expose unmanaged servers; enforcement remains deployment-specific."
+        ]
+      }
+    ],
+    "publisherProduct": false,
+    "lastReviewedAt": "2026-09-13"
   }
 ]

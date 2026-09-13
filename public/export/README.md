@@ -8,6 +8,7 @@
 | `mitigations.json` | Mitigations (`validated` requires reproduction package) |
 | `vendor-claims.json` | Unverified vendor claims only |
 | `products.json` | Generated product fixtures from `src/data/products.ts` |
+| `sources.json` | Generated source registry from `src/data/sources.ts` |
 | `changelog.json` | Catalog version history |
 | `asi-catalog.json` | Combined generated snapshot |
 

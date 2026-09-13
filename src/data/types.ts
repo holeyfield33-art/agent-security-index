@@ -85,6 +85,24 @@ export type PrimarySource = {
   sourceType?: SourceType;
 };
 
+export type Source = {
+  id: SourceId;
+  title: string;
+  sourceType: SourceType;
+  publisher: string;
+  url: string;
+  publishedAt?: string;
+  accessedAt?: string;
+  authors?: string[];
+  summary?: string;
+  supports: {
+    attackClassIds: AttackClassId[];
+    mitigationIds: MitigationId[];
+    productIds: ProductId[];
+  };
+  notes?: string;
+};
+
 export type Mitigation = {
   id: MitigationId;
   name: string;
@@ -115,7 +133,9 @@ export type Incident = {
   attackEvidenceLevel?: AttackEvidenceLevel;
   confidence: Confidence;
   primarySource: PrimarySource;
+  primarySourceId?: SourceId;
   additionalSources?: PrimarySource[];
+  additionalSourceIds?: SourceId[];
 };
 
 export type AttackClass = {
