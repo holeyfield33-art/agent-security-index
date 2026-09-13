@@ -17,7 +17,36 @@ export const ALLOWED_TIERS = new Set([
   "T0_theoretical", "T1_lab_poc", "T2_field_incident", "T3_widespread",
 ]);
 export const ALLOWED_STATUS = new Set(["draft", "public-review", "stable"]);
-export const VALIDATED_STATUSES = new Set(["reproduced", "aletheia_tested"]);
+export const ALLOWED_MITIGATION_STATUS = new Set([
+  "proposed",
+  "established-practice",
+  "paper-evaluated",
+  "reproduced",
+  "aletheia-tested",
+]);
+export const VALIDATED_STATUSES = new Set(["reproduced", "aletheia-tested"]);
+export const LEGACY_MITIGATION_STATUS = new Map([
+  ["established_practice", "established-practice"],
+  ["paper_evaluated", "paper-evaluated"],
+  ["aletheia_tested", "aletheia-tested"],
+]);
+export const ALLOWED_PRODUCT_EVIDENCE_STATUS = new Set([
+  "vendor-claimed",
+  "documented",
+  "third-party-evaluated",
+  "reproduced",
+  "aletheia-tested",
+]);
+export const PRODUCT_EVIDENCE_REQUIRES_SOURCES = new Set([
+  "third-party-evaluated",
+  "reproduced",
+  "aletheia-tested",
+]);
+export const ALLOWED_PRODUCT_COVERAGE = new Set(["full", "partial", "adjacent", "unknown"]);
+
+export function normalizeMitigationStatus(status) {
+  return LEGACY_MITIGATION_STATUS.get(status) ?? status;
+}
 
 export function evaluateCatalog(catalog, opts = {}) {
   const strict = Boolean(opts.strict);
@@ -48,17 +77,24 @@ export function evaluateCatalog(catalog, opts = {}) {
   const mitigationsRaw = catalog.mitigations ?? catalog.MITIGATIONS ?? [];
   const mitigations = Array.isArray(mitigationsRaw) ? mitigationsRaw : Object.values(mitigationsRaw);
   const vendorClaims = catalog.vendorClaims ?? catalog.VENDOR_CLAIMS ?? [];
+  const products = catalog.products ?? catalog.PRODUCTS ?? [];
 
   if (!ALLOWED_STATUS.has(catStatus)) {
     addFinding(errors, "error", "catalog.status.invalid", `Unknown catalog status: ${catStatus}`);
   }
 
   const mitById = new Map(mitigations.map((m) => [m.id, m]));
+  const classIds = new Set(attackClasses.map((c) => c.id));
   let validatedCount = 0;
   let placeholderIncidentCount = 0;
 
   for (const m of mitigations) {
     const loc = `mitigations.${m.id}`;
+    const status = normalizeMitigationStatus(m.status);
+    if (m.status && !ALLOWED_MITIGATION_STATUS.has(status)) {
+      addFinding(errors, "error", "mitigation.status.invalid",
+        `Mitigation "${m.id}" has invalid status "${m.status}"`, loc);
+    }
     if (m.validated === true) {
       validatedCount += 1;
       const url = m.reproductionPackageUrl;
@@ -69,9 +105,9 @@ export function evaluateCatalog(catalog, opts = {}) {
         addFinding(errors, "error", "mitigation.validated.placeholder_reproduction",
           `Mitigation "${m.id}" validated:true but reproductionPackageUrl is a placeholder: ${url}`, loc);
       }
-      if (m.status && !VALIDATED_STATUSES.has(m.status)) {
+      if (m.status && !VALIDATED_STATUSES.has(status)) {
         addFinding(errors, "error", "mitigation.validated.bad_status",
-          `Mitigation "${m.id}" validated:true but status is "${m.status}" (need reproduced|aletheia_tested)`, loc);
+          `Mitigation "${m.id}" validated:true but status is "${m.status}" (need reproduced|aletheia-tested)`, loc);
       }
     }
   }
@@ -144,6 +180,82 @@ export function evaluateCatalog(catalog, opts = {}) {
     }
   }
 
+  const productIds = new Set();
+  for (const product of products) {
+    const loc = `products.${product?.id ?? "unknown"}`;
+    if (!product || typeof product !== "object") {
+      addFinding(errors, "error", "product.invalid", "Product entry must be an object", loc);
+      continue;
+    }
+    if (!product.id || typeof product.id !== "string") {
+      addFinding(errors, "error", "product.missing_id", "Product missing id", loc);
+    } else if (productIds.has(product.id)) {
+      addFinding(errors, "error", "product.duplicate_id",
+        `Duplicate product id "${product.id}"`, loc);
+    } else {
+      productIds.add(product.id);
+    }
+
+    if ("score" in product || "riskScore" in product || "overallScore" in product) {
+      addFinding(errors, "error", "product.score.present",
+        `Product "${product.id}" must not define an overall numeric score`, loc);
+    }
+
+    if (product.publisherProduct === true) {
+      const disclosure = product.disclosure;
+      if (!disclosure || typeof disclosure !== "string" || !disclosure.trim()) {
+        addFinding(errors, "error", "product.publisher.missing_disclosure",
+          `Publisher product "${product.id}" requires disclosure text`, loc);
+      }
+    }
+
+    if (!Array.isArray(product.coverages)) {
+      addFinding(errors, "error", "product.coverages.invalid",
+        `Product "${product.id}" coverages must be an array`, loc);
+      continue;
+    }
+
+    for (let i = 0; i < product.coverages.length; i++) {
+      const coverage = product.coverages[i];
+      const covLoc = `${loc}.coverages.${i}`;
+      if (!coverage || typeof coverage !== "object") {
+        addFinding(errors, "error", "product.coverage.invalid",
+          `Coverage ${i} for product "${product.id}" must be an object`, covLoc);
+        continue;
+      }
+      if (!classIds.has(coverage.attackClassId)) {
+        addFinding(errors, "error", "product.coverage.unknown_attack_class",
+          `Product "${product.id}" references unknown attack class "${coverage.attackClassId}"`, covLoc);
+      }
+      if (!ALLOWED_PRODUCT_COVERAGE.has(coverage.coverage)) {
+        addFinding(errors, "error", "product.coverage.value.invalid",
+          `Product "${product.id}" has invalid coverage "${coverage.coverage}"`, covLoc);
+      }
+      if (!ALLOWED_PRODUCT_EVIDENCE_STATUS.has(coverage.evidenceStatus)) {
+        addFinding(errors, "error", "product.coverage.evidence_status.invalid",
+          `Product "${product.id}" has invalid evidenceStatus "${coverage.evidenceStatus}"`, covLoc);
+      }
+      if (!Array.isArray(coverage.mitigationIds)) {
+        addFinding(errors, "error", "product.coverage.mitigations.invalid",
+          `Product "${product.id}" coverage mitigationIds must be an array`, covLoc);
+      } else {
+        for (const mid of coverage.mitigationIds) {
+          if (!mitById.has(mid)) {
+            addFinding(errors, "error", "product.coverage.unknown_mitigation",
+              `Product "${product.id}" references unknown mitigation "${mid}"`, covLoc);
+          }
+        }
+      }
+      if (!Array.isArray(coverage.evidenceSourceIds)) {
+        addFinding(errors, "error", "product.coverage.sources.invalid",
+          `Product "${product.id}" coverage evidenceSourceIds must be an array`, covLoc);
+      } else if (PRODUCT_EVIDENCE_REQUIRES_SOURCES.has(coverage.evidenceStatus) && coverage.evidenceSourceIds.length === 0) {
+        addFinding(errors, "error", "product.coverage.sources.required",
+          `Product "${product.id}" coverage "${coverage.evidenceStatus}" requires evidenceSourceIds`, covLoc);
+      }
+    }
+  }
+
   const reviewStatus = catalog.independentReview?.status ?? meta.independentReview?.status;
   if (catStatus === "stable" && reviewStatus && reviewStatus !== "complete") {
     addFinding(errors, "error", "catalog.stable.without_review",
@@ -155,6 +267,7 @@ export function evaluateCatalog(catalog, opts = {}) {
     attackClasses: attackClasses.length, incidents: incidents.length,
     mitigations: mitigations.length, validatedMitigations: validatedCount,
     placeholderIncidents: placeholderIncidentCount, vendorClaims: vendorClaims.length,
+    products: products.length,
     errors: errors.length, warnings: warnings.length,
   };
 

@@ -7,13 +7,15 @@
 | `incidents.json` | Structured incidents with primary sources |
 | `mitigations.json` | Mitigations (`validated` requires reproduction package) |
 | `vendor-claims.json` | Unverified vendor claims only |
+| `products.json` | Generated product fixtures from `src/data/products.ts` |
 | `changelog.json` | Catalog version history |
-| `asi-catalog.json` | Combined snapshot (add via local push if missing) |
+| `asi-catalog.json` | Combined generated snapshot |
 
 ## CI
 
 ```bash
-node scripts/check-catalog-invariant.mjs
+npm run assemble:catalog
+node scripts/check-catalog-invariant.mjs --strict
 ```
 
-Gate reads `asi-catalog.json` if present, otherwise assemble from split files in a future revision.
+Gate reads `asi-catalog.json`; run assembly first to refresh it from split files and typed product fixtures.

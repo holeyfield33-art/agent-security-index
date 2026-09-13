@@ -1,0 +1,245 @@
+[
+  {
+    "id": "aletheia-runtime-firewall",
+    "name": "Aletheia Runtime Firewall",
+    "vendor": "Aletheia",
+    "description": "Draft publisher-product fixture for code, import, runtime, and supply-chain control boundaries. This is not a ranking claim.",
+    "deployment": [
+      "local",
+      "self-hosted"
+    ],
+    "categories": [
+      "runtime-firewall",
+      "supply-chain-boundary",
+      "code-import-control"
+    ],
+    "pricingModel": "unknown",
+    "coverages": [
+      {
+        "attackClassId": "AAC-10",
+        "mitigationIds": [
+          "abom-hash",
+          "allowlist-servers",
+          "provenance",
+          "kill-switch"
+        ],
+        "evidenceStatus": "vendor-claimed",
+        "evidenceSourceIds": [],
+        "coverage": "partial",
+        "limitations": [
+          "Fixture only; no independent or reproduced coverage evidence recorded."
+        ]
+      },
+      {
+        "attackClassId": "AAC-16",
+        "mitigationIds": [
+          "stdio-deny",
+          "tool-sandbox",
+          "hash-pin",
+          "abom-hash"
+        ],
+        "evidenceStatus": "vendor-claimed",
+        "evidenceSourceIds": [],
+        "coverage": "partial",
+        "limitations": [
+          "Limited to configured runtime/import boundaries; no universal MCP RCE claim."
+        ]
+      },
+      {
+        "attackClassId": "AAC-36",
+        "mitigationIds": [
+          "least-privilege",
+          "abom-hash",
+          "tool-sandbox",
+          "hash-pin"
+        ],
+        "evidenceStatus": "vendor-claimed",
+        "evidenceSourceIds": [],
+        "coverage": "adjacent",
+        "limitations": [
+          "Addresses enforcement boundary; does not itself prove per-skill least privilege."
+        ]
+      },
+      {
+        "attackClassId": "AAC-37",
+        "mitigationIds": [
+          "abom-hash",
+          "provenance",
+          "tool-sandbox",
+          "content-firewall"
+        ],
+        "evidenceStatus": "vendor-claimed",
+        "evidenceSourceIds": [],
+        "coverage": "adjacent",
+        "limitations": [
+          "Addresses install/runtime control surfaces; malicious-skill detection evidence is not recorded."
+        ]
+      }
+    ],
+    "publisherProduct": true,
+    "disclosure": "Aletheia products are developed by the publisher of Agent Security Index. Their coverage is evaluated using the same published methodology as other products.",
+    "lastReviewedAt": "2026-09-13"
+  },
+  {
+    "id": "aletheia-aegis-provenance",
+    "name": "Aegis Provenance",
+    "vendor": "Aletheia",
+    "description": "Draft publisher-product fixture for context provenance, instruction authority, and egress-linkage boundaries.",
+    "deployment": [
+      "local",
+      "self-hosted"
+    ],
+    "categories": [
+      "provenance",
+      "instruction-authority",
+      "egress-linkage"
+    ],
+    "pricingModel": "unknown",
+    "coverages": [
+      {
+        "attackClassId": "AAC-02",
+        "mitigationIds": [
+          "rag-validate",
+          "untrusted-io",
+          "output-dlp",
+          "trajectory"
+        ],
+        "evidenceStatus": "vendor-claimed",
+        "evidenceSourceIds": [],
+        "coverage": "adjacent",
+        "limitations": [
+          "Targets provenance and egress linkage; does not claim full indirect-injection prevention."
+        ]
+      },
+      {
+        "attackClassId": "AAC-08",
+        "mitigationIds": [
+          "provenance",
+          "least-privilege",
+          "mtls-a2a",
+          "hitl"
+        ],
+        "evidenceStatus": "vendor-claimed",
+        "evidenceSourceIds": [],
+        "coverage": "partial",
+        "limitations": [
+          "Depends on deployment integration with identity and tool authorization boundaries."
+        ]
+      },
+      {
+        "attackClassId": "AAC-12",
+        "mitigationIds": [
+          "untrusted-io",
+          "trajectory",
+          "content-firewall",
+          "schema-gov"
+        ],
+        "evidenceStatus": "vendor-claimed",
+        "evidenceSourceIds": [],
+        "coverage": "adjacent",
+        "limitations": [
+          "Tracks instruction authority and flow; no reproduced prevention result recorded."
+        ]
+      },
+      {
+        "attackClassId": "AAC-15",
+        "mitigationIds": [
+          "least-privilege",
+          "output-dlp",
+          "schema-gov",
+          "untrusted-io"
+        ],
+        "evidenceStatus": "vendor-claimed",
+        "evidenceSourceIds": [],
+        "coverage": "adjacent",
+        "limitations": [
+          "Helps expose context/egress linkage; does not prove all oversharing is blocked."
+        ]
+      }
+    ],
+    "publisherProduct": true,
+    "disclosure": "Aletheia products are developed by the publisher of Agent Security Index. Their coverage is evaluated using the same published methodology as other products.",
+    "lastReviewedAt": "2026-09-13"
+  },
+  {
+    "id": "aletheia-lite",
+    "name": "Aletheia Lite",
+    "vendor": "Aletheia",
+    "description": "Draft publisher-product fixture for capability authorization, confused-deputy, and consequential-action boundaries.",
+    "deployment": [
+      "local",
+      "self-hosted"
+    ],
+    "categories": [
+      "capability-authorization",
+      "confused-deputy",
+      "consequential-action"
+    ],
+    "pricingModel": "unknown",
+    "coverages": [
+      {
+        "attackClassId": "AAC-07",
+        "mitigationIds": [
+          "least-privilege",
+          "abom-hash",
+          "capability-attest",
+          "kill-switch"
+        ],
+        "evidenceStatus": "vendor-claimed",
+        "evidenceSourceIds": [],
+        "coverage": "adjacent",
+        "limitations": [
+          "Fixture only; deployment-specific authorization evidence remains unknown."
+        ]
+      },
+      {
+        "attackClassId": "AAC-08",
+        "mitigationIds": [
+          "provenance",
+          "least-privilege",
+          "mtls-a2a",
+          "hitl"
+        ],
+        "evidenceStatus": "vendor-claimed",
+        "evidenceSourceIds": [],
+        "coverage": "adjacent",
+        "limitations": [
+          "Identifies confused-deputy boundary; no third-party evaluation recorded."
+        ]
+      },
+      {
+        "attackClassId": "AAC-25",
+        "mitigationIds": [
+          "least-privilege",
+          "provenance",
+          "hitl",
+          "mtls-a2a"
+        ],
+        "evidenceStatus": "vendor-claimed",
+        "evidenceSourceIds": [],
+        "coverage": "adjacent",
+        "limitations": [
+          "Applies to capability boundaries only where cross-agent authorization is integrated."
+        ]
+      },
+      {
+        "attackClassId": "AAC-38",
+        "mitigationIds": [
+          "hitl",
+          "least-privilege",
+          "trajectory",
+          "kill-switch"
+        ],
+        "evidenceStatus": "vendor-claimed",
+        "evidenceSourceIds": [],
+        "coverage": "partial",
+        "limitations": [
+          "Consequential-action gates are scoped to configured actions; no universal misuse claim."
+        ]
+      }
+    ],
+    "publisherProduct": true,
+    "disclosure": "Aletheia products are developed by the publisher of Agent Security Index. Their coverage is evaluated using the same published methodology as other products.",
+    "lastReviewedAt": "2026-09-13"
+  }
+]

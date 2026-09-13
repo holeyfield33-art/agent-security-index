@@ -28,6 +28,27 @@ function loadJsonChunks(prefix) {
   return out;
 }
 
+function normalizeMitigationStatus(status) {
+  if (status === "established_practice") return "established-practice";
+  if (status === "paper_evaluated") return "paper-evaluated";
+  if (status === "aletheia_tested") return "aletheia-tested";
+  return status;
+}
+
+function loadProductsFromTs() {
+  const src = readFileSync(join(root, "src/data/products.ts"), "utf8");
+  const disclosureMatch = src.match(/export const PUBLISHER_PRODUCT_DISCLOSURE\s*=\s*("[\s\S]*?");/);
+  const productsMatch = src.match(/export const PRODUCTS(?::[\s\S]*?)?=\s*(\[[\s\S]*\]);?\s*$/);
+  if (!disclosureMatch || !productsMatch) {
+    throw new Error("Could not parse src/data/products.ts");
+  }
+  const disclosure = Function(`"use strict"; return (${disclosureMatch[1]});`)();
+  return Function(
+    "PUBLISHER_PRODUCT_DISCLOSURE",
+    `"use strict"; return (${productsMatch[1]});`,
+  )(disclosure);
+}
+
 function loadClassesFromTs() {
   const parts = readdirSync(partsDir)
     .filter((n) => /^classes-part-\d+\.ts$/.test(n))
@@ -118,8 +139,11 @@ if (fromTs.length >= attacks.length && fromTs.length > 0) {
 assertCanonicalClasses(attacks, declaredClassCount);
 
 const incidents = loadJsonChunks("incidents");
-const mitigations = JSON.parse(readFileSync(join(dir, "mitigations.json"), "utf8"));
+const mitigations = JSON.parse(readFileSync(join(dir, "mitigations.json"), "utf8"))
+  .map((m) => ({ ...m, status: normalizeMitigationStatus(m.status) }));
 const vendorClaims = JSON.parse(readFileSync(join(dir, "vendor-claims.json"), "utf8"));
+const products = loadProductsFromTs();
+writeFileSync(join(dir, "products.json"), JSON.stringify(products, null, 2));
 const changelog = JSON.parse(readFileSync(join(dir, "changelog.json"), "utf8"));
 
 const meta = {
@@ -137,6 +161,7 @@ const exp = {
   incidents,
   mitigations,
   vendorClaims,
+  products,
   changelog,
 };
 writeFileSync(join(dir, "asi-catalog.json"), JSON.stringify(exp));
