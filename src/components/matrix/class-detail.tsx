@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { ATTACK_RISK_GUIDANCE } from "@/data/methodology";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Sheet,
@@ -35,6 +36,7 @@ export function ClassDetail({ attackClass, onClose }: Props) {
               </p>
               <SheetTitle>{c.name}</SheetTitle>
               <SheetDescription>{c.summary}</SheetDescription>
+              <p className="mt-2 text-xs leading-5 text-muted">{ATTACK_RISK_GUIDANCE}</p>
               <div className="mt-3 flex flex-wrap gap-1.5">
                 <ImpactBadge impact={c.impact} />
                 <ComplexityBadge complexity={c.complexity} />

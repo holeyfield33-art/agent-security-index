@@ -1,4 +1,4 @@
-import type { AttackEvidenceLevel, EvidenceTier, ProductCoverage, SourceType } from "./types.ts";
+import type { AttackEvidenceLevel, EvidenceTier, ProductCoverage, ProductEvidenceStatus, SourceType } from "./types.ts";
 
 export type MethodologySection = {
   id: string;
@@ -12,7 +12,16 @@ export type MethodologyTerm<T extends string> = {
   meaning: string;
 };
 
+export const ASI_ROLE = "Agent Security Index is a research and comparison publication. It is not an automated security control, allowlist, denylist, certification authority, procurement gate, or substitute for local testing, sandboxing, least privilege, runtime enforcement, or human review.";
+
+export const PRODUCT_DECISION_GUIDANCE = "Product coverage records describe relationships supported by the linked evidence, where available, under stated assumptions. Vendor claims and missing evidence remain explicitly labeled. Do not use these records as the sole basis for procurement, deployment, or automated allow/deny decisions.";
+
+export const ATTACK_RISK_GUIDANCE = "The riskScore is an attack-class exposure/risk heuristic only. It is not a product score, vendor ranking, certification score, evidence confidence, mitigation effectiveness, or procurement recommendation.";
+
 export const METHODOLOGY_SECTIONS: MethodologySection[] = [
+  { id: "what-asi-is", title: "What ASI is / is not", body: ASI_ROLE },
+  { id: "decision-use", title: "Using coverage records in decisions", body: PRODUCT_DECISION_GUIDANCE },
+  { id: "layered-defense", title: "Use layered defenses", body: "No catalog, scanner, index, or security product should be treated as sufficient by itself for high-assurance agent deployments. Combine artifact review, least privilege, sandboxing, authorization controls, runtime monitoring, and human approval where appropriate. This is deployment guidance, not an additional scoring criterion." },
   {
     id: "attack-classes-are-not-cves",
     title: "Attack classes are not CVEs",
@@ -29,7 +38,7 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: "vendor-claims",
     title: "Vendor claims are not proof",
     body:
-      "Vendor and publisher claims are recorded as claims until independent documentation, third-party evaluation, reproduction, or Aletheia testing changes their status.",
+      "Vendor and publisher claims are recorded as claims. Vendor documentation may support documented status; it is not independent evaluation. Third-party evaluation, reproduction, and Aletheia testing each require their own supporting evidence.",
   },
   {
     id: "separate-evidence-tracks",
@@ -59,8 +68,16 @@ export const METHODOLOGY_SECTIONS: MethodologySection[] = [
     id: "attack-risk-score",
     title: "Attack risk score is class-only",
     body:
-      "The matrix riskScore is an attack-class exposure signal for sorting and presentation. It is not a product score, vendor ranking, evidence confidence, or mitigation-effectiveness measure.",
+      ATTACK_RISK_GUIDANCE,
   },
+];
+
+export const PRODUCT_EVIDENCE_MEANINGS: MethodologyTerm<ProductEvidenceStatus>[] = [
+  { value: "vendor-claimed", label: "Vendor claimed", meaning: "A claim attributed to the vendor or publisher; independent verification is not implied." },
+  { value: "documented", label: "Documented", meaning: "Linked vendor documentation supports the stated relationship; this is not independent validation of effectiveness." },
+  { value: "third-party-evaluated", label: "Third-party evaluated", meaning: "An independent evaluation is linked. Its tested scope and limitations still apply." },
+  { value: "reproduced", label: "Reproduced", meaning: "A public reproduction artifact supports the relationship under the stated test conditions." },
+  { value: "aletheia-tested", label: "Aletheia tested", meaning: "An Aletheia test artifact supports the relationship. Publisher testing is not independent certification." },
 ];
 
 export const MITIGATION_STATUS_MEANINGS = [

@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { ATTACK_RISK_GUIDANCE } from "@/data/methodology";
 import { Button } from "@/components/ui/button";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ATTACK_CLASSES, EMPTY_FILTERS, filterClasses, type Filters } from "@/lib/matrix/catalog";
@@ -92,6 +93,7 @@ export function MatrixApp() {
 
         <main className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 lg:px-8">
           <KpiStrip classes={visible} />
+          <p className="text-xs leading-5 text-muted">{ATTACK_RISK_GUIDANCE}</p>
           {view === "matrix" ? (
             <MatrixTable classes={visible} selectedId={selectedId} onSelect={setSelectedId} />
           ) : null}

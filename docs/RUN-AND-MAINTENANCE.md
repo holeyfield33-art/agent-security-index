@@ -1,7 +1,7 @@
 # ASI run and maintenance manual
 
 Repository: `holeyfield33-art/agent-security-index`  
-Reviewed: 2026-09-13  
+Reviewed: 2026-09-14
 Publication status: `0.2.0-draft`; independent review remains pending.
 
 ## 1. Operating contract
@@ -11,6 +11,12 @@ ASI is a static React/TypeScript research publication built by Vite. It has no b
 The sealed data set contains 40 attack classes, 23 incidents, 28 sources, 23 mitigations, and 6 product profiles. No mitigation is marked validated. Publisher product evidence remains vendor-claimed. These are snapshot counts, not permanent validation targets for future authorized research additions.
 
 Source existence is not source quality. A working URL does not demonstrate that a product prevents an attack. Public availability does not make this draft independently reviewed or certified.
+
+Trust positioning is authored in `src/data/methodology.ts`: ASI's publication role, product decision-use guidance, layered defenses and risk-score limitations. Keep the decision-use guidance visible on Products, product detail and Methodology. Product records must not be used alone for procurement, deployment or automated allow/deny decisions. ASI itself does not enforce those decisions.
+
+ASI is not an automated security control, allowlist, denylist, certification authority or procurement gate. It does not replace local testing, sandboxing, least privilege, runtime enforcement or human review. Attack riskScore is an attack-class exposure/risk heuristic, not a product score, vendor ranking, certification score, evidence confidence, mitigation effectiveness or procurement recommendation.
+
+Product details show the existing `lastReviewedAt` or "Review date not recorded". Source displays show `publishedAt` and `accessedAt` when present; access is not a product review. Never refresh a review date merely because a build or deployment ran. Evidence labels and unknown coverage must remain distinct; absence of independent evidence must remain visible.
 
 Feature development is paused after this addition. The next work is domain selection, deployment, production smoke testing, and public launch. This manual does not itself deploy or authorize an automatic release.
 

@@ -4,6 +4,10 @@ import { Button } from "@/components/ui/button";
 import { MatrixApp } from "@/components/matrix/matrix-app";
 import {
   ATTACK_EVIDENCE_LEVEL_MEANINGS,
+  ASI_ROLE,
+  ATTACK_RISK_GUIDANCE,
+  PRODUCT_DECISION_GUIDANCE,
+  PRODUCT_EVIDENCE_MEANINGS,
   EVIDENCE_TIER_MEANINGS,
   METHODOLOGY_SECTIONS,
   MITIGATION_STATUS_MEANINGS,
@@ -192,7 +196,7 @@ function HomePage({ incidents }: { incidents: Incident[] }) {
             <h1>More autonomy.<br />More exposure.<br /><em>Better evidence.</em></h1>
             <p className="hero-description">A research index of how AI agents fail, which controls help, and where product claims meet the evidence.</p>
             <div className="hero-actions"><a className="primary-link" href="#/matrix">Explore the attack matrix <span>↗</span></a><a className="text-link" href="#/methodology">Our methodology <span>↗</span></a></div>
-            <p className="hero-note">Open taxonomy. Traceable sources. Explicit limitations.</p>
+            <p className="hero-note">Research and comparison. Not certification or an automated security control.</p>
           </div>
           <aside className="index-plate" aria-label="Attack class index preview">
             <div className="plate-heading"><span>FIG. 01 / ATTACK SURFACE</span><span>AAC</span></div>
@@ -220,9 +224,7 @@ function MethodologyPage() {
     <>
       <PageHeader eyebrow="Methodology" title="How ASI represents evidence">
         <p>
-          ASI is a static research index for agent attack classes, incidents, mitigations, and
-          product coverage claims. It is not a scanner, certification program, vendor ranking, or
-          replacement for product-specific security review.
+          {ASI_ROLE}
         </p>
       </PageHeader>
       <Content className="grid gap-6">
@@ -239,6 +241,7 @@ function MethodologyPage() {
         <TermSection title="Source types" terms={SOURCE_TYPE_HIERARCHY} />
         <TermSection title="Mitigation statuses" terms={MITIGATION_STATUS_MEANINGS} />
         <TermSection title="Product coverage meanings" terms={PRODUCT_COVERAGE_MEANINGS} />
+        <TermSection title="Product evidence statuses" terms={PRODUCT_EVIDENCE_MEANINGS} />
       </Content>
     </>
   );
@@ -274,9 +277,9 @@ function ProductsPage() {
     <>
       <PageHeader eyebrow="Products" title="Product coverage directory">
         <p>
-          Product entries are fixtures for coverage semantics. They are not ranked, scored, or
-          treated as independent proof.
+          Product coverage is presented with its evidence status and limitations. Products are not ranked or scored.
         </p>
+        <p className="mt-3">{PRODUCT_DECISION_GUIDANCE}</p>
       </PageHeader>
       <Content className="grid gap-3">
         {PRODUCTS.map((product) => {
@@ -324,6 +327,7 @@ function ProductDetailPage({ id }: { id: string }) {
     <>
       <PageHeader eyebrow="Product detail" title={product.name}>
         <p>{product.description}</p>
+        <p className="mt-3">{PRODUCT_DECISION_GUIDANCE}</p>
       </PageHeader>
       <Content className="grid gap-5">
         <section className="rounded-md bg-surface p-4 shadow-border">
@@ -331,7 +335,7 @@ function ProductDetailPage({ id }: { id: string }) {
             <Info label="Vendor" value={product.vendor} />
             <Info label="Pricing" value={product.pricingModel} />
             <Info label="Deployment" value={product.deployment.join(", ")} />
-            <Info label="Last reviewed" value={product.lastReviewedAt} />
+            <Info label="Last reviewed" value={product.lastReviewedAt || "Review date not recorded"} />
           </dl>
           <MetaList values={product.categories} />
           {product.publisherProduct ? (
@@ -406,6 +410,8 @@ function SourceLinks({
               <span className="text-subtle">
                 ({source.sourceType}; {source.publisher})
               </span>
+              {source.publishedAt ? <span className="block text-xs text-muted">Published: <time dateTime={source.publishedAt}>{source.publishedAt}</time></span> : null}
+              {source.accessedAt ? <span className="block text-xs text-muted">Source accessed: <time dateTime={source.accessedAt}>{source.accessedAt}</time> (not a product review date)</span> : null}
             </li>
           ))}
         </ul>
@@ -530,8 +536,7 @@ function AttackDetailPage({
           </div>
           {attack.aka ? <p className="mt-3 text-sm text-subtle">Legacy alias: {attack.aka}</p> : null}
           <p className="mt-4 rounded-md border border-border bg-elevated p-3 text-sm leading-6 text-muted">
-            riskScore is an attack exposure/risk heuristic. It is not product quality, evidence
-            confidence, or mitigation effectiveness.
+            {ATTACK_RISK_GUIDANCE}
           </p>
         </section>
         <section className="grid gap-3 md:grid-cols-2">
