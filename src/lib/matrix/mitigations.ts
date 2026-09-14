@@ -1,6 +1,15 @@
 import type { Mitigation } from "./types";
 
 export const MITIGATIONS: Record<string, Mitigation> = {
+  "control-plane-isolation": {
+    id: "control-plane-isolation",
+    name: "Control-plane isolation",
+    summary: "Keep administrative mutation outside the governed agent's trust domain. The workload cannot widen its own sandbox mode, approval policy, capability grants, privilege policy, or security-control configuration.",
+    status: "established-practice",
+    validated: false,
+    sourceIds: ["src-deepseek-harness-cve-2026-82533"],
+    appliesTo: ["AAC-29", "AAC-07"],
+  },
   "abom-hash": {
     id: "abom-hash",
     name: "ABOM hashing",

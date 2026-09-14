@@ -1,0 +1,79 @@
+[
+  {
+    "id": "INC-401",
+    "name": "DeepSeek Harness sandbox self-disable via local control plane",
+    "date": "2026-09-08",
+    "year": 2026,
+    "summary": "A confined agent could reach a local HTTP control API whose authentication trusted a client-supplied Host header. An agent influenced by untrusted content could use privileged operations to widen sandbox and approval state to danger-full-access, escaping its intended confinement.",
+    "affectedProduct": "DeepSeek Harness",
+    "affectedVersions": "< 0.1.2-alpha.1",
+    "fixedIn": "0.1.2-alpha.1",
+    "attackClassIds": [
+      "AAC-29",
+      "AAC-07"
+    ],
+    "cveIds": [
+      "CVE-2026-82533"
+    ],
+    "evidenceTier": "T2_field_incident",
+    "confidence": "high",
+    "primarySource": {
+      "title": "DeepSeek Harness < 0.1.2-alpha.1 Authentication Bypass via Host Header Spoofing",
+      "url": "https://www.vulncheck.com/advisories/deepseek-harness-alpha-1-authentication-bypass-via-host-header-spoofing",
+      "kind": "primary-disclosure",
+      "accessed": "2026-09-13"
+    },
+    "primarySourceId": "src-deepseek-harness-cve-2026-82533",
+    "additionalSources": [
+      {
+        "title": "DeepSeek Harness sandbox subsystem documentation",
+        "url": "https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/subsystems/sandbox.md",
+        "kind": "vendor-advisory",
+        "accessed": "2026-09-13"
+      },
+      {
+        "title": "DeepSeek Harness Flaw Let AI Agents Disable Their Own File Sandbox Without Approval",
+        "url": "https://thehackernews.com/2026/09/deepseek-harness-flaw-let-ai-agents.html",
+        "kind": "credible-secondary",
+        "accessed": "2026-09-13"
+      }
+    ],
+    "additionalSourceIds": [
+      "src-deepseek-harness-sandbox-docs",
+      "src-deepseek-harness-thn"
+    ],
+    "mitigationIds": [
+      "control-plane-isolation"
+    ],
+    "resolution": "Historical vulnerability. VulnCheck identifies versions before 0.1.2-alpha.1 as affected and references the fixed release and patch. The fix boundary is 0.1.2-alpha.1; no claim about npm publication order is made.",
+    "classificationNotes": "Primary AAC-29: the confined workload escaped its sandbox through the control API. Secondary AAC-07: it widened its own approved execution authority. These are the current catalog mappings, not the unpublished AAC-43 or unrelated AAC-18.",
+    "architecturalLesson": "A security boundary must not be mutable from within the authority domain it constrains. Sandbox configuration, approval policy, capability grants, privilege state, and administrative APIs require authority outside the governed workload. Companion case INC-402 crossed tenant boundaries through shared infrastructure. Security authority and mutable shared state must remain identity-scoped outside the governed workload."
+  },
+  {
+    "id": "INC-402",
+    "name": "ChatGPT cross-account shared-state command channel",
+    "date": "2026-09-08",
+    "year": 2026,
+    "summary": "Check Point Research showed that otherwise separated ChatGPT code-execution containers could exchange values through mutable metadata on a shared internal package/Artifactory service. This was not the user's operating-system clipboard. The state formed a bidirectional cross-account channel carrying attacker tasks; the victim session could act with its own available capabilities. The demonstration retrieved Gmail data through the victim's connected account.",
+    "affectedProduct": "ChatGPT",
+    "attackClassIds": [
+      "AAC-08"
+    ],
+    "cveIds": [],
+    "evidenceTier": "T1_lab_poc",
+    "confidence": "high",
+    "primarySource": {
+      "title": "The Shared Clipboard Inside the Sandbox: Cross-Account Data Leakage in ChatGPT",
+      "url": "https://research.checkpoint.com/2026/the-shared-clipboard-inside-the-sandbox-cross-account-data-leakage-in-chatgpt/",
+      "kind": "primary-disclosure",
+      "accessed": "2026-09-13"
+    },
+    "primarySourceId": "src-chatgpt-shared-state-checkpoint",
+    "mitigationIds": [
+      "isolation"
+    ],
+    "resolution": "Check Point disclosed the findings to OpenAI. According to Check Point Research, OpenAI confirmed that the internal Artifactory instance involved in the research had been decommissioned. This is a historical research disclosure, not a claim that ChatGPT remains vulnerable.",
+    "classificationNotes": "AAC-08 captures the victim session acting as a deputy for another principal. The underlying failure was tenant isolation of mutable shared state. The current taxonomy has no dedicated tenant-state class; no additional class, prompt-injection mapping, A2A protocol, or host sandbox escape is inferred.",
+    "architecturalLesson": "Mutable shared state must never allow one security principal to write instructions or trusted state into another principal's execution context without explicit authorization and provenance. Companion case INC-401 let the governed agent modify its own control boundary; this case crossed identities through shared infrastructure. Security authority and mutable shared state must remain identity-scoped outside the governed workload."
+  }
+]

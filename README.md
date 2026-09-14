@@ -15,7 +15,7 @@ This is a **draft research product**, not a scanner, certification, or peer-revi
 | `types.ts` | Lifecycle, protocol, AttackClass shapes |
 | `classes.ts` | Canonical runtime index; normalizes legacy AX labels to AAC primary IDs |
 | `classes-part-1.ts` … `classes-part-14.ts` | Source fragments for 40 classes; some legacy AX labels remain internally |
-| `mitigations.ts` | 22 controls (`validated: false` pending independent review) |
+| `mitigations.ts` | 23 controls (`validated: false` pending independent review) |
 | `catalog.ts` | Filters, high-risk, stats |
 
 **Published taxonomy:** `AAC-01 … AAC-40`.
@@ -63,7 +63,7 @@ Legacy `AX-*` labels are retained only as aliases/source-fragment identifiers du
 ## Local development
 
 ```bash
-npm install
+npm ci --no-audit --no-fund
 npm run typecheck
 npm test
 npm run build
@@ -77,7 +77,9 @@ npm run check:catalog
 npm run check:catalog:strict
 ```
 
-`check:catalog:strict` is expected to fail while draft incident records still contain placeholder primary-source URLs. Those placeholders must be resolved before the catalog is promoted to `public-review` or `stable`.
+`check:catalog:strict` must pass before release. All incident primary sources resolve through the canonical source registry; placeholder URLs are not accepted.
+
+See [Run and maintenance manual](docs/RUN-AND-MAINTENANCE.md) for daily operation, research updates, release gates, deployment, recovery, and the authoritative AAC mapping table.
 
 ## Disclosure
 

@@ -1,5 +1,82 @@
 [
   {
+    "id": "src-deepseek-harness-cve-2026-82533",
+    "title": "DeepSeek Harness < 0.1.2-alpha.1 Authentication Bypass via Host Header Spoofing",
+    "sourceType": "primary-disclosure",
+    "publisher": "VulnCheck",
+    "url": "https://www.vulncheck.com/advisories/deepseek-harness-alpha-1-authentication-bypass-via-host-header-spoofing",
+    "publishedAt": "2026-09-08",
+    "accessedAt": "2026-09-13",
+    "supports": {
+      "attackClassIds": [
+        "AAC-29",
+        "AAC-07"
+      ],
+      "mitigationIds": [
+        "control-plane-isolation"
+      ],
+      "productIds": []
+    }
+  },
+  {
+    "id": "src-deepseek-harness-sandbox-docs",
+    "title": "DeepSeek Harness sandbox subsystem documentation",
+    "sourceType": "vendor-advisory",
+    "publisher": "DeepSeek",
+    "url": "https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/subsystems/sandbox.md",
+    "accessedAt": "2026-09-13",
+    "notes": "Official architectural context; not independent evidence of mitigation effectiveness or a version-specific reproduction.",
+    "supports": {
+      "attackClassIds": [
+        "AAC-29",
+        "AAC-07"
+      ],
+      "mitigationIds": [],
+      "productIds": []
+    }
+  },
+  {
+    "id": "src-deepseek-harness-thn",
+    "title": "DeepSeek Harness Flaw Let AI Agents Disable Their Own File Sandbox Without Approval",
+    "sourceType": "credible-secondary",
+    "publisher": "The Hacker News",
+    "url": "https://thehackernews.com/2026/09/deepseek-harness-flaw-let-ai-agents.html",
+    "publishedAt": "2026-09-09",
+    "authors": [
+      "Swati Khandelwal"
+    ],
+    "accessedAt": "2026-09-13",
+    "supports": {
+      "attackClassIds": [
+        "AAC-29",
+        "AAC-07"
+      ],
+      "mitigationIds": [],
+      "productIds": []
+    }
+  },
+  {
+    "id": "src-chatgpt-shared-state-checkpoint",
+    "title": "The Shared Clipboard Inside the Sandbox: Cross-Account Data Leakage in ChatGPT",
+    "sourceType": "primary-disclosure",
+    "publisher": "Check Point Research",
+    "url": "https://research.checkpoint.com/2026/the-shared-clipboard-inside-the-sandbox-cross-account-data-leakage-in-chatgpt/",
+    "publishedAt": "2026-09-08",
+    "authors": [
+      "Alexey Bukhteyev"
+    ],
+    "accessedAt": "2026-09-13",
+    "supports": {
+      "attackClassIds": [
+        "AAC-08"
+      ],
+      "mitigationIds": [
+        "isolation"
+      ],
+      "productIds": []
+    }
+  },
+  {
     "id": "src-promptfoo-owasp-agentic-ai",
     "title": "OWASP Top 10 for Agentic Applications",
     "sourceType": "vendor-advisory",

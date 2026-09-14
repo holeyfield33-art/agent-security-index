@@ -416,6 +416,17 @@ function SourceLinks({
   );
 }
 
+function IncidentContext({ incident }: { incident: Incident }) {
+  return <div className="mt-3 grid gap-2 text-sm leading-6 text-muted">
+    <div className="flex flex-wrap gap-2">{incident.attackClassIds.map((id, index) => <a key={id} href={`#/attacks/${id}`} className="text-accent hover:underline">{index === 0 ? "Primary" : "Secondary"}: {id}</a>)}{incident.cveIds.map(id => <Badge key={id}>{id}</Badge>)}</div>
+    {incident.affectedVersions ? <p>Affected versions: {incident.affectedVersions}{incident.fixedIn ? `; fixed in ${incident.fixedIn}.` : ""}</p> : null}
+    {incident.resolution ? <p><strong>Resolution / current status: </strong>{incident.resolution}</p> : null}
+    {incident.classificationNotes ? <p><strong>Classification: </strong>{incident.classificationNotes}</p> : null}
+    {incident.architecturalLesson ? <p><strong>Architectural lesson: </strong>{incident.architecturalLesson}</p> : null}
+    {incident.mitigationIds?.map(id => { const mitigation = MITIGATION_LIST.find(item => item.id === id); return mitigation ? <p key={id}><strong>Control: {mitigation.name}. </strong>{mitigation.summary}</p> : null; })}
+  </div>;
+}
+
 function IncidentsPage({
   incidents,
   sources,
@@ -453,8 +464,9 @@ function IncidentsPage({
                   <h2 className="mt-1 text-lg font-medium text-fg">{incident.name}</h2>
                   <p className="mt-1 text-sm leading-6 text-muted">{incident.summary}</p>
                 </div>
-                <Badge>{incident.year}</Badge>
+                <Badge>{incident.date}</Badge>
               </div>
+              <IncidentContext incident={incident} />
               {incident.primarySourceId ? (
                 <SourceLinks
                   title="Primary source"
@@ -474,6 +486,7 @@ function IncidentsPage({
                   </a>
                 </div>
               )}
+              {incident.additionalSourceIds?.length ? <SourceLinks title="Additional sources" sourceIds={incident.additionalSourceIds} sourceById={sourceById} /> : null}
             </article>
           ))}
         </div>
@@ -540,6 +553,16 @@ function AttackDetailPage({
           empty="No incidents are currently attached."
           records={attack.incidents.map((incident) => `${incident.name} (${incident.year}) - ${incident.summary}`)}
         />
+        {relatedIncidents.map((incident) => (
+          <article key={incident.id} className="rounded-md bg-surface p-4 shadow-border">
+            <p className="font-mono text-xs text-subtle">{incident.id} · {incident.date}</p>
+            <h2 className="mt-1 text-lg font-medium">{incident.name}</h2>
+            <p className="mt-2 text-sm leading-6 text-muted">{incident.summary}</p>
+            <IncidentContext incident={incident} />
+            <SourceLinks title="Primary source" sourceIds={incident.primarySourceId ? [incident.primarySourceId] : []} sourceById={sourceById} />
+            {incident.additionalSourceIds?.length ? <SourceLinks title="Additional sources" sourceIds={incident.additionalSourceIds} sourceById={sourceById} /> : null}
+          </article>
+        ))}
         {relatedSourceIds.length ? (
           <section className="rounded-md bg-surface p-4 shadow-border">
             <h2 className="text-xl font-medium text-fg">Resolved source records</h2>

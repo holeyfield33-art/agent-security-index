@@ -233,9 +233,20 @@ export function evaluateCatalog(catalog, opts = {}) {
     }
   }
 
+  const incidentIds = new Set();
   for (const inc of incidents) {
     const loc = `incidents.${inc.id ?? inc.name}`;
-    if (inc.primarySourceId && !sourceById.has(inc.primarySourceId)) {
+    if (!inc.id || incidentIds.has(inc.id)) {
+      addFinding(errors, "error", "incident.id.invalid", `Missing or duplicate incident ID: ${inc.id}`, loc);
+    }
+    incidentIds.add(inc.id);
+    for (const id of inc.attackClassIds ?? []) {
+      if (!classIds.has(id)) addFinding(errors, "error", "incident.attack.unknown", `Incident ${inc.id} references unknown class ${id}`, loc);
+    }
+    for (const id of inc.mitigationIds ?? []) {
+      if (!mitById.has(id)) addFinding(errors, "error", "incident.mitigation.unknown", `Incident ${inc.id} references unknown mitigation ${id}`, loc);
+    }
+    if (!inc.primarySourceId || !sourceById.has(inc.primarySourceId)) {
       addFinding(errors, "error", "incident.primary_source_id.unknown",
         `Incident "${inc.id}" references unknown primarySourceId "${inc.primarySourceId}"`, loc);
     }

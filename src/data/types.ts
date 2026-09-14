@@ -127,6 +127,10 @@ export type Incident = {
   affectedProduct?: string;
   affectedVersions?: string;
   fixedIn?: string;
+  mitigationIds?: MitigationId[];
+  resolution?: string;
+  classificationNotes?: string;
+  architecturalLesson?: string;
   attackClassIds: AttackClassId[];
   cveIds: string[];
   evidenceTier: EvidenceTier;
