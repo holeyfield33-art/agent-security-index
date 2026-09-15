@@ -15,6 +15,7 @@ import {
   SOURCE_TYPE_HIERARCHY,
 } from "@/data/methodology";
 import { PRODUCTS } from "@/data/products";
+import { RESEARCH_PUBLICATIONS } from "@/data/research";
 import { SOURCES } from "@/data/sources";
 import type { Incident, Source, SourceId } from "@/data/types";
 import { MITIGATION_LIST } from "@/lib/matrix/mitigations";
@@ -591,9 +592,34 @@ function ResearchPage() {
   return (
     <>
       <PageHeader eyebrow="Research" title="Research publications">
-        <p>Research publications coming next.</p>
+        <p>Authored studies with explicit scope, attribution, and evidence limitations. Drafts are labeled separately from completed research.</p>
       </PageHeader>
-      <Content />
+      <Content className="space-y-8">
+        {RESEARCH_PUBLICATIONS.map((publication) => (
+          <article key={publication.id} aria-labelledby={publication.id} className="max-w-3xl">
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="font-mono text-xs text-subtle">{publication.id}</p>
+              <Badge>{publication.status}</Badge>
+              <Badge>{publication.evidenceStatus}</Badge>
+            </div>
+            <h2 id={publication.id} className="mt-4 text-2xl font-medium tracking-tight text-fg">{publication.title}</h2>
+            <p className="mt-2 text-lg leading-7 text-muted">{publication.subtitle}</p>
+            <p className="mt-3 text-xs text-subtle">Research affiliation: {publication.affiliation}</p>
+            <p className="mt-6 text-sm leading-7 text-muted">{publication.summary}</p>
+            <h3 className="mt-6 text-base font-medium text-fg">Author-reported finding</h3>
+            <p className="mt-2 text-base leading-7 text-fg">{publication.coreClaim}</p>
+            <p className="mt-3 text-sm leading-7 text-muted">{publication.qualification}</p>
+            <h3 className="mt-6 text-base font-medium text-fg">Scope and publication status</h3>
+            <p className="mt-2 text-sm leading-7 text-muted">{publication.scope}</p>
+            <p className="mt-3 text-sm leading-7 text-muted">{publication.safetyNote}</p>
+            <nav aria-label={`${publication.id} reading links`} className="mt-6 flex flex-wrap gap-x-6 gap-y-3 border-t border-border pt-5">
+              {publication.links.map((link) => (
+                <a key={link.href} href={link.href} className="text-sm text-accent underline underline-offset-4 hover:text-fg">{link.label}</a>
+              ))}
+            </nav>
+          </article>
+        ))}
+      </Content>
     </>
   );
 }

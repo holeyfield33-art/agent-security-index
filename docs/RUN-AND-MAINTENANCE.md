@@ -116,6 +116,21 @@ Confirm this table against the live source before each new research task. AAC-41
 | AAC-39 | System Prompt Extraction |
 | AAC-40 | Telemetry Blind Spots |
 
+## Research publications across repositories
+
+The `#/research` surface reads publication metadata from `src/data/research.ts`. The canonical article for ASI-RESEARCH-001 lives in the separate `holeyfield33-art/ASI-Research-v1` repository. Do not hand-copy the full article into ASI or fetch GitHub content at runtime.
+
+For a research revision:
+
+1. Edit the research repository's `RESEARCH.md`, then align its README, methodology, attribution, and evidence register. Keep author reports distinct from independently supported findings.
+2. Verify source content and source roles, not only URL availability. Review redacted evidence and record unavailable test metadata honestly.
+3. Do not promote a draft, add a PDF link, create an incident/AAC mapping, or upgrade product evidence solely because the article exists. Final PDF generation requires explicit text approval and evidence review.
+4. Run `git diff --check` in the research repository and verify every local Markdown link and evidence file. No npm build is required for this Markdown-only repository.
+5. Obtain approval, commit and publish the research changes first. Check that the remote article and new evidence-register path resolve. Then update ASI metadata and run its complete release gate and desktop/mobile research-route smoke test.
+6. Deploy ASI only after the linked research revision is public. Refresh `#/research` on production and open every reading link. A successful local build is not a deployment.
+
+The initial Research 001 draft leaves all catalog counts, product evidence, and AAC definitions unchanged. Placeholder evidence is never a completed artifact. Keep raw sensitive material out of both Git histories.
+
 ## 5. Research addition procedure
 
 1. Check branch, status and current counts. Search existing incidents by CVE, product and source URL to prevent duplicates.
@@ -226,7 +241,7 @@ Test desktop and narrow mobile widths. Confirm no horizontal page overflow, blan
 | `#/attacks/AAC-29`, `#/attacks/AAC-07` | INC-401, CVE and version boundary |
 | `#/attacks/AAC-08` | INC-402, historical resolution, no invented CVE |
 | `#/methodology` | Authored methodology |
-| `#/research` | Current coming-next state; no promised publications inferred |
+| `#/research` | ASI-RESEARCH-001 editorial draft; public evidence pending, qualified finding, safe scope, and canonical reading links |
 | `#/unknown`, invalid product/attack IDs | Restrained not-found view |
 
 Refresh a direct hash URL. Test malformed percent encoding in product/attack IDs. Temporarily block `/export/asi-catalog.json` with browser request blocking, reload Incidents, confirm the explicit error state, then disable blocking. Click the source links and verify destinations; an HTTP success alone is not source review.

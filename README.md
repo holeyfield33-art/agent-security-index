@@ -81,7 +81,13 @@ npm run check:catalog:strict
 
 See [Run and maintenance manual](docs/RUN-AND-MAINTENANCE.md) for daily operation, research updates, release gates, deployment, recovery, and the authoritative AAC mapping table.
 
-## Disclosure
+## Research publications
+
+`#/research` lists ASI-RESEARCH-001, **The Disclosure Gap**, as an editorial draft with public evidence pending. Publication metadata lives in `src/data/research.ts`; the article, methodology, attribution, and evidence register are maintained in the separate [ASI-Research-v1 repository](https://github.com/holeyfield33-art/ASI-Research-v1). This draft creates no catalog incident, taxonomy mapping, or product evidence upgrade.
+
+Publish the reviewed research repository changes before deploying its ASI entry so all reading links resolve to the intended revision. Final PDF generation requires text approval and evidence review.
+
+## Publisher disclosure
 
 Aletheia publishes Agent Security Index. The launch directory contains external products only, without rankings or certification. Historical publisher product fixtures and their vendor claims are not part of the public catalog.
 
