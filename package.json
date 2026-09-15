@@ -15,7 +15,9 @@
     "check:catalog": "node scripts/assemble-catalog.mjs && node scripts/check-catalog-invariant.mjs",
     "check:catalog:strict": "node scripts/assemble-catalog.mjs && node scripts/check-catalog-invariant.mjs --strict",
     "assert:taxonomy": "node scripts/assert-aac-ids.mjs",
-    "test": "node scripts/assert-aac-ids.mjs && node scripts/assemble-catalog.mjs && node scripts/check-catalog-invariant.mjs && node --test scripts/public-products.test.mjs scripts/research-publication.test.mjs"
+    "test": "node scripts/assert-aac-ids.mjs && node scripts/assemble-catalog.mjs && node scripts/check-catalog-invariant.mjs && node --test scripts/public-products.test.mjs scripts/research-publication.test.mjs scripts/launch-hardening.test.mjs",
+    "test:e2e": "playwright test",
+    "generate:social": "node scripts/render-social.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
@@ -31,6 +33,7 @@
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
+    "@playwright/test": "1.63.0",
     "@tailwindcss/vite": "^4.3.0",
     "@types/node": "^22.16.5",
     "@types/react": "^19.2.0",

@@ -31,6 +31,8 @@ import {
   VECTOR_LABEL,
 } from "@/lib/matrix/types";
 import { cn } from "@/lib/utils";
+import { setPageMetadata } from "@/lib/page-metadata";
+import { parsePublicCatalog } from "@/lib/public-catalog";
 
 type Route =
   | { name: "home" }
@@ -64,6 +66,9 @@ function safeDecodeRoutePart(value: string): string {
 function parseRoute(hash: string): Route {
   const path = (hash.replace(/^#/, "") || "/").replace(/\/+$/, "") || "/";
   const parts = path.split("/").filter(Boolean).map(safeDecodeRoutePart);
+  if (parts.some(part => !part || part.includes("/"))) return { name: "not-found" };
+  if (parts.length > 2) return { name: "not-found" };
+  if (parts.length === 2 && !["research", "products", "attacks"].includes(parts[0])) return { name: "not-found" };
 
   if (parts[0] === "matrix") return { name: "matrix" };
   if (parts[0] === "products" && parts[1]) return { name: "product", id: parts[1] };
@@ -99,9 +104,12 @@ function usePublicCatalog() {
 
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 10000);
     setStatus("loading");
-    fetch("/export/asi-catalog.json")
+    fetch("/export/asi-catalog.json", { signal: controller.signal })
       .then((response) => (response.ok ? response.json() : Promise.reject(response.statusText)))
+      .then(parsePublicCatalog)
       .then((catalog) => {
         if (active) {
           setIncidents(catalog.incidents ?? []);
@@ -115,9 +123,12 @@ function usePublicCatalog() {
           setSources([]);
           setStatus("error");
         }
-      });
+      })
+      .finally(() => window.clearTimeout(timeout));
     return () => {
       active = false;
+      window.clearTimeout(timeout);
+      controller.abort();
     };
   }, []);
 
@@ -468,9 +479,9 @@ function IncidentsPage({
       </PageHeader>
       <Content>
         {status === "error" ? (
-          <div className="mb-4 rounded-md border border-border bg-surface p-4 text-sm text-muted shadow-border">
-            Incident records could not be loaded from the generated catalog. Run the catalog
-            assembly step and refresh this page.
+          <div role="alert" className="mb-4 rounded-md border border-border bg-surface p-4 text-sm text-muted shadow-border">
+            Incident records are temporarily unavailable. Please refresh this page later.
+            Research and methodology remain available.
           </div>
         ) : null}
         {status === "loading" ? (
@@ -734,18 +745,14 @@ export function App() {
   const route = useHashRoute();
   const publication = route.name === "research-detail" ? RESEARCH_PUBLICATIONS.find((item) => item.slug === route.id) : undefined;
   useEffect(() => {
-    if (!publication) return;
-    const previousTitle = document.title;
-    const description = document.querySelector('meta[name="description"]');
-    const previousDescription = description?.getAttribute("content");
-    document.title = "The Disclosure Gap | ASI Research 001";
-    description?.setAttribute("content", publication.metaDescription);
+    const product = route.name === "product" ? PRODUCTS.find(item => item.id === route.id) : undefined;
+    const attack = route.name === "attack" ? ATTACK_CLASSES.find(item => item.id === route.id) : undefined;
+    const detail = publication ? { title: "The Disclosure Gap | ASI Research 001", description: publication.metaDescription }
+      : product ? { title: `${product.name} | Agent Security Index`, description: product.description }
+      : attack ? { title: `${attack.id}: ${attack.name} | Agent Security Index`, description: attack.summary } : undefined;
+    setPageMetadata(route.name, detail);
     window.scrollTo(0, 0);
-    return () => {
-      document.title = previousTitle;
-      if (previousDescription !== null && previousDescription !== undefined) description?.setAttribute("content", previousDescription);
-    };
-  }, [publication]);
+  }, [route, publication]);
   const { incidents, sources, status: catalogStatus } = usePublicCatalog();
   const page = useMemo(() => {
     switch (route.name) {

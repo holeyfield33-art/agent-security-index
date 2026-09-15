@@ -262,7 +262,29 @@ Build command: `npm ci --no-audit --no-fund` followed by the release gate and `n
 6. Publish the approved build, then repeat production smoke checks, counts and primary source resolution.
 7. Record production URL, provider/project, DNS owner, deployment ID, commit SHA, timestamp, operator, results and rollback target in the release record.
 
-Use revalidation/short caching for HTML and catalog JSON; hashed Vite assets can be cached long-term. Publish data and JS together to avoid old/new schema mismatches. Hash paths are handled in the browser, so no server route rewrite is needed for `#/attacks/...` beyond serving the root document. Source maps are currently generated: review whether the chosen host should publish them; they must contain no secrets.
+Use revalidation/short caching for HTML and catalog JSON; hashed Vite assets can be cached long-term. Publish data and JS together to avoid old/new schema mismatches. Hash paths are handled in the browser, so no server route rewrite is needed for `#/attacks/...` beyond serving the root document. Production source maps are disabled; verify a missing `.js.map` returns 404. Use local development for debugging.
+
+### Custom-domain launch suite
+
+The production host is `https://index.aletheia-core.com`. After the release commands, install Chromium with `npx playwright install chromium` and run `npm run test:e2e`. Locally the runner starts a loopback-only static `dist/` test server applying `vercel.json` headers. It is not a production backend. Test artifacts are written under the OS temporary directory (`asi-launch-e2e`), leaving `.gitignore` unchanged.
+
+To test production in PowerShell:
+
+```powershell
+$env:ASI_E2E_BASE_URL = 'https://index.aletheia-core.com'
+npm run test:e2e
+Remove-Item Env:ASI_E2E_BASE_URL
+```
+
+Cover `/`, `#/research`, `#/research/asi-research-001`, `#/matrix`, `#/methodology`, and `/export/asi-catalog.json`. The suite also checks research history navigation, matrix search/filter keyboard handling, malformed IDs, no-JavaScript fallback, CSP enforcement, and HTTP/JSON/schema/timeout catalog failures. Failure simulations are browser-local interceptions; they do not alter production data. The catalog request times out after 10 seconds, fails to an explicit error, and has no retry infrastructure.
+
+### Metadata and security maintenance
+
+The root HTML contains the canonical custom-domain URL, social card tags, WebSite JSON-LD, crawler directive, favicon and fallback. Per-view titles/descriptions are updated without changing the fragment-free canonical. The sitemap intentionally contains only the root: do not add hash routes or nonexistent clean routes. Independent article indexing and per-article social unfurls remain limited by hash routing. Do not invent author handles, verification tokens, review dates, or article evidence.
+
+The inline JSON-LD SHA-256 is allowlisted by CSP in `vercel.json`. Any edit must update the exact hash; the unit test catches mismatch. Scripts are self-only apart from that hash, inline event handlers are blocked, framing/objects/forms are blocked, sensitive browser permissions are denied, and catalog JSON is revalidated and marked noindex. Inline styles remain allowed for the existing UI library; no unsafe-inline script exception is present. HSTS is host-scoped, without preload or includeSubDomains. These controls do not make the public catalog private.
+
+Regenerate `public/social-card.png` from its SVG with `npm run generate:social` when branding changes; review the exported image. CI includes audit and E2E checks, but an account billing lock prevents GitHub Actions from starting until the account owner resolves it. Never weaken tests to work around an account problem.
 
 Public launch remains conditional on domain, HTTPS and production checks. Keep the visible draft/review disclosure until an actual review supports changing it.
 

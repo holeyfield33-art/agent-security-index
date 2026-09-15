@@ -62,6 +62,8 @@ Legacy `AX-*` labels are retained only as aliases/source-fragment identifiers du
 
 ## Local development
 
+Production: [index.aletheia-core.com](https://index.aletheia-core.com/).
+
 ```bash
 npm ci --no-audit --no-fund
 npm run typecheck
@@ -80,6 +82,16 @@ npm run check:catalog:strict
 `check:catalog:strict` must pass before release. All incident primary sources resolve through the canonical source registry; placeholder URLs are not accepted.
 
 See [Run and maintenance manual](docs/RUN-AND-MAINTENANCE.md) for daily operation, research updates, release gates, deployment, recovery, and the authoritative AAC mapping table.
+
+## Launch verification and SEO
+
+After `npm ci`, run `npx playwright install chromium`, `npm run build`, then `npm run test:e2e`. The suite tests the production output with the Vercel response headers, desktop and mobile layouts, navigation, matrix filtering, catalog failures, metadata and crawler assets. Test artifacts go to the OS temporary directory, not Git.
+
+For the real domain in PowerShell: `$env:ASI_E2E_BASE_URL = 'https://index.aletheia-core.com'`, then `npm run test:e2e`. Clear that variable before running local tests again.
+
+`index.html` owns the custom-domain canonical, Open Graph/Twitter metadata, structured WebSite data, favicon and no-JavaScript fallback. `src/lib/page-metadata.ts` updates per-view browser metadata. `public/robots.txt` and `public/sitemap.xml` advertise only the actual fragment-free root document. Hash views are not independently crawlable article URLs; separate article search/social previews require a separately approved URL/rendering change. No Search Console verification or indexing success is claimed.
+
+`vercel.json` owns the security headers and the exact hash authorizing inline structured metadata. Tests catch hash drift. Production source maps are disabled. `public/social-card.svg` is the source for the committed PNG; regenerate with `npm run generate:social` and visually inspect before publishing.
 
 ## Research publications
 

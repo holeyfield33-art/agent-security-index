@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://index.aletheia-core.com/sitemap.xml
