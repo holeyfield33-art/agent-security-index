@@ -83,9 +83,9 @@ See [Run and maintenance manual](docs/RUN-AND-MAINTENANCE.md) for daily operatio
 
 ## Research publications
 
-`#/research` lists ASI-RESEARCH-001, **The Disclosure Gap**, as an editorial draft with public evidence pending. Publication metadata lives in `src/data/research.ts`; the article, methodology, attribution, and evidence register are maintained in the separate [ASI-Research-v1 repository](https://github.com/holeyfield33-art/ASI-Research-v1). This draft creates no catalog incident, taxonomy mapping, or product evidence upgrade.
+`#/research` lists ASI-RESEARCH-001, **The Disclosure Gap**, with the full native article at `#/research/asi-research-001`. The publication is evidence-scoped: local findings are author-reported and original evidence remains pending. Metadata lives in `src/data/research.ts`; canonical Markdown, methodology, attribution, and the evidence register live in [ASI-Research-v1](https://github.com/holeyfield33-art/ASI-Research-v1).
 
-Publish the reviewed research repository changes before deploying its ASI entry so all reading links resolve to the intended revision. Final PDF generation requires text approval and evidence review.
+After editing the canonical article, run `node scripts/sync-research.mjs ../ASI-Research-v1/RESEARCH.md` to regenerate the checked-in native article data. The generator records a normalized source SHA-256 and article word count. Dev, CI, and production builds use that snapshot without a sibling checkout or runtime GitHub fetch. Review and publish the research repository first, then the ASI integration. No final PDF, catalog incident, taxonomy mapping, or product-evidence upgrade is implied.
 
 ## Publisher disclosure
 

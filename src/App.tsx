@@ -15,7 +15,9 @@ import {
   SOURCE_TYPE_HIERARCHY,
 } from "@/data/methodology";
 import { PRODUCTS } from "@/data/products";
-import { RESEARCH_PUBLICATIONS } from "@/data/research";
+import { RESEARCH_POSITIONING, RESEARCH_PUBLICATIONS } from "@/data/research";
+import { RESEARCH_001 } from "@/data/research-001.generated";
+import { ResearchArticle } from "@/components/research-article";
 import { SOURCES } from "@/data/sources";
 import type { Incident, Source, SourceId } from "@/data/types";
 import { MITIGATION_LIST } from "@/lib/matrix/mitigations";
@@ -38,6 +40,7 @@ type Route =
   | { name: "incidents" }
   | { name: "methodology" }
   | { name: "research" }
+  | { name: "research-detail"; id: string }
   | { name: "attack"; id: string }
   | { name: "not-found" };
 
@@ -67,7 +70,11 @@ function parseRoute(hash: string): Route {
   if (parts[0] === "products") return { name: "products" };
   if (parts[0] === "incidents") return { name: "incidents" };
   if (parts[0] === "methodology") return { name: "methodology" };
-  if (parts[0] === "research") return { name: "research" };
+  if (parts[0] === "research") {
+    if (parts.length === 1) return { name: "research" };
+    if (parts.length === 2 && parts[1]) return { name: "research-detail", id: parts[1] };
+    return { name: "not-found" };
+  }
   if (parts[0] === "attacks" && parts[1]) return { name: "attack", id: parts[1].toUpperCase() };
   if (parts.length === 0) return { name: "home" };
   return { name: "not-found" };
@@ -207,6 +214,12 @@ function HomePage({ incidents }: { incidents: Incident[] }) {
           </aside>
         </section>
         <section className="catalog-totals" aria-label="Catalog at a glance"><p className="overline">THE INDEX<br /><span>AT A GLANCE</span></p>{[["Attack classes", counts.classes], ["Incident records", counts.incidents || "—"], ["Mitigations", counts.mitigations], ["Product profiles", counts.products]].map(([label, value]) => <div key={label}><strong>{value}</strong><span>{label}</span></div>)}</section>
+        <section aria-labelledby="latest-research" className="border-b border-border py-8">
+          <p className="overline">LATEST RESEARCH</p>
+          <h2 id="latest-research" className="mt-3 text-2xl font-medium">{RESEARCH_PUBLICATIONS[0].title}</h2>
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-muted">What happens when vulnerability reporting moves faster than mitigation? An evidence-scoped study of an author-reported DeepSeek persistence test.</p>
+          <a className="text-link mt-4 inline-block" href="#/research/asi-research-001">Read ASI Research 001 <span aria-hidden="true">→</span></a>
+        </section>
         <section className="editorial-sections">
           <div className="directory-section"><div className="section-label"><span>01 / EXPLORE THE INDEX</span><span>RESEARCH TO REFERENCE</span></div>{[
             { number: "01", title: "Attack matrix", description: "Trace attack classes across protocols, agent lifecycles, and defensive controls.", href: "#/matrix" },
@@ -592,7 +605,7 @@ function ResearchPage() {
   return (
     <>
       <PageHeader eyebrow="Research" title="Research publications">
-        <p>Authored studies with explicit scope, attribution, and evidence limitations. Drafts are labeled separately from completed research.</p>
+        <p>{RESEARCH_POSITIONING}</p>
       </PageHeader>
       <Content className="space-y-8">
         {RESEARCH_PUBLICATIONS.map((publication) => (
@@ -604,21 +617,44 @@ function ResearchPage() {
             </div>
             <h2 id={publication.id} className="mt-4 text-2xl font-medium tracking-tight text-fg">{publication.title}</h2>
             <p className="mt-2 text-lg leading-7 text-muted">{publication.subtitle}</p>
-            <p className="mt-3 text-xs text-subtle">Research affiliation: {publication.affiliation}</p>
             <p className="mt-6 text-sm leading-7 text-muted">{publication.summary}</p>
-            <h3 className="mt-6 text-base font-medium text-fg">Author-reported finding</h3>
-            <p className="mt-2 text-base leading-7 text-fg">{publication.coreClaim}</p>
             <p className="mt-3 text-sm leading-7 text-muted">{publication.qualification}</p>
-            <h3 className="mt-6 text-base font-medium text-fg">Scope and publication status</h3>
-            <p className="mt-2 text-sm leading-7 text-muted">{publication.scope}</p>
-            <p className="mt-3 text-sm leading-7 text-muted">{publication.safetyNote}</p>
             <nav aria-label={`${publication.id} reading links`} className="mt-6 flex flex-wrap gap-x-6 gap-y-3 border-t border-border pt-5">
-              {publication.links.map((link) => (
-                <a key={link.href} href={link.href} className="text-sm text-accent underline underline-offset-4 hover:text-fg">{link.label}</a>
-              ))}
+              <a href={`#/research/${publication.slug}`} className="text-sm text-accent underline underline-offset-4">Read ASI Research 001 →</a>
+              <a href={publication.repositoryUrl} className="text-sm text-accent underline underline-offset-4">View research repository</a>
             </nav>
           </article>
         ))}
+      </Content>
+    </>
+  );
+}
+
+function ResearchDetailPage({ id }: { id: string }) {
+  const publication = RESEARCH_PUBLICATIONS.find((item) => item.slug === id);
+  if (!publication) return <NotFound title="Research publication not found" backHref="#/research" backLabel="Back to research" />;
+  return (
+    <>
+      <PageHeader eyebrow={publication.id} title={publication.title}>
+        <p className="text-lg">{publication.subtitle}</p>
+      </PageHeader>
+      <Content>
+        <div className="mb-10 max-w-3xl space-y-4">
+          <div className="flex flex-wrap gap-2"><Badge>{publication.status}</Badge><Badge>{publication.evidenceStatus}</Badge></div>
+          <dl className="grid gap-4 text-sm sm:grid-cols-3">
+            <Info label="Research period" value={publication.researchPeriod} />
+            <Info label="Research affiliation" value={publication.affiliation} />
+            <Info label="Article length" value={`${RESEARCH_001.wordCount.toLocaleString()} words · ${Math.ceil(RESEARCH_001.wordCount / 220)} min read`} />
+          </dl>
+          <p className="text-sm leading-7 text-muted">{publication.qualification}</p>
+          <p className="text-sm leading-7 text-muted">{publication.safetyNote}</p>
+          <nav aria-label="Research resources" className="flex flex-wrap gap-5 text-sm text-accent underline underline-offset-4">
+            <a href={publication.repositoryUrl}>View research repository</a>
+            <a href={publication.methodologyUrl}>View methodology</a>
+          </nav>
+        </div>
+        <ResearchArticle />
+        <a href="#/research" className="mt-10 inline-block text-sm text-accent underline underline-offset-4">Back to research</a>
       </Content>
     </>
   );
@@ -696,6 +732,20 @@ function NotFound({
 
 export function App() {
   const route = useHashRoute();
+  const publication = route.name === "research-detail" ? RESEARCH_PUBLICATIONS.find((item) => item.slug === route.id) : undefined;
+  useEffect(() => {
+    if (!publication) return;
+    const previousTitle = document.title;
+    const description = document.querySelector('meta[name="description"]');
+    const previousDescription = description?.getAttribute("content");
+    document.title = "The Disclosure Gap | ASI Research 001";
+    description?.setAttribute("content", publication.metaDescription);
+    window.scrollTo(0, 0);
+    return () => {
+      document.title = previousTitle;
+      if (previousDescription !== null && previousDescription !== undefined) description?.setAttribute("content", previousDescription);
+    };
+  }, [publication]);
   const { incidents, sources, status: catalogStatus } = usePublicCatalog();
   const page = useMemo(() => {
     switch (route.name) {
@@ -711,6 +761,8 @@ export function App() {
         return <MethodologyPage />;
       case "research":
         return <ResearchPage />;
+      case "research-detail":
+        return <ResearchDetailPage id={route.id} />;
       case "attack":
         return <AttackDetailPage id={route.id} incidents={incidents} sources={sources} />;
       case "not-found":

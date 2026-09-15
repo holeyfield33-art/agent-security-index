@@ -118,16 +118,17 @@ Confirm this table against the live source before each new research task. AAC-41
 
 ## Research publications across repositories
 
-The `#/research` surface reads publication metadata from `src/data/research.ts`. The canonical article for ASI-RESEARCH-001 lives in the separate `holeyfield33-art/ASI-Research-v1` repository. Do not hand-copy the full article into ASI or fetch GitHub content at runtime.
+The `#/research` index and home feature link to `#/research/asi-research-001`. Metadata lives in `src/data/research.ts`. Canonical article Markdown lives in `holeyfield33-art/ASI-Research-v1`; `src/data/research-001.generated.ts` is its checked-in native reading snapshot. Do not hand-edit that generated file or fetch GitHub content at runtime.
 
 For a research revision:
 
 1. Edit the research repository's `RESEARCH.md`, then align its README, methodology, attribution, and evidence register. Keep author reports distinct from independently supported findings.
 2. Verify source content and source roles, not only URL availability. Review redacted evidence and record unavailable test metadata honestly.
-3. Do not promote a draft, add a PDF link, create an incident/AAC mapping, or upgrade product evidence solely because the article exists. Final PDF generation requires explicit text approval and evidence review.
-4. Run `git diff --check` in the research repository and verify every local Markdown link and evidence file. No npm build is required for this Markdown-only repository.
-5. Obtain approval, commit and publish the research changes first. Check that the remote article and new evidence-register path resolve. Then update ASI metadata and run its complete release gate and desktop/mobile research-route smoke test.
-6. Deploy ASI only after the linked research revision is public. Refresh `#/research` on production and open every reading link. A successful local build is not a deployment.
+3. An article can be published with author-reported findings and explicit limitations, but publication does not verify evidence. Do not add a PDF, incident/AAC mapping, or product-evidence upgrade solely because an article exists. Original screenshots and the four illustrative images are different artifact categories.
+4. Run `node scripts/validate-research.mjs` and `git diff --check` in the research repository. No npm install or build is required there.
+5. From ASI, run `node scripts/sync-research.mjs ../ASI-Research-v1/RESEARCH.md`. Confirm the SHA-256 and word count, and review the generated diff. The converter intentionally accepts only headings, paragraphs, quotes, flat lists, and links. Unsupported markup must be resolved, not silently dropped. Word count includes section 1-10 text and headings, excluding title metadata and references.
+6. Run ASI's complete release gate and desktop/mobile smoke tests for the home feature, research index, full article, direct refresh, unknown/malformed research IDs, and navigation back to existing pages. Confirm every source/resource link. Article title/description update in the browser and restore on exit; hash URLs do not provide separate server-rendered social/SEO metadata.
+7. After approval, commit and push the research changes first; verify its files resolve. Then commit/push ASI. CI and Vercel require neither the sibling checkout nor network access to read the article. Verify the deployed asset and smoke-test the live article. A successful local build is not a deployment.
 
 The initial Research 001 draft leaves all catalog counts, product evidence, and AAC definitions unchanged. Placeholder evidence is never a completed artifact. Keep raw sensitive material out of both Git histories.
 
@@ -241,7 +242,8 @@ Test desktop and narrow mobile widths. Confirm no horizontal page overflow, blan
 | `#/attacks/AAC-29`, `#/attacks/AAC-07` | INC-401, CVE and version boundary |
 | `#/attacks/AAC-08` | INC-402, historical resolution, no invented CVE |
 | `#/methodology` | Authored methodology |
-| `#/research` | ASI-RESEARCH-001 editorial draft; public evidence pending, qualified finding, safe scope, and canonical reading links |
+| `#/research` | One published article with visible evidence limitations and a native reading link |
+| `#/research/asi-research-001` | Full 11-section article, author-reported finding, original-evidence limitations, sources and repository links; no PDF or operational payload |
 | `#/unknown`, invalid product/attack IDs | Restrained not-found view |
 
 Refresh a direct hash URL. Test malformed percent encoding in product/attack IDs. Temporarily block `/export/asi-catalog.json` with browser request blocking, reload Incidents, confirm the explicit error state, then disable blocking. Click the source links and verify destinations; an HTTP success alone is not source review.
