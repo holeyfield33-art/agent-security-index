@@ -83,7 +83,7 @@ See [Run and maintenance manual](docs/RUN-AND-MAINTENANCE.md) for daily operatio
 
 ## Disclosure
 
-Aletheia develops Aegis and Lite. Those products are listed only under vendor claims and are evaluated with the same published rules as any other vendor. They are not hard-coded to the top of any ranking.
+Aletheia publishes Agent Security Index. The launch directory contains external products only, without rankings or certification. Historical publisher product fixtures and their vendor claims are not part of the public catalog.
 
 ## License
 

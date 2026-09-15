@@ -1,27 +1,2 @@
 import type { VendorClaim } from "./types.ts";
-export const VENDOR_CLAIMS: VendorClaim[] = [
-  {
-    "productId": "aletheia-aegis",
-    "productName": "Aegis",
-    "vendor": "Aletheia",
-    "isPublisherProduct": true,
-    "summary": "Deterministic security invariants for agent runtimes.",
-    "deployment": ["local", "self-hosted"],
-    "claimStatus": "unverified_vendor_claim",
-    "claimedClassIds": ["AAC-01", "AAC-02", "AAC-03", "AAC-05", "AAC-06", "AAC-11", "AAC-16"],
-    "claimText": "Publisher asserts partial relevance. Not third-party evaluated.",
-    "limitations": ["Self-declared claim only"]
-  },
-  {
-    "productId": "aletheia-lite",
-    "productName": "Lite",
-    "vendor": "Aletheia",
-    "isPublisherProduct": true,
-    "summary": "Lightweight subset of Aegis controls.",
-    "deployment": ["local", "self-hosted"],
-    "claimStatus": "unverified_vendor_claim",
-    "claimedClassIds": ["AAC-01", "AAC-03", "AAC-05"],
-    "claimText": "Publisher asserts partial relevance. Not third-party evaluated.",
-    "limitations": ["Self-declared claim only"]
-  }
-];
+export const VENDOR_CLAIMS: VendorClaim[] = [];

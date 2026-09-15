@@ -177,6 +177,9 @@ export function evaluateCatalog(catalog, opts = {}) {
   }
 
   for (const claim of vendorClaims) {
+    if (claim.isPublisherProduct || /^aletheia-/i.test(claim.productId ?? "") || /^aletheia$/i.test(claim.vendor ?? "")) {
+      addFinding(errors, "error", "vendor_claim.publisher.prohibited", "Publisher claims cannot enter the public catalog");
+    }
     const loc = `vendorClaims.${claim.productId}`;
     if (claim.claimStatus === "third_party_evaluated") {
       const ev = claim.evidenceUrl;
@@ -279,6 +282,9 @@ export function evaluateCatalog(catalog, opts = {}) {
         `Product "${product.id}" must not define an overall numeric score`, loc);
     }
 
+    if (product.publisherProduct !== false || /^aletheia-/i.test(product.id ?? "") || /^aletheia$/i.test(product.vendor ?? "")) {
+      addFinding(errors, "error", "product.publisher.prohibited", "Public products must be external", loc);
+    }
     if (product.publisherProduct === true) {
       const disclosure = product.disclosure;
       if (!disclosure || typeof disclosure !== "string" || !disclosure.trim()) {
@@ -300,6 +306,9 @@ export function evaluateCatalog(catalog, opts = {}) {
         addFinding(errors, "error", "product.coverage.invalid",
           `Coverage ${i} for product "${product.id}" must be an object`, covLoc);
         continue;
+      }
+      if (!["documented", "third-party-evaluated", "reproduced"].includes(coverage.evidenceStatus) || !Array.isArray(coverage.evidenceSourceIds) || coverage.evidenceSourceIds.length === 0) {
+        addFinding(errors, "error", "product.coverage.public_evidence.required", "Public coverage requires documented, evaluated or reproduced evidence with linked sources; otherwise publish zero coverage rows", covLoc);
       }
       if (!classIds.has(coverage.attackClassId)) {
         addFinding(errors, "error", "product.coverage.unknown_attack_class",

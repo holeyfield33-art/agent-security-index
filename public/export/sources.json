@@ -82,7 +82,7 @@
     "sourceType": "vendor-advisory",
     "publisher": "Promptfoo",
     "url": "https://www.promptfoo.dev/docs/red-team/owasp-agentic-ai/",
-    "accessedAt": "2026-09-13",
+    "accessedAt": "2026-09-14",
     "summary": "Official Promptfoo documentation for testing agentic-AI risks, including goal hijack, tool misuse, supply chain, code execution, and excessive agency scenarios.",
     "supports": {
       "attackClassIds": [
@@ -107,7 +107,7 @@
     "sourceType": "vendor-advisory",
     "publisher": "Promptfoo",
     "url": "https://www.promptfoo.dev/docs/red-team/agents/",
-    "accessedAt": "2026-09-13",
+    "accessedAt": "2026-09-14",
     "summary": "Official Promptfoo guidance for red-teaming agent memory poisoning, tool discovery, excessive agency, goal hijacking, tool-chain attacks, and privilege escalation.",
     "supports": {
       "attackClassIds": [
@@ -132,7 +132,7 @@
     "sourceType": "vendor-advisory",
     "publisher": "Promptfoo",
     "url": "https://www.promptfoo.dev/docs/red-team/plugins/mcp/",
-    "accessedAt": "2026-09-13",
+    "accessedAt": "2026-09-14",
     "summary": "Official Promptfoo MCP plugin documentation for testing MCP tool manipulation, system-prompt extraction, unauthorized tool discovery, and privilege-escalation paths.",
     "supports": {
       "attackClassIds": [
@@ -155,7 +155,7 @@
     "sourceType": "vendor-advisory",
     "publisher": "Check Point AI Security",
     "url": "https://docs.lakera.ai/docs/agent-security",
-    "accessedAt": "2026-09-13",
+    "accessedAt": "2026-09-14",
     "summary": "Official Check Point AI Security documentation describing AI Agent Security and AI Guardrails coverage across prompts, model outputs, tool calls, tool responses, and tool descriptions.",
     "supports": {
       "attackClassIds": [
@@ -182,7 +182,7 @@
     "sourceType": "vendor-advisory",
     "publisher": "Check Point AI Security",
     "url": "https://docs.lakera.ai/docs/data-leakage-prevention",
-    "accessedAt": "2026-09-13",
+    "accessedAt": "2026-09-14",
     "summary": "Official Check Point AI Guardrails documentation for screening inputs, outputs, tool calls, and tool-role messages for PII, system prompts, trigger words, and custom entities.",
     "supports": {
       "attackClassIds": [
@@ -205,7 +205,7 @@
     "sourceType": "vendor-advisory",
     "publisher": "Check Point AI Security",
     "url": "https://docs.lakera.ai/docs/quickstart",
-    "accessedAt": "2026-09-13",
+    "accessedAt": "2026-09-14",
     "summary": "Official Check Point AI Security quickstart showing prompt-injection detection with the service.",
     "supports": {
       "attackClassIds": [
@@ -226,7 +226,7 @@
     "sourceType": "vendor-advisory",
     "publisher": "Invariant Labs",
     "url": "https://invariantlabs.ai/",
-    "accessedAt": "2026-09-13",
+    "accessedAt": "2026-09-14",
     "summary": "Official Invariant Labs product page describing MCP Scan, Guardrails, and Explorer for agent security workflows.",
     "supports": {
       "attackClassIds": [
@@ -246,16 +246,15 @@
   },
   {
     "id": "src-invariant-mcp-scan-github",
-    "title": "Invariant MCP-Scan",
+    "title": "MCP-Scan repository (now Snyk Agent Scan)",
     "sourceType": "vendor-advisory",
-    "publisher": "Invariant Labs",
+    "publisher": "Snyk / Invariant Labs",
     "url": "https://github.com/invariantlabs-ai/mcp-scan",
-    "accessedAt": "2026-09-13",
+    "accessedAt": "2026-09-14",
     "summary": "Official Invariant Labs repository for MCP-Scan, a scanner for local and remote MCP servers.",
     "supports": {
       "attackClassIds": [
         "AAC-03",
-        "AAC-05",
         "AAC-10",
         "AAC-14"
       ],
@@ -269,7 +268,7 @@
         "invariant-mcp-scan"
       ]
     },
-    "notes": "Coverage is scanner/discovery oriented, not runtime enforcement."
+    "notes": "Original MCP-Scan URL redirects to Snyk Agent Scan. Reviewed as first-party project documentation; release-specific scope applies."
   },
   {
     "id": "src-inc-001-zombai-copilot-rce",
@@ -513,6 +512,153 @@
       ],
       "mitigationIds": [],
       "productIds": []
+    }
+  },
+  {
+    "id": "src-nvidia-agentic-security",
+    "title": "Agentic Security — NeMo Guardrails Library",
+    "sourceType": "vendor-advisory",
+    "publisher": "NVIDIA",
+    "url": "https://docs.nvidia.com/nemo/guardrails/configure-guardrails/guardrail-catalog/agentic-security",
+    "accessedAt": "2026-09-14",
+    "supports": {
+      "attackClassIds": [
+        "AAC-11"
+      ],
+      "mitigationIds": [],
+      "productIds": [
+        "nvidia-nemo-guardrails"
+      ]
+    }
+  },
+  {
+    "id": "src-nvidia-tool-calling",
+    "title": "Tool Calling — NeMo Guardrails Library",
+    "sourceType": "vendor-advisory",
+    "publisher": "NVIDIA",
+    "url": "https://docs.nvidia.com/nemo/guardrails/configure-guardrails/guardrail-catalog/tool-calling",
+    "accessedAt": "2026-09-14",
+    "supports": {
+      "attackClassIds": [
+        "AAC-38"
+      ],
+      "mitigationIds": [],
+      "productIds": [
+        "nvidia-nemo-guardrails"
+      ]
+    }
+  },
+  {
+    "id": "src-nvidia-guardrail-catalog",
+    "title": "Guardrail Catalog — NeMo Guardrails Library",
+    "sourceType": "vendor-advisory",
+    "publisher": "NVIDIA",
+    "url": "https://docs.nvidia.com/nemo/guardrails/configure-guardrails/guardrail-catalog",
+    "accessedAt": "2026-09-14",
+    "supports": {
+      "attackClassIds": [
+        "AAC-11"
+      ],
+      "mitigationIds": [],
+      "productIds": [
+        "nvidia-nemo-guardrails"
+      ]
+    }
+  },
+  {
+    "id": "src-meta-llamafirewall-research",
+    "title": "LlamaFirewall: An open source guardrail system for building secure AI agents",
+    "sourceType": "academic-paper",
+    "publisher": "Meta",
+    "url": "https://ai.meta.com/research/publications/llamafirewall-an-open-source-guardrail-system-for-building-secure-ai-agents/",
+    "accessedAt": "2026-09-14",
+    "supports": {
+      "attackClassIds": [
+        "AAC-01",
+        "AAC-28",
+        "AAC-38"
+      ],
+      "mitigationIds": [],
+      "productIds": [
+        "meta-llamafirewall"
+      ]
+    },
+    "publishedAt": "2025-04-29",
+    "notes": "Vendor-authored research, not independent evaluation."
+  },
+  {
+    "id": "src-meta-protection-tools",
+    "title": "Sharing new open source protection tools and advancements in AI privacy and security",
+    "sourceType": "vendor-advisory",
+    "publisher": "Meta",
+    "url": "https://ai.meta.com/blog/ai-defenders-program-llama-protection-tools/",
+    "accessedAt": "2026-09-14",
+    "supports": {
+      "attackClassIds": [
+        "AAC-01",
+        "AAC-28",
+        "AAC-38"
+      ],
+      "mitigationIds": [],
+      "productIds": [
+        "meta-llamafirewall"
+      ]
+    },
+    "publishedAt": "2025-04-29"
+  },
+  {
+    "id": "src-aws-agentcore-policy-ga",
+    "title": "Policy in Amazon Bedrock AgentCore is now generally available",
+    "sourceType": "vendor-advisory",
+    "publisher": "Amazon Web Services",
+    "url": "https://aws.amazon.com/about-aws/whats-new/2026/03/policy-amazon-bedrock-agentcore-generally-available/",
+    "accessedAt": "2026-09-14",
+    "supports": {
+      "attackClassIds": [
+        "AAC-07",
+        "AAC-38"
+      ],
+      "mitigationIds": [],
+      "productIds": [
+        "aws-agentcore-policy-guardrails"
+      ]
+    },
+    "publishedAt": "2026-03-03"
+  },
+  {
+    "id": "src-aws-guardrails-policy",
+    "title": "Guardrails in policies — Amazon Bedrock AgentCore",
+    "sourceType": "vendor-advisory",
+    "publisher": "Amazon Web Services",
+    "url": "https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/policy-guardrails-in-policies.html",
+    "accessedAt": "2026-09-14",
+    "supports": {
+      "attackClassIds": [
+        "AAC-01",
+        "AAC-38"
+      ],
+      "mitigationIds": [],
+      "productIds": [
+        "aws-agentcore-policy-guardrails"
+      ]
+    }
+  },
+  {
+    "id": "src-aws-agentcore-faq",
+    "title": "Amazon Bedrock AgentCore FAQs",
+    "sourceType": "vendor-advisory",
+    "publisher": "Amazon Web Services",
+    "url": "https://aws.amazon.com/bedrock/agentcore/faqs/",
+    "accessedAt": "2026-09-14",
+    "supports": {
+      "attackClassIds": [
+        "AAC-07",
+        "AAC-38"
+      ],
+      "mitigationIds": [],
+      "productIds": [
+        "aws-agentcore-policy-guardrails"
+      ]
     }
   }
 ]

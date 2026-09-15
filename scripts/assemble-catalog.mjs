@@ -37,16 +37,15 @@ function normalizeMitigationStatus(status) {
 
 function loadProductsFromTs() {
   const src = readFileSync(join(root, "src/data/products.ts"), "utf8");
-  const disclosureMatch = src.match(/export const PUBLISHER_PRODUCT_DISCLOSURE\s*=\s*("[\s\S]*?");/);
   const productsMatch = src.match(/export const PRODUCTS(?::[\s\S]*?)?=\s*(\[[\s\S]*\]);?\s*$/);
-  if (!disclosureMatch || !productsMatch) {
+  if (!productsMatch) {
     throw new Error("Could not parse src/data/products.ts");
   }
-  const disclosure = Function(`"use strict"; return (${disclosureMatch[1]});`)();
-  return Function(
-    "PUBLISHER_PRODUCT_DISCLOSURE",
-    `"use strict"; return (${productsMatch[1]});`,
-  )(disclosure);
+  const products = Function(`"use strict"; return (${productsMatch[1]});`)();
+  if (products.some((product) => product.publisherProduct !== false || /^aletheia-/i.test(product.id) || /^aletheia$/i.test(product.vendor))) {
+    throw new Error("Public product export must contain external products only");
+  }
+  return products;
 }
 
 function loadSourcesFromTs() {
@@ -165,6 +164,9 @@ const incidents = loadJsonChunks("incidents").map((incident) => {
 const mitigations = JSON.parse(readFileSync(join(dir, "mitigations.json"), "utf8"))
   .map((m) => ({ ...m, status: normalizeMitigationStatus(m.status) }));
 const vendorClaims = JSON.parse(readFileSync(join(dir, "vendor-claims.json"), "utf8"));
+if (vendorClaims.some((claim) => claim.isPublisherProduct || /^aletheia-/i.test(claim.productId ?? "") || /^aletheia$/i.test(claim.vendor ?? ""))) {
+  throw new Error("Publisher claims cannot enter the public catalog");
+}
 const products = loadProductsFromTs();
 writeFileSync(join(dir, "products.json"), JSON.stringify(products, null, 2));
 const changelog = JSON.parse(readFileSync(join(dir, "changelog.json"), "utf8"));

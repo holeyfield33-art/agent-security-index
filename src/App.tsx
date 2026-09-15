@@ -212,7 +212,7 @@ function HomePage({ incidents }: { incidents: Incident[] }) {
             { number: "02", title: "Incident records", description: "Examine reported failures and follow the sources behind each record.", href: "#/incidents" },
             { number: "03", title: "Product coverage", description: "Inspect documented coverage, evidence status, and declared limitations.", href: "#/products" },
           ].map(item => <a className="directory-row" href={item.href} key={item.number}><span className="row-number">{item.number}</span><div><h2>{item.title}</h2><p>{item.description}</p></div><span className="row-arrow">↗</span></a>)}</div>
-          <aside className="editorial-note"><p className="overline">02 / THE EVIDENCE STANDARD</p><h2>A claim is a<br />starting point.<br /><em>Not a conclusion.</em></h2><p>Source existence and source quality are different questions. We make evidence status visible so you can judge what a coverage claim actually supports.</p><a className="text-link" href="#/methodology">Read the methodology <span>↗</span></a><div className="note-footnote">No vendor rankings. No implied certification.<br />Publisher-owned products are disclosed.</div></aside>
+          <aside className="editorial-note"><p className="overline">02 / THE EVIDENCE STANDARD</p><h2>A claim is a<br />starting point.<br /><em>Not a conclusion.</em></h2><p>Source existence and source quality are different questions. We make evidence status visible so you can judge what a coverage claim actually supports.</p><a className="text-link" href="#/methodology">Read the methodology <span>↗</span></a><div className="note-footnote">No vendor rankings. No implied certification.<br />Coverage stays scoped to the evidence.</div></aside>
         </section>
       </main>
     </>
@@ -277,8 +277,9 @@ function ProductsPage() {
     <>
       <PageHeader eyebrow="Products" title="Product coverage directory">
         <p>
-          Product coverage is presented with its evidence status and limitations. Products are not ranked or scored.
+          Products are mapped to attack classes only where public evidence supports the relationship. Entries are not ranked or certified.
         </p>
+        <p className="mt-3">Coverage is scoped to the cited evidence and stated assumptions. Absence of evidence is not evidence of absence. Documented vendor functionality is not independently validated effectiveness.</p>
         <p className="mt-3">{PRODUCT_DECISION_GUIDANCE}</p>
       </PageHeader>
       <Content className="grid gap-3">
@@ -309,6 +310,7 @@ function ProductsPage() {
                 </div>
               </div>
               <MetaList values={[...product.deployment, ...product.categories]} />
+              {product.coverages.length === 0 ? <p className="mt-3 text-sm text-muted">No mapped coverage yet.</p> : null}
             </a>
           );
         })}
@@ -346,6 +348,7 @@ function ProductDetailPage({ id }: { id: string }) {
         </section>
         <section>
           <h2 className="text-xl font-medium text-fg">Coverage records</h2>
+          {product.coverages.length === 0 ? <p className="mt-3 text-sm text-muted">No mapped coverage yet.</p> : null}
           <div className="mt-3 grid gap-3">
             {product.coverages.map((coverage) => {
               const attack = ATTACK_CLASSES.find((item) => item.id === coverage.attackClassId);

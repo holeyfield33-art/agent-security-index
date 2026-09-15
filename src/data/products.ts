@@ -1,308 +1,476 @@
 import type { Product } from "./types.ts";
 
-export const PUBLISHER_PRODUCT_DISCLOSURE =
-  "Aletheia products are developed by the publisher of Agent Security Index. Their coverage is evaluated using the same published methodology as other products.";
-
 export const PRODUCTS: Product[] = [
   {
-    id: "aletheia-runtime-firewall",
-    name: "Aletheia Runtime Firewall",
-    vendor: "Aletheia",
-    description:
-      "Draft publisher-product fixture for code, import, runtime, and supply-chain control boundaries. This is not a ranking claim.",
-    deployment: ["local", "self-hosted"],
-    categories: ["runtime-firewall", "supply-chain-boundary", "code-import-control"],
-    pricingModel: "unknown",
-    coverages: [
-      {
-        attackClassId: "AAC-10",
-        mitigationIds: ["abom-hash", "allowlist-servers", "provenance", "kill-switch"],
-        evidenceStatus: "vendor-claimed",
-        evidenceSourceIds: [],
-        coverage: "partial",
-        limitations: ["Fixture only; no independent or reproduced coverage evidence recorded."],
-      },
-      {
-        attackClassId: "AAC-16",
-        mitigationIds: ["stdio-deny", "tool-sandbox", "hash-pin", "abom-hash"],
-        evidenceStatus: "vendor-claimed",
-        evidenceSourceIds: [],
-        coverage: "partial",
-        limitations: ["Limited to configured runtime/import boundaries; no universal MCP RCE claim."],
-      },
-      {
-        attackClassId: "AAC-36",
-        mitigationIds: ["least-privilege", "abom-hash", "tool-sandbox", "hash-pin"],
-        evidenceStatus: "vendor-claimed",
-        evidenceSourceIds: [],
-        coverage: "adjacent",
-        limitations: ["Addresses enforcement boundary; does not itself prove per-skill least privilege."],
-      },
-      {
-        attackClassId: "AAC-37",
-        mitigationIds: ["abom-hash", "provenance", "tool-sandbox", "content-firewall"],
-        evidenceStatus: "vendor-claimed",
-        evidenceSourceIds: [],
-        coverage: "adjacent",
-        limitations: ["Addresses install/runtime control surfaces; malicious-skill detection evidence is not recorded."],
-      },
+    "id": "promptfoo-red-teaming",
+    "name": "Promptfoo Red Teaming",
+    "vendor": "Promptfoo",
+    "description": "External product entry for Promptfoo's LLM and agent red-team testing workflows. Coverage is mapped as documented evaluation capability, not runtime prevention.",
+    "deployment": [
+      "local",
+      "cloud"
     ],
-    publisherProduct: true,
-    disclosure: PUBLISHER_PRODUCT_DISCLOSURE,
-    lastReviewedAt: "2026-09-13",
+    "categories": [
+      "red-team-testing",
+      "agent-evaluation",
+      "mcp-testing"
+    ],
+    "homepageUrl": "https://www.promptfoo.dev/",
+    "docsUrl": "https://www.promptfoo.dev/docs/red-team/",
+    "pricingModel": "commercial",
+    "coverages": [
+      {
+        "attackClassId": "AAC-01",
+        "mitigationIds": [
+          "trajectory"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-promptfoo-owasp-agentic-ai",
+          "src-promptfoo-agents"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "Documents testing for goal-hijack behavior; does not claim runtime blocking."
+        ]
+      },
+      {
+        "attackClassId": "AAC-03",
+        "mitigationIds": [
+          "trajectory"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-promptfoo-mcp-plugin"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "MCP coverage is a red-team plugin mapping, not a tool-descriptor firewall."
+        ]
+      },
+      {
+        "attackClassId": "AAC-06",
+        "mitigationIds": [
+          "trajectory"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-promptfoo-agents"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "Memory-poisoning coverage depends on configured scenarios and target integration."
+        ]
+      },
+      {
+        "attackClassId": "AAC-38",
+        "mitigationIds": [
+          "trajectory"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-promptfoo-owasp-agentic-ai",
+          "src-promptfoo-agents"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "Excessive-agency tests can expose consequential-action paths but do not enforce gates."
+        ]
+      },
+      {
+        "attackClassId": "AAC-39",
+        "mitigationIds": [
+          "trajectory"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-promptfoo-mcp-plugin"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "System-prompt extraction coverage is documented as a test vector only."
+        ]
+      }
+    ],
+    "publisherProduct": false,
+    "lastReviewedAt": "2026-09-14"
   },
   {
-    id: "aletheia-aegis-provenance",
-    name: "Aegis Provenance",
-    vendor: "Aletheia",
-    description:
-      "Draft publisher-product fixture for context provenance, instruction authority, and egress-linkage boundaries.",
-    deployment: ["local", "self-hosted"],
-    categories: ["provenance", "instruction-authority", "egress-linkage"],
-    pricingModel: "unknown",
-    coverages: [
-      {
-        attackClassId: "AAC-02",
-        mitigationIds: ["rag-validate", "untrusted-io", "output-dlp", "trajectory"],
-        evidenceStatus: "vendor-claimed",
-        evidenceSourceIds: [],
-        coverage: "adjacent",
-        limitations: ["Targets provenance and egress linkage; does not claim full indirect-injection prevention."],
-      },
-      {
-        attackClassId: "AAC-08",
-        mitigationIds: ["provenance", "least-privilege", "mtls-a2a", "hitl"],
-        evidenceStatus: "vendor-claimed",
-        evidenceSourceIds: [],
-        coverage: "partial",
-        limitations: ["Depends on deployment integration with identity and tool authorization boundaries."],
-      },
-      {
-        attackClassId: "AAC-12",
-        mitigationIds: ["untrusted-io", "trajectory", "content-firewall", "schema-gov"],
-        evidenceStatus: "vendor-claimed",
-        evidenceSourceIds: [],
-        coverage: "adjacent",
-        limitations: ["Tracks instruction authority and flow; no reproduced prevention result recorded."],
-      },
-      {
-        attackClassId: "AAC-15",
-        mitigationIds: ["least-privilege", "output-dlp", "schema-gov", "untrusted-io"],
-        evidenceStatus: "vendor-claimed",
-        evidenceSourceIds: [],
-        coverage: "adjacent",
-        limitations: ["Helps expose context/egress linkage; does not prove all oversharing is blocked."],
-      },
+    "id": "checkpoint-ai-guardrails",
+    "name": "Check Point AI Guardrails",
+    "vendor": "Check Point",
+    "description": "External product entry for Check Point AI Security / AI Guardrails runtime controls across prompts, outputs, and agent tool interactions.",
+    "deployment": [
+      "cloud",
+      "self-hosted"
     ],
-    publisherProduct: true,
-    disclosure: PUBLISHER_PRODUCT_DISCLOSURE,
-    lastReviewedAt: "2026-09-13",
+    "categories": [
+      "ai-guardrails",
+      "runtime-protection",
+      "data-leakage-prevention"
+    ],
+    "homepageUrl": "https://docs.lakera.ai/introduction",
+    "docsUrl": "https://docs.lakera.ai/docs/agent-security",
+    "pricingModel": "commercial",
+    "coverages": [
+      {
+        "attackClassId": "AAC-01",
+        "mitigationIds": [
+          "content-firewall",
+          "untrusted-io"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-checkpoint-agent-security",
+          "src-checkpoint-quickstart"
+        ],
+        "coverage": "partial",
+        "limitations": [
+          "Prompt-attack detection is documented; bypass resistance is not independently evaluated here."
+        ]
+      },
+      {
+        "attackClassId": "AAC-02",
+        "mitigationIds": [
+          "content-firewall",
+          "untrusted-io"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-checkpoint-agent-security"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "Tool-call and tool-response screening maps to indirect-injection boundaries, not full prevention."
+        ]
+      },
+      {
+        "attackClassId": "AAC-15",
+        "mitigationIds": [
+          "output-dlp",
+          "untrusted-io"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-checkpoint-agent-security",
+          "src-checkpoint-data-leakage-prevention"
+        ],
+        "coverage": "partial",
+        "limitations": [
+          "DLP scope depends on configured detectors, entities, and deployment coverage."
+        ]
+      },
+      {
+        "attackClassId": "AAC-38",
+        "mitigationIds": [
+          "trajectory",
+          "content-firewall"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-checkpoint-agent-security"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "Agent behavior defense is documented but not mapped to a complete consequential-action gate."
+        ]
+      },
+      {
+        "attackClassId": "AAC-39",
+        "mitigationIds": [
+          "output-dlp"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-checkpoint-data-leakage-prevention"
+        ],
+        "coverage": "partial",
+        "limitations": [
+          "System-prompt detection is documented as a leakage detector; it is not a universal secrecy guarantee."
+        ]
+      }
+    ],
+    "publisherProduct": false,
+    "lastReviewedAt": "2026-09-14"
   },
   {
-    id: "aletheia-lite",
-    name: "Aletheia Lite",
-    vendor: "Aletheia",
-    description:
-      "Draft publisher-product fixture for capability authorization, confused-deputy, and consequential-action boundaries.",
-    deployment: ["local", "self-hosted"],
-    categories: ["capability-authorization", "confused-deputy", "consequential-action"],
-    pricingModel: "unknown",
-    coverages: [
-      {
-        attackClassId: "AAC-07",
-        mitigationIds: ["least-privilege", "abom-hash", "capability-attest", "kill-switch"],
-        evidenceStatus: "vendor-claimed",
-        evidenceSourceIds: [],
-        coverage: "adjacent",
-        limitations: ["Fixture only; deployment-specific authorization evidence remains unknown."],
-      },
-      {
-        attackClassId: "AAC-08",
-        mitigationIds: ["provenance", "least-privilege", "mtls-a2a", "hitl"],
-        evidenceStatus: "vendor-claimed",
-        evidenceSourceIds: [],
-        coverage: "adjacent",
-        limitations: ["Identifies confused-deputy boundary; no third-party evaluation recorded."],
-      },
-      {
-        attackClassId: "AAC-25",
-        mitigationIds: ["least-privilege", "provenance", "hitl", "mtls-a2a"],
-        evidenceStatus: "vendor-claimed",
-        evidenceSourceIds: [],
-        coverage: "adjacent",
-        limitations: ["Applies to capability boundaries only where cross-agent authorization is integrated."],
-      },
-      {
-        attackClassId: "AAC-38",
-        mitigationIds: ["hitl", "least-privilege", "trajectory", "kill-switch"],
-        evidenceStatus: "vendor-claimed",
-        evidenceSourceIds: [],
-        coverage: "partial",
-        limitations: ["Consequential-action gates are scoped to configured actions; no universal misuse claim."],
-      },
+    "id": "invariant-mcp-scan",
+    "name": "Invariant MCP-Scan",
+    "vendor": "Invariant Labs",
+    "description": "MCP-Scan originated at Invariant Labs. Its official repository now redirects to Snyk Agent Scan. This entry retains the MCP-Scan lineage and maps only documented configuration discovery and scanning, not all capabilities of later releases.",
+    "deployment": [
+      "local"
     ],
-    publisherProduct: true,
-    disclosure: PUBLISHER_PRODUCT_DISCLOSURE,
-    lastReviewedAt: "2026-09-13",
+    "categories": [
+      "mcp-scanning",
+      "server-discovery",
+      "agent-security-testing"
+    ],
+    "homepageUrl": "https://invariantlabs.ai/",
+    "docsUrl": "https://github.com/invariantlabs-ai/mcp-scan",
+    "pricingModel": "unknown",
+    "coverages": [
+      {
+        "attackClassId": "AAC-03",
+        "mitigationIds": [
+          "telemetry",
+          "allowlist-servers"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-invariant-mcp-scan-github"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "Scanner coverage can surface MCP risk but is not a runtime metadata firewall.",
+          "The original repository redirects to Snyk Agent Scan; behavior and supported configurations depend on the release used."
+        ]
+      },
+      {
+        "attackClassId": "AAC-10",
+        "mitigationIds": [
+          "allowlist-servers",
+          "telemetry"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-invariant-mcp-scan-github"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "MCP server scanning supports supply-chain review but does not replace provenance enforcement.",
+          "The original repository redirects to Snyk Agent Scan; behavior and supported configurations depend on the release used."
+        ]
+      },
+      {
+        "attackClassId": "AAC-14",
+        "mitigationIds": [
+          "allowlist-servers",
+          "telemetry"
+        ],
+        "evidenceStatus": "documented",
+        "evidenceSourceIds": [
+          "src-invariant-mcp-scan-github"
+        ],
+        "coverage": "adjacent",
+        "limitations": [
+          "Discovery and scanning can expose unmanaged servers; enforcement remains deployment-specific.",
+          "The original repository redirects to Snyk Agent Scan; behavior and supported configurations depend on the release used."
+        ]
+      }
+    ],
+    "publisherProduct": false,
+    "lastReviewedAt": "2026-09-14"
   },
   {
-    id: "promptfoo-red-teaming",
-    name: "Promptfoo Red Teaming",
-    vendor: "Promptfoo",
-    description:
-      "External product entry for Promptfoo's LLM and agent red-team testing workflows. Coverage is mapped as documented evaluation capability, not runtime prevention.",
-    deployment: ["local", "cloud"],
-    categories: ["red-team-testing", "agent-evaluation", "mcp-testing"],
-    homepageUrl: "https://www.promptfoo.dev/",
-    docsUrl: "https://www.promptfoo.dev/docs/red-team/",
-    pricingModel: "commercial",
-    coverages: [
-      {
-        attackClassId: "AAC-01",
-        mitigationIds: ["trajectory"],
-        evidenceStatus: "documented",
-        evidenceSourceIds: ["src-promptfoo-owasp-agentic-ai", "src-promptfoo-agents"],
-        coverage: "adjacent",
-        limitations: ["Documents testing for goal-hijack behavior; does not claim runtime blocking."],
-      },
-      {
-        attackClassId: "AAC-03",
-        mitigationIds: ["trajectory"],
-        evidenceStatus: "documented",
-        evidenceSourceIds: ["src-promptfoo-mcp-plugin"],
-        coverage: "adjacent",
-        limitations: ["MCP coverage is a red-team plugin mapping, not a tool-descriptor firewall."],
-      },
-      {
-        attackClassId: "AAC-06",
-        mitigationIds: ["trajectory"],
-        evidenceStatus: "documented",
-        evidenceSourceIds: ["src-promptfoo-agents"],
-        coverage: "adjacent",
-        limitations: ["Memory-poisoning coverage depends on configured scenarios and target integration."],
-      },
-      {
-        attackClassId: "AAC-38",
-        mitigationIds: ["trajectory"],
-        evidenceStatus: "documented",
-        evidenceSourceIds: ["src-promptfoo-owasp-agentic-ai", "src-promptfoo-agents"],
-        coverage: "adjacent",
-        limitations: ["Excessive-agency tests can expose consequential-action paths but do not enforce gates."],
-      },
-      {
-        attackClassId: "AAC-39",
-        mitigationIds: ["trajectory"],
-        evidenceStatus: "documented",
-        evidenceSourceIds: ["src-promptfoo-mcp-plugin"],
-        coverage: "adjacent",
-        limitations: ["System-prompt extraction coverage is documented as a test vector only."],
-      },
+    "id": "nvidia-nemo-guardrails",
+    "name": "NVIDIA NeMo Guardrails",
+    "vendor": "NVIDIA",
+    "publisherProduct": false,
+    "deployment": [
+      "local",
+      "self-hosted"
     ],
-    publisherProduct: false,
-    lastReviewedAt: "2026-09-13",
+    "categories": [
+      "agentic-security",
+      "tool-validation",
+      "injection-detection",
+      "guardrails",
+      "library"
+    ],
+    "description": "Guardrails library with configurable injection-detection and tool-validation rails. This profile covers the library, not every feature of the wider NeMo Platform.",
+    "homepageUrl": "https://docs.nvidia.com/nemo/guardrails/configure-guardrails/guardrail-catalog",
+    "docsUrl": "https://docs.nvidia.com/nemo/guardrails/configure-guardrails/guardrail-catalog/agentic-security",
+    "pricingModel": "open-source",
+    "lastReviewedAt": "2026-09-14",
+    "coverages": [
+      {
+        "attackClassId": "AAC-11",
+        "coverage": "partial",
+        "evidenceStatus": "documented",
+        "mitigationIds": [
+          "content-firewall"
+        ],
+        "evidenceSourceIds": [
+          "src-nvidia-agentic-security",
+          "src-nvidia-guardrail-catalog"
+        ],
+        "limitations": [
+          "Configured code, SQL and template injection detection covers selected downstream injection patterns, not arbitrary command execution.",
+          "Tool-calling rails are opt-in and require experimental IORails; they are unavailable on the default LLMRails engine.",
+          "IORails tool rails support the OpenAI Chat Completions wire format with openai/nim engines; configuration compatibility and fallback behavior matter.",
+          "Guardrails are defense in depth. Tool validation is not a complete authorization system.",
+          "Model-path rails alone do not cover all tool misuse or tool-output injection; platform features are not assumed present in the library."
+        ]
+      },
+      {
+        "attackClassId": "AAC-38",
+        "coverage": "partial",
+        "evidenceStatus": "documented",
+        "mitigationIds": [],
+        "evidenceSourceIds": [
+          "src-nvidia-tool-calling"
+        ],
+        "limitations": [
+          "Validates declared tool names, argument schemas and tool-result linkage; well-formed calls can still be unauthorized or harmful.",
+          "Tool-calling rails are opt-in and require experimental IORails; they are unavailable on the default LLMRails engine.",
+          "IORails tool rails support the OpenAI Chat Completions wire format with openai/nim engines; configuration compatibility and fallback behavior matter.",
+          "Guardrails are defense in depth. Tool validation is not a complete authorization system.",
+          "Model-path rails alone do not cover all tool misuse or tool-output injection; platform features are not assumed present in the library."
+        ]
+      }
+    ]
   },
   {
-    id: "checkpoint-ai-guardrails",
-    name: "Check Point AI Guardrails",
-    vendor: "Check Point",
-    description:
-      "External product entry for Check Point AI Security / AI Guardrails runtime controls across prompts, outputs, and agent tool interactions.",
-    deployment: ["cloud", "self-hosted"],
-    categories: ["ai-guardrails", "runtime-protection", "data-leakage-prevention"],
-    homepageUrl: "https://docs.lakera.ai/introduction",
-    docsUrl: "https://docs.lakera.ai/docs/agent-security",
-    pricingModel: "commercial",
-    coverages: [
-      {
-        attackClassId: "AAC-01",
-        mitigationIds: ["content-firewall", "untrusted-io"],
-        evidenceStatus: "documented",
-        evidenceSourceIds: ["src-checkpoint-agent-security", "src-checkpoint-quickstart"],
-        coverage: "partial",
-        limitations: ["Prompt-attack detection is documented; bypass resistance is not independently evaluated here."],
-      },
-      {
-        attackClassId: "AAC-02",
-        mitigationIds: ["content-firewall", "untrusted-io"],
-        evidenceStatus: "documented",
-        evidenceSourceIds: ["src-checkpoint-agent-security"],
-        coverage: "adjacent",
-        limitations: ["Tool-call and tool-response screening maps to indirect-injection boundaries, not full prevention."],
-      },
-      {
-        attackClassId: "AAC-15",
-        mitigationIds: ["output-dlp", "untrusted-io"],
-        evidenceStatus: "documented",
-        evidenceSourceIds: ["src-checkpoint-agent-security", "src-checkpoint-data-leakage-prevention"],
-        coverage: "partial",
-        limitations: ["DLP scope depends on configured detectors, entities, and deployment coverage."],
-      },
-      {
-        attackClassId: "AAC-38",
-        mitigationIds: ["trajectory", "content-firewall"],
-        evidenceStatus: "documented",
-        evidenceSourceIds: ["src-checkpoint-agent-security"],
-        coverage: "adjacent",
-        limitations: ["Agent behavior defense is documented but not mapped to a complete consequential-action gate."],
-      },
-      {
-        attackClassId: "AAC-39",
-        mitigationIds: ["output-dlp"],
-        evidenceStatus: "documented",
-        evidenceSourceIds: ["src-checkpoint-data-leakage-prevention"],
-        coverage: "partial",
-        limitations: ["System-prompt detection is documented as a leakage detector; it is not a universal secrecy guarantee."],
-      },
+    "id": "meta-llamafirewall",
+    "name": "LlamaFirewall",
+    "vendor": "Meta",
+    "publisherProduct": false,
+    "deployment": [
+      "local",
+      "self-hosted"
     ],
-    publisherProduct: false,
-    lastReviewedAt: "2026-09-13",
+    "categories": [
+      "prompt-injection",
+      "agent-security",
+      "code-safety",
+      "guardrails"
+    ],
+    "description": "Open-source framework combining PromptGuard 2, experimental Agent Alignment Checks and CodeShield. These components address different risks; LlamaFirewall is not interchangeable with Llama Guard.",
+    "homepageUrl": "https://ai.meta.com/research/publications/llamafirewall-an-open-source-guardrail-system-for-building-secure-ai-agents/",
+    "pricingModel": "open-source",
+    "lastReviewedAt": "2026-09-14",
+    "coverages": [
+      {
+        "attackClassId": "AAC-01",
+        "coverage": "partial",
+        "evidenceStatus": "documented",
+        "mitigationIds": [
+          "content-firewall"
+        ],
+        "evidenceSourceIds": [
+          "src-meta-llamafirewall-research",
+          "src-meta-protection-tools"
+        ],
+        "limitations": [
+          "PromptGuard 2 targets jailbreak/prompt-injection detection; no universal prevention claim.",
+          "Not a general authorization kernel; safeguard detection does not replace least privilege or external policy.",
+          "Effectiveness depends on orchestration and integration.",
+          "Agent Alignment Checks are experimental in the published research."
+        ]
+      },
+      {
+        "attackClassId": "AAC-28",
+        "coverage": "adjacent",
+        "evidenceStatus": "documented",
+        "mitigationIds": [],
+        "evidenceSourceIds": [
+          "src-meta-llamafirewall-research",
+          "src-meta-protection-tools"
+        ],
+        "limitations": [
+          "CodeShield analyzes generated code for insecure or dangerous patterns; static analysis is not execution containment.",
+          "Not a general authorization kernel; safeguard detection does not replace least privilege or external policy.",
+          "Effectiveness depends on orchestration and integration.",
+          "Agent Alignment Checks are experimental in the published research."
+        ]
+      },
+      {
+        "attackClassId": "AAC-38",
+        "coverage": "adjacent",
+        "evidenceStatus": "documented",
+        "mitigationIds": [
+          "trajectory"
+        ],
+        "evidenceSourceIds": [
+          "src-meta-protection-tools",
+          "src-meta-llamafirewall-research"
+        ],
+        "limitations": [
+          "Meta describes risky plug-in interactions and agent misalignment; this does not establish complete tool authorization.",
+          "Not a general authorization kernel; safeguard detection does not replace least privilege or external policy.",
+          "Effectiveness depends on orchestration and integration.",
+          "Agent Alignment Checks are experimental in the published research."
+        ]
+      }
+    ]
   },
   {
-    id: "invariant-mcp-scan",
-    name: "Invariant MCP-Scan",
-    vendor: "Invariant Labs",
-    description:
-      "External product entry for Invariant Labs MCP-Scan, mapped narrowly to MCP server discovery and scanning coverage.",
-    deployment: ["local"],
-    categories: ["mcp-scanning", "server-discovery", "agent-security-testing"],
-    homepageUrl: "https://invariantlabs.ai/",
-    docsUrl: "https://github.com/invariantlabs-ai/mcp-scan",
-    pricingModel: "unknown",
-    coverages: [
-      {
-        attackClassId: "AAC-03",
-        mitigationIds: ["telemetry", "allowlist-servers"],
-        evidenceStatus: "documented",
-        evidenceSourceIds: ["src-invariant-home", "src-invariant-mcp-scan-github"],
-        coverage: "adjacent",
-        limitations: ["Scanner coverage can surface MCP risk but is not a runtime metadata firewall."],
-      },
-      {
-        attackClassId: "AAC-05",
-        mitigationIds: ["drift-detect", "hash-pin"],
-        evidenceStatus: "documented",
-        evidenceSourceIds: ["src-invariant-mcp-scan-github"],
-        coverage: "adjacent",
-        limitations: ["Mapped to scanner-assisted descriptor risk visibility, not automatic rug-pull prevention."],
-      },
-      {
-        attackClassId: "AAC-10",
-        mitigationIds: ["allowlist-servers", "telemetry"],
-        evidenceStatus: "documented",
-        evidenceSourceIds: ["src-invariant-home", "src-invariant-mcp-scan-github"],
-        coverage: "adjacent",
-        limitations: ["MCP server scanning supports supply-chain review but does not replace provenance enforcement."],
-      },
-      {
-        attackClassId: "AAC-14",
-        mitigationIds: ["allowlist-servers", "telemetry"],
-        evidenceStatus: "documented",
-        evidenceSourceIds: ["src-invariant-home", "src-invariant-mcp-scan-github"],
-        coverage: "adjacent",
-        limitations: ["Discovery and scanning can expose unmanaged servers; enforcement remains deployment-specific."],
-      },
+    "id": "aws-agentcore-policy-guardrails",
+    "name": "Amazon Bedrock AgentCore Policy + Guardrails",
+    "vendor": "Amazon Web Services",
+    "publisherProduct": false,
+    "deployment": [
+      "cloud"
     ],
-    publisherProduct: false,
-    lastReviewedAt: "2026-09-13",
-  },
+    "categories": [
+      "agent-policy",
+      "tool-authorization",
+      "prompt-attack-detection",
+      "sensitive-data",
+      "gateway-enforcement"
+    ],
+    "description": "AWS-specific combination of AgentCore Policy for external gateway tool-access rules and Bedrock Guardrails for configured content checks. Policy authorization and probabilistic detection are separate controls.",
+    "homepageUrl": "https://aws.amazon.com/bedrock/agentcore/faqs/",
+    "docsUrl": "https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/policy-guardrails-in-policies.html",
+    "pricingModel": "usage-based",
+    "lastReviewedAt": "2026-09-14",
+    "coverages": [
+      {
+        "attackClassId": "AAC-01",
+        "coverage": "partial",
+        "evidenceStatus": "documented",
+        "mitigationIds": [
+          "content-firewall"
+        ],
+        "evidenceSourceIds": [
+          "src-aws-guardrails-policy"
+        ],
+        "limitations": [
+          "Configured prompt-attack safeguards detect prompt injection, jailbreaks and prompt leakage within selected request content.",
+          "AWS/AgentCore-specific; not a universal cross-platform agent firewall.",
+          "Bedrock Guardrail detection is probabilistic; deterministic policy enforcement depends on configured policy.",
+          "Gateway routing, IAM permissions, selected context fields and regional availability matter."
+        ]
+      },
+      {
+        "attackClassId": "AAC-07",
+        "coverage": "partial",
+        "evidenceStatus": "documented",
+        "mitigationIds": [
+          "least-privilege",
+          "control-plane-isolation"
+        ],
+        "evidenceSourceIds": [
+          "src-aws-agentcore-policy-ga",
+          "src-aws-agentcore-faq"
+        ],
+        "limitations": [
+          "External policy constrains tool access and conditions; it does not prevent every privilege-escalation mechanism.",
+          "AWS/AgentCore-specific; not a universal cross-platform agent firewall.",
+          "Bedrock Guardrail detection is probabilistic; deterministic policy enforcement depends on configured policy.",
+          "Gateway routing, IAM permissions, selected context fields and regional availability matter."
+        ]
+      },
+      {
+        "attackClassId": "AAC-38",
+        "coverage": "partial",
+        "evidenceStatus": "documented",
+        "mitigationIds": [
+          "least-privilege"
+        ],
+        "evidenceSourceIds": [
+          "src-aws-agentcore-policy-ga",
+          "src-aws-guardrails-policy",
+          "src-aws-agentcore-faq"
+        ],
+        "limitations": [
+          "Gateway evaluates requests before tool access; capabilities bypassing that boundary are outside this mapping.",
+          "AWS/AgentCore-specific; not a universal cross-platform agent firewall.",
+          "Bedrock Guardrail detection is probabilistic; deterministic policy enforcement depends on configured policy.",
+          "Gateway routing, IAM permissions, selected context fields and regional availability matter."
+        ]
+      }
+    ]
+  }
 ];

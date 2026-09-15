@@ -8,7 +8,7 @@ Publication status: `0.2.0-draft`; independent review remains pending.
 
 ASI is a static React/TypeScript research publication built by Vite. It has no backend, database, authentication service, or production application server. Deploy the complete `dist/` directory. The browser loads incident records from `/export/asi-catalog.json` and uses hash routes.
 
-The sealed data set contains 40 attack classes, 23 incidents, 28 sources, 23 mitigations, and 6 product profiles. No mitigation is marked validated. Publisher product evidence remains vendor-claimed. These are snapshot counts, not permanent validation targets for future authorized research additions.
+The external-first launch data set contains 40 attack classes, 23 incidents, 36 sources, 23 mitigations, and 6 external product profiles. No mitigation is marked validated. Public publisher products and vendor claims are absent. These are snapshot counts, not permanent validation targets for future authorized research additions.
 
 Source existence is not source quality. A working URL does not demonstrate that a product prevents an attack. Public availability does not make this draft independently reviewed or certified.
 
@@ -142,7 +142,9 @@ Confirm this table against the live source before each new research task. AAC-41
 
 Incident tiers are T0 theoretical, T1 lab/PoC, T2 field incident or CVE/advisory, T3 multiple independent field cases. Research on a real service can still be a controlled T1 demonstration. Confidence in a report is separate from the tier and from severity.
 
-Product statuses have separate requirements: vendor-claimed can have no linked sources; documented requires vendor documentation/advisory; third-party-evaluated requires independent evidence; reproduced requires public reproduction evidence; aletheia-tested requires an actual Aletheia artifact. The validator checks structural eligibility, not whether the source substantively proves the claim. Human research review remains necessary.
+The schema retains separate evidence statuses, but the external-first public surface has a stricter eligibility rule: each published coverage row requires documented, third-party-evaluated or reproduced status and resolving source IDs. Documented requires vendor documentation/advisory; third-party-evaluated requires independent evidence; reproduced requires public reproduction evidence. A product can instead have zero rows, displayed as "No mapped coverage yet." Unknown coverage is not converted to partial. Publisher products and public publisher vendor claims are rejected during assembly and validation. Overall product scores remain prohibited. The validator checks structural eligibility, not whether a source substantively proves the claim; human review remains necessary.
+
+The six public IDs are `promptfoo-red-teaming`, `checkpoint-ai-guardrails`, `invariant-mcp-scan`, `nvidia-nemo-guardrails`, `meta-llamafirewall`, and `aws-agentcore-policy-guardrails`. The three former `aletheia-*` profiles and claims were removed from authored datasets, not CSS-hidden. Git history retains historical records; no internal fixture file is exported. Deployment values remain local/self-hosted/cloud as applicable; library, open-source and AWS scope belong in descriptive metadata.
 
 ## 6. Final pre-launch pair
 
@@ -190,7 +192,7 @@ $catalog.products.Count
 $catalog.incidents | Where-Object { -not $_.primarySourceId }
 ```
 
-Expected current counts: 40 / 23 / 28 / 23 / 6; the last command prints nothing. Check all source and mitigation references, unique incident IDs, exactly one record for each addition, zero placeholders and no unintended product changes. Do not treat passing automated checks as verification of every factual claim in the older catalog.
+Expected current counts: 40 / 23 / 36 / 23 / 6; the last command prints nothing. Check all source and mitigation references, unique incident IDs, exactly one record for each addition, zero placeholders and no unintended product changes. Do not treat passing automated checks as verification of every factual claim in the older catalog.
 
 ### Clean-generation check
 
@@ -218,7 +220,8 @@ Test desktop and narrow mobile widths. Confirm no horizontal page overflow, blan
 | `#/matrix` | Filters/views work; class selection opens detail |
 | `#/products` | Six profiles and evidence labels |
 | `#/products/promptfoo-red-teaming` | Resolved sources and limitations |
-| `#/products/aletheia-lite` | Vendor-claimed and missing independent evidence wording |
+| All six external product detail routes | Evidence links and scoped limitations |
+| `#/products/aletheia-lite`, `#/products/aletheia-runtime-firewall`, `#/products/aletheia-aegis-provenance` | Product not found, no coverage claims |
 | `#/incidents` | 23 records; both new titles, dates, source links and resolution text |
 | `#/attacks/AAC-29`, `#/attacks/AAC-07` | INC-401, CVE and version boundary |
 | `#/attacks/AAC-08` | INC-402, historical resolution, no invented CVE |

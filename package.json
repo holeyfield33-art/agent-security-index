@@ -15,7 +15,7 @@
     "check:catalog": "node scripts/assemble-catalog.mjs && node scripts/check-catalog-invariant.mjs",
     "check:catalog:strict": "node scripts/assemble-catalog.mjs && node scripts/check-catalog-invariant.mjs --strict",
     "assert:taxonomy": "node scripts/assert-aac-ids.mjs",
-    "test": "node scripts/assert-aac-ids.mjs && node scripts/assemble-catalog.mjs && node scripts/check-catalog-invariant.mjs"
+    "test": "node scripts/assert-aac-ids.mjs && node scripts/assemble-catalog.mjs && node scripts/check-catalog-invariant.mjs && node --test scripts/public-products.test.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
