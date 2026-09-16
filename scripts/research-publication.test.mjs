@@ -50,9 +50,10 @@ test("architecture note is explicitly proposed research with experiment pending"
   assert.equal(architectureNote.id, "ASI-ARCH-001");
   assert.equal(architectureNote.status, "Architecture note");
   assert.equal(architectureNote.evidenceStatus, "Experiment pending");
-  assert.match(architectureNote.qualification, /proposed architecture/i);
+  assert.match(architectureNote.qualification, /not a validated or production-grade security system/i);
   assert.match(architectureNote.scope, /single-machine, multi-process/i);
-  assert.match(architectureNote.safetyNote, /does not claim universal AI safety/i);
+  assert.match(architectureNote.scope, /stateful-agent memory/i);
+  assert.match(architectureNote.safetyNote, /complete semantic provenance/i);
 });
 
 test("native article renders all 11 sections, links and qualified core claim", () => {
@@ -66,12 +67,17 @@ test("native article renders all 11 sections, links and qualified core claim", (
   for (const match of html.matchAll(/href="([^"]+)"/g)) assert(match[1].startsWith("https://"));
 });
 
-test("architecture note contains the frozen five invariants and remains product-neutral", () => {
+test("architecture note contains frozen invariants, bootstrap rules and implementation threat model", () => {
   const { ArchitectureNote001 } = loadTS("src/components/architecture-note-001.tsx");
   const html = renderToStaticMarkup(React.createElement(ArchitectureNote001));
   for (const invariant of ["T1", "T2", "T3", "T4", "T5"]) assert(html.includes(invariant));
-  assert.match(html, /Reference ≠ Authority/);
-  assert.match(html, /Materialization is not disclosure/);
+  for (const threat of ["I-1", "I-2", "I-3", "I-4", "I-5", "I-6", "I-7"]) assert(html.includes(threat));
+  assert.match(html, /Reference issuance comes before reference use/);
+  assert.match(html, /Opacity cannot mean semantic blindness/);
+  assert.match(html, /worker is the primary plaintext attack surface/i);
+  assert.match(html, /runtime dependency provenance/i);
+  assert.match(html, /Stateful agents remain an open boundary/);
+  assert.match(html, /Implementation threat model/);
   assert.match(html, /Experiment 001/);
   assert(!/Aletheia|Runtime Firewall|Helios|VAR/.test(html));
 });
