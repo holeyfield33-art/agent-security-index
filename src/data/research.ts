@@ -1,5 +1,5 @@
-// Metadata for the one published study. Full text is generated from its canonical repository.
-export const RESEARCH_POSITIONING = "ASI Research publishes evidence-scoped security research on AI agent and model failure modes.";
+// Metadata for published ASI research and architecture notes.
+export const RESEARCH_POSITIONING = "ASI Research publishes evidence-scoped security research and architecture notes on AI agent and model failure modes.";
 export const RESEARCH_PUBLICATIONS = [
   {
     id: "ASI-RESEARCH-001",
@@ -18,5 +18,23 @@ export const RESEARCH_PUBLICATIONS = [
     safetyNote: "Operational prompts and dangerous outputs are withheld. Supplied gallery images are illustrative, not original captures. No final PDF or product-evidence upgrade accompanies this publication.",
     repositoryUrl: "https://github.com/holeyfield33-art/ASI-Research-v1",
     methodologyUrl: "https://github.com/holeyfield33-art/ASI-Research-v1/blob/main/METHODOLOGY.md",
+  },
+  {
+    id: "ASI-ARCH-001",
+    slug: "reference-not-authority",
+    title: "Reference ≠ Authority",
+    subtitle: "Opaque References and Controlled Materialization for AI Agent Data Security",
+    status: "Architecture note",
+    evidenceStatus: "Experiment pending",
+    researchPeriod: "2026",
+    affiliation: "Agent Security Index",
+    summary: "A proposed architecture for separating an AI planner's ability to coordinate work from its authority to access or disclose the protected data involved in that work.",
+    metaDescription: "ASI Architecture Note 001 proposes opaque references, deterministic authorization, controlled materialization, and recursive governance of AI-derived outputs so planning does not automatically imply plaintext access or disclosure authority.",
+    coreClaim: "An untrusted AI planner can coordinate operations over protected data without automatically receiving plaintext access or authority over that data.",
+    qualification: "This is a proposed architecture, not a validated security product. The control model has been adversarially pressure-tested at the design level; implementation results for the five frozen invariants remain pending.",
+    scope: "The initial experiment targets a single-machine, multi-process threat model with a trusted Resolver, Representation Gate, controlled worker implementation, and OS isolation. Kernel/root compromise and malicious trusted components are out of scope for V1.",
+    safetyNote: "The note does not claim universal AI safety, perfect memory erasure, protection from a compromised trusted computing base, or revocation of information already disclosed to a human or external system.",
+    repositoryUrl: "https://github.com/holeyfield33-art/agent-security-index",
+    methodologyUrl: "#/methodology",
   },
 ] as const;
