@@ -1,3 +1,5 @@
+import { IssuanceFigure, ControlLoopFigure, DisclosureFigure } from "@/components/architecture-figures";
+
 const PRINCIPLES = [
   ["Reference ≠ Authority", "An opaque handle can name protected information without granting permission to read or use it."],
   ["Planner ≠ Authorizer", "The planner may propose an operation. Authority originates outside the planner and is evaluated by the Resolver."],
@@ -8,7 +10,7 @@ const PRINCIPLES = [
 const INVARIANTS = [
   ["T1", "Reference is not authority", "Possessing Ref_A without a valid authorization must not yield plaintext or trigger materialization."],
   ["T2", "No self-authorization", "Changing the requested operation, purpose, recipient, or destination must not widen the planner’s authority."],
-  ["T3", "Controlled plaintext", "Authorized plaintext appears only inside the designated worker boundary under the stated implementation threat model."],
+  ["T3", "Controlled plaintext", "During computation, authorized plaintext appears only inside the designated worker boundary under the stated implementation threat model; trusted ingestion and Gate registration remain inside the trusted data path."],
   ["T4", "No derived-data laundering", "A protected parent cannot silently produce an unrestricted child merely because the output is newly generated."],
   ["T5", "Compute does not imply disclose", "Permission to transform data does not automatically permit display, export, send, or other disclosure."],
 ] as const;
@@ -40,10 +42,10 @@ export function ArchitectureNote001() {
       <section>
         <p className="font-mono text-xs tracking-[0.14em] text-accent uppercase">Architecture Note 001 · Proposed architecture · Experiment pending</p>
         <blockquote>
-          <p>AI can coordinate operations over protected data without automatically receiving plaintext access or authority over that data.</p>
+          <p>An untrusted AI planner may coordinate operations over protected data without automatically receiving plaintext access or authority, provided reference issuance, authorization, worker isolation, and output governance remain inside the stated trusted boundary.</p>
         </blockquote>
         <p>
-          Many agent systems collapse several different privileges into one step: naming information, reading it, computing over it, and disclosing it. This note proposes separating those privileges structurally. An untrusted planner operates over opaque references. A trusted Resolver decides whether a proposed use is authorized. Plaintext appears only inside an explicitly authorized computation boundary. Any derived output returns through a Representation Gate before it can be reused or disclosed.
+          Many agent systems collapse several different privileges into one step: naming information, reading it, computing over it, and disclosing it. This note proposes separating those privileges structurally. An untrusted planner operates over opaque references. A trusted Resolver decides whether a proposed use is authorized. Plaintext is kept out of the planner; trusted ingestion and registration handle it, and authorized computation uses an isolated worker. Any derived output returns through a Representation Gate before it can be reused or disclosed.
         </p>
         <p>
           The proposal is intentionally narrower than a production security architecture. Its purpose is to create a falsifiable experiment: can the five invariants below survive an actively adversarial planner under a stated single-machine threat model?
@@ -67,17 +69,7 @@ export function ArchitectureNote001() {
         <p>
           Opaque references are not invented by the planner. They are created only by the trusted Representation Gate when protected information is first registered or when a derived candidate is promoted into a governed representation. The trusted Registry stores the binding between the random reference and the exact committed representation.
         </p>
-        <pre className="mt-5 overflow-x-auto border border-border bg-elevated p-4 text-xs leading-6"><code>{`Trusted ingestion / governed output
-        ↓
-Representation Gate
-        ↓
-create H_content
-create random Ref
-store Ref → representation binding
-        ↓
-issue Ref to approved workflow view
-        ↓
-Untrusted Planner`}</code></pre>
+        <IssuanceFigure />
         <p>
           Reference issuance is therefore part of the trusted path. A planner may receive a reference because the surrounding workflow is allowed to reveal that the object exists; receiving the reference still grants no read, compute, or disclosure authority. Revocation and retention may later disable resolution or retire the reference mapping, while audit records may retain non-plaintext commitments to preserve history.
         </p>
@@ -99,21 +91,7 @@ Untrusted Planner`}</code></pre>
         <p>
           The planner never receives registry access or delegation secrets. It receives a trusted workflow view, proposes an operation, and waits for a decision. If semantic computation is authorized, the exact representation is materialized only to the approved worker. Candidate output is intercepted and registered as a new governed representation before downstream reuse.
         </p>
-        <pre className="mt-5 overflow-x-auto border border-border bg-elevated p-4 text-xs leading-6"><code>{`Protected Data
-      ↓
-Representation Gate → Ref_A / H_A
-      ↓ controlled planner view
-Untrusted Planner
-      ↓ proposal only
-Trusted Resolver
-      ↓ ALLOW / DENY
-Controlled Materialization
-      ↓
-Isolated Worker
-      ↓ candidate output only
-Representation Gate → Ref_B / H_B
-      ↓
-Trusted Resolver → reuse or disclosure decision`}</code></pre>
+        <ControlLoopFigure />
       </section>
 
       <section>
@@ -154,7 +132,7 @@ Trusted Resolver → reuse or disclosure decision`}</code></pre>
       <section>
         <h2>Derived lineage has a defined ceiling</h2>
         <p>
-          The Gate can reliably bind a new representation to the governed inputs that the trusted runtime actually materialized for that execution. It cannot prove that a model has never learned related information through prior context, model weights, a human observation, a covert channel, or statistical inference across many allowed queries.
+          With complete mediation of inputs and an intact trusted runtime, the Gate is intended to bind a new representation to the governed inputs that the trusted runtime actually materialized for that execution. It cannot prove that a model has never learned related information through prior context, model weights, a human observation, a covert channel, or statistical inference across many allowed queries.
         </p>
         <p>
           Lineage in this architecture therefore means <strong>runtime dependency provenance</strong>, not complete semantic causation. This distinction matters: a correct parent commitment can prevent straightforward policy laundering without proving that every bit of information in the output came only from those parents.
@@ -189,6 +167,7 @@ Trusted Resolver → reuse or disclosure decision`}</code></pre>
         <p>
           In many useful workflows, disclosure is eventually unavoidable. The architecture does not eliminate that last-mile decision; it makes it explicit and independently authorized.
         </p>
+        <DisclosureFigure />
         <blockquote><p>Revocation can stop future system-controlled use. It cannot erase information that has already been disclosed.</p></blockquote>
       </section>
 
@@ -199,7 +178,8 @@ Trusted Resolver → reuse or disclosure decision`}</code></pre>
         </p>
         <p><strong>Trusted for V1:</strong> Resolver, Registry, Gate, policy evaluator, controlled worker implementation, and the operating-system isolation configuration.</p>
         <p><strong>Untrusted:</strong> planner process, any language model used by the planner, planner memory, planner-supplied fields, logs outside the trusted boundary, and human behavior after authorized disclosure.</p>
-        <div className="mt-5 overflow-x-auto">
+        <p>Severity labels are provisional experiment-prioritization judgments, not measured risk scores. Each threat must be tested against the actual implementation and stated assumptions.</p>
+        <div className="mt-5 overflow-x-auto" role="region" aria-label="Implementation threats I-1 through I-10" tabIndex={0}>
           <table className="w-full min-w-[720px] border-collapse text-left text-sm">
             <thead><tr className="border-y border-border"><th className="p-2">ID</th><th className="p-2">Attack surface</th><th className="p-2">Threat</th><th className="p-2">Impact</th><th className="p-2">Severity</th></tr></thead>
             <tbody>{THREATS.map(([id, surface, threat, impact, severity]) => <tr key={id} className="border-b border-border align-top"><td className="p-2 font-mono text-accent">{id}</td><td className="p-2">{surface}</td><td className="p-2 text-muted">{threat}</td><td className="p-2">{impact}</td><td className="p-2">{severity}</td></tr>)}</tbody>
@@ -235,7 +215,7 @@ Trusted Resolver → reuse or disclosure decision`}</code></pre>
         <p>
           The planner should be actively adversarial. It should attempt unauthorized reference use, field substitution, repeated materialization, lineage confusion, output-channel escape, and compute-to-disclosure escalation. Any single break of T1–T5 is a failed experiment, even if the overall idea remains useful.
         </p>
-        <blockquote><p>The implementation is the red-team exercise. The architecture earns confidence only when the invariants survive contact with code.</p></blockquote>
+        <p>Use synthetic protected data and record the exact code revision, host configuration, grants, requests, decisions, and observations for each test. Include an authorized control case to distinguish enforcement from a system that simply denies everything. Report untested cases separately from passes; passing the selected tests supplies bounded evidence, not proof of universal enforcement.</p>
       </section>
 
       <section>
@@ -247,6 +227,7 @@ Trusted Resolver → reuse or disclosure decision`}</code></pre>
         <p>
           The harder question is not whether opaque references are possible. It is whether reference issuance, planner-visible metadata, worker isolation, lineage, and narrow policy can be implemented without recreating ambient authority through another path. That is what Experiment 001 is intended to test.
         </p>
+        <blockquote><p>The implementation is the red-team exercise. The architecture earns confidence only when the invariants survive contact with code.</p></blockquote>
       </section>
     </article>
   );

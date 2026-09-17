@@ -50,6 +50,7 @@ test("architecture note is explicitly proposed research with experiment pending"
   assert.equal(architectureNote.id, "ASI-ARCH-001");
   assert.equal(architectureNote.status, "Architecture note");
   assert.equal(architectureNote.evidenceStatus, "Experiment pending");
+  assert.equal(architectureNote.repositoryUrl, null);
   assert.match(architectureNote.qualification, /not a validated or production-grade security system/i);
   assert.match(architectureNote.scope, /single-machine, multi-process/i);
   assert.match(architectureNote.scope, /stateful-agent memory/i);
@@ -71,7 +72,7 @@ test("architecture note contains frozen invariants, bootstrap rules and implemen
   const { ArchitectureNote001 } = loadTS("src/components/architecture-note-001.tsx");
   const html = renderToStaticMarkup(React.createElement(ArchitectureNote001));
   for (const invariant of ["T1", "T2", "T3", "T4", "T5"]) assert(html.includes(invariant));
-  for (const threat of ["I-1", "I-2", "I-3", "I-4", "I-5", "I-6", "I-7"]) assert(html.includes(threat));
+  for (const threat of ["I-1", "I-2", "I-3", "I-4", "I-5", "I-6", "I-7", "I-8", "I-9", "I-10"]) assert(html.includes(threat));
   assert.match(html, /Reference issuance comes before reference use/);
   assert.match(html, /Opacity cannot mean semantic blindness/);
   assert.match(html, /worker is the primary plaintext attack surface/i);

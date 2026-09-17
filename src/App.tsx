@@ -631,8 +631,8 @@ function ResearchPage() {
             <p className="mt-6 text-sm leading-7 text-muted">{publication.summary}</p>
             <p className="mt-3 text-sm leading-7 text-muted">{publication.qualification}</p>
             <nav aria-label={`${publication.id} reading links`} className="mt-6 flex flex-wrap gap-x-6 gap-y-3 border-t border-border pt-5">
-              <a href={`#/research/${publication.slug}`} className="text-sm text-accent underline underline-offset-4">Read ASI Research 001 →</a>
-              <a href={publication.repositoryUrl} className="text-sm text-accent underline underline-offset-4">View research repository</a>
+              <a href={`#/research/${publication.slug}`} className="text-sm text-accent underline underline-offset-4">{publication.id === "ASI-ARCH-001" ? "Read Architecture Note 001" : "Read ASI Research 001"} →</a>
+              {publication.repositoryUrl && <a href={publication.repositoryUrl} className="text-sm text-accent underline underline-offset-4">View research repository</a>}
             </nav>
           </article>
         ))}
@@ -660,7 +660,7 @@ function ResearchDetailPage({ id }: { id: string }) {
           <p className="text-sm leading-7 text-muted">{publication.qualification}</p>
           <p className="text-sm leading-7 text-muted">{publication.safetyNote}</p>
           <nav aria-label="Research resources" className="flex flex-wrap gap-5 text-sm text-accent underline underline-offset-4">
-            <a href={publication.repositoryUrl}>View research repository</a>
+            {publication.repositoryUrl && <a href={publication.repositoryUrl}>View research repository</a>}
             <a href={publication.methodologyUrl}>View methodology</a>
           </nav>
         </div>

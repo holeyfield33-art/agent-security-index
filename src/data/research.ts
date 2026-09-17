@@ -31,10 +31,10 @@ export const RESEARCH_PUBLICATIONS = [
     summary: "A proposed architecture for separating an AI planner's ability to coordinate work from its authority to access or disclose protected data, with an explicit implementation threat model for reference issuance, metadata exposure, worker isolation, lineage, and policy failure.",
     metaDescription: "ASI Architecture Note 001 proposes opaque references, deterministic authorization, controlled materialization, and recursive governance of AI-derived outputs while explicitly pressure-testing reference issuance, planner metadata, worker isolation, and implementation failure modes.",
     coreClaim: "An untrusted AI planner can coordinate operations over protected data without automatically receiving plaintext access or authority over that data, provided reference issuance, authorization, worker isolation, and output governance remain inside the stated trusted boundary.",
-    qualification: "This is a proposed and adversarially reviewed architecture, not a validated or production-grade security system. Its strongest claims remain conditional on the V1 trusted computing base and must be tested experimentally against the five frozen invariants.",
+    qualification: "This is a proposed architecture with an explicit adversarial threat model, not a validated or production-grade security system. Its strongest claims remain conditional on the V1 trusted computing base and must be tested experimentally against the five frozen invariants.",
     scope: "The initial experiment targets a single-machine, multi-process threat model with trusted reference issuance, Resolver, Representation Gate, controlled worker implementation, and OS process isolation. Stateful-agent memory, external providers, multi-user identity, kernel/root compromise, and malicious trusted components are not solved by V1.",
     safetyNote: "The note does not claim universal AI safety, perfect memory erasure, complete semantic provenance, protection from a compromised trusted computing base, or revocation of information already disclosed to a human or external system.",
-    repositoryUrl: "https://github.com/holeyfield33-art/agent-security-index",
+    repositoryUrl: null,
     methodologyUrl: "#/methodology",
   },
 ] as const;
