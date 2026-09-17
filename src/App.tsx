@@ -631,8 +631,8 @@ function ResearchPage() {
             <p className="mt-6 text-sm leading-7 text-muted">{publication.summary}</p>
             <p className="mt-3 text-sm leading-7 text-muted">{publication.qualification}</p>
             <nav aria-label={`${publication.id} reading links`} className="mt-6 flex flex-wrap gap-x-6 gap-y-3 border-t border-border pt-5">
-              <a href={`#/research/${publication.slug}`} className="text-sm text-accent underline underline-offset-4">Read ASI Research 001 →</a>
-              <a href={publication.repositoryUrl} className="text-sm text-accent underline underline-offset-4">View research repository</a>
+              <a href={`#/research/${publication.slug}`} className="text-sm text-accent underline underline-offset-4">{publication.id === "ASI-ARCH-001" ? "Read Architecture Note 001" : "Read ASI Research 001"} →</a>
+              {publication.repositoryUrl && <a href={publication.repositoryUrl} className="text-sm text-accent underline underline-offset-4">View research repository</a>}
             </nav>
           </article>
         ))}
@@ -655,12 +655,12 @@ function ResearchDetailPage({ id }: { id: string }) {
           <dl className="grid gap-4 text-sm sm:grid-cols-3">
             <Info label="Research period" value={publication.researchPeriod} />
             <Info label="Research affiliation" value={publication.affiliation} />
-            <Info label="Article length" value={`${RESEARCH_001.wordCount.toLocaleString()} words · ${Math.ceil(RESEARCH_001.wordCount / 220)} min read`} />
+            {publication.slug === "asi-research-001" && <Info label="Article length" value={`${RESEARCH_001.wordCount.toLocaleString()} words · ${Math.ceil(RESEARCH_001.wordCount / 220)} min read`} />}
           </dl>
           <p className="text-sm leading-7 text-muted">{publication.qualification}</p>
           <p className="text-sm leading-7 text-muted">{publication.safetyNote}</p>
           <nav aria-label="Research resources" className="flex flex-wrap gap-5 text-sm text-accent underline underline-offset-4">
-            <a href={publication.repositoryUrl}>View research repository</a>
+            {publication.repositoryUrl && <a href={publication.repositoryUrl}>View research repository</a>}
             <a href={publication.methodologyUrl}>View methodology</a>
           </nav>
         </div>
@@ -747,7 +747,7 @@ export function App() {
   useEffect(() => {
     const product = route.name === "product" ? PRODUCTS.find(item => item.id === route.id) : undefined;
     const attack = route.name === "attack" ? ATTACK_CLASSES.find(item => item.id === route.id) : undefined;
-    const detail = publication ? { title: "The Disclosure Gap | ASI Research 001", description: publication.metaDescription }
+    const detail = publication ? { title: `${publication.title} | ${publication.id}`, description: publication.metaDescription }
       : product ? { title: `${product.name} | Agent Security Index`, description: product.description }
       : attack ? { title: `${attack.id}: ${attack.name} | Agent Security Index`, description: attack.summary } : undefined;
     setPageMetadata(route.name, detail);

@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { ArchitectureNote001 } from "@/components/architecture-note-001";
 import { RESEARCH_001 } from "@/data/research-001.generated";
 import { researchLinkHref } from "@/lib/research-links";
 
@@ -12,6 +13,11 @@ function InlineText({ text }: { text: string }) {
 }
 
 export function ResearchArticle() {
+  const isArchitectureNote = typeof window !== "undefined"
+    && window.location.hash.startsWith("#/research/reference-not-authority");
+
+  if (isArchitectureNote) return <ArchitectureNote001 />;
+
   return (
     <article className="research-article" aria-label="The Disclosure Gap full article">
       {RESEARCH_001.sections.map((section) => (

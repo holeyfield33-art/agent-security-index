@@ -1,5 +1,5 @@
-// Metadata for the one published study. Full text is generated from its canonical repository.
-export const RESEARCH_POSITIONING = "ASI Research publishes evidence-scoped security research on AI agent and model failure modes.";
+// Metadata for published ASI research and architecture notes.
+export const RESEARCH_POSITIONING = "ASI Research publishes evidence-scoped security research and architecture notes on AI agent and model failure modes.";
 export const RESEARCH_PUBLICATIONS = [
   {
     id: "ASI-RESEARCH-001",
@@ -18,5 +18,23 @@ export const RESEARCH_PUBLICATIONS = [
     safetyNote: "Operational prompts and dangerous outputs are withheld. Supplied gallery images are illustrative, not original captures. No final PDF or product-evidence upgrade accompanies this publication.",
     repositoryUrl: "https://github.com/holeyfield33-art/ASI-Research-v1",
     methodologyUrl: "https://github.com/holeyfield33-art/ASI-Research-v1/blob/main/METHODOLOGY.md",
+  },
+  {
+    id: "ASI-ARCH-001",
+    slug: "reference-not-authority",
+    title: "Reference ≠ Authority",
+    subtitle: "Opaque References and Controlled Materialization for AI Agent Data Security",
+    status: "Architecture note",
+    evidenceStatus: "Experiment pending",
+    researchPeriod: "2026",
+    affiliation: "Agent Security Index",
+    summary: "A proposed architecture for separating an AI planner's ability to coordinate work from its authority to access or disclose protected data, with an explicit implementation threat model for reference issuance, metadata exposure, worker isolation, lineage, and policy failure.",
+    metaDescription: "ASI Architecture Note 001 proposes opaque references, deterministic authorization, controlled materialization, and recursive governance of AI-derived outputs while explicitly pressure-testing reference issuance, planner metadata, worker isolation, and implementation failure modes.",
+    coreClaim: "An untrusted AI planner can coordinate operations over protected data without automatically receiving plaintext access or authority over that data, provided reference issuance, authorization, worker isolation, and output governance remain inside the stated trusted boundary.",
+    qualification: "This is a proposed architecture with an explicit adversarial threat model, not a validated or production-grade security system. Its strongest claims remain conditional on the V1 trusted computing base and must be tested experimentally against the five frozen invariants.",
+    scope: "The initial experiment targets a single-machine, multi-process threat model with trusted reference issuance, Resolver, Representation Gate, controlled worker implementation, and OS process isolation. Stateful-agent memory, external providers, multi-user identity, kernel/root compromise, and malicious trusted components are not solved by V1.",
+    safetyNote: "The note does not claim universal AI safety, perfect memory erasure, complete semantic provenance, protection from a compromised trusted computing base, or revocation of information already disclosed to a human or external system.",
+    repositoryUrl: null,
+    methodologyUrl: "#/methodology",
   },
 ] as const;

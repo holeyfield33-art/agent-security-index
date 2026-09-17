@@ -113,3 +113,28 @@ a:focus-visible, button:focus-visible { outline: 2px solid #365a45; outline-offs
 .research-article blockquote { margin: 1.5rem 0; font-family: var(--font-editorial); }
 .research-article blockquote p { font-size: 1.25rem; line-height: 1.65; }
 .research-article a { color: var(--color-accent); text-decoration: underline; text-underline-offset: .2em; }
+
+/* Native diagrams stay readable and reflow with the article on small screens. */
+.architecture-figure { margin: 1.75rem 0; padding: 24px; border: 1px solid #c5ccbc; background: #eef0e7; }
+.figure-kicker { font: 10px/1.6 var(--font-mono); text-transform: uppercase; letter-spacing: .1em; color: #4b604e; margin-bottom: 18px; }
+.diagram-node { padding: 17px 19px; border: 1px solid #b6c1ad; background: #fffdfa; display: flex; flex-direction: column; gap: 7px; }
+.diagram-node strong { font-size: 15px; line-height: 1.45; font-weight: 600; }
+.diagram-node span, .diagram-return { font-size: 13px; line-height: 1.65; color: #515a50; }
+.diagram-node small { font: 11px/1.7 var(--font-mono); color: #5e564a; }
+.untrusted-node { border-style: dashed; border-color: #756d62; background: #f5f1e9; }
+.trusted-node { border-left: 3px solid #365a45; }
+.worker-node { background: #f4ead9; border: 1px solid #9b7c46; border-left-width: 3px; }
+.flow-arrow { display: flex; align-items: center; flex-direction: column; gap: 4px; padding: 10px 0; color: #365a45; font: 20px/1.2 var(--font-mono); text-align: center; }
+.flow-arrow span:first-child:not(:last-child) { font: 11px/1.6 var(--font-mono); color: #515a50; }
+.trusted-zone { border: 1px solid #809274; padding: 16px; background: #e3e9da; }
+.trusted-zone .figure-kicker { margin-bottom: 12px; }
+.diagram-return { padding-top: 15px; }
+.decision-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.diagram-node .decision-number { font: 10px/1.5 var(--font-mono); letter-spacing: .08em; }
+.architecture-figure figcaption { margin-top: 18px; padding-top: 14px; border-top: 1px solid #c5ccbc; font-size: 12px; line-height: 1.75; color: #535c50; }
+@media (max-width: 640px) {
+  .architecture-figure { padding: 15px; }
+  .trusted-zone { padding: 11px; }
+  .diagram-node { padding: 13px; }
+  .decision-grid { grid-template-columns: 1fr; }
+}

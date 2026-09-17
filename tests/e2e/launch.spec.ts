@@ -5,9 +5,25 @@ const routes = [
   ["/", /More autonomy/],
   ["/#/research", /^Research publications$/],
   ["/#/research/asi-research-001", /^The Disclosure Gap$/],
+  ["/#/research/reference-not-authority", /^Reference ≠ Authority$/],
   ["/#/matrix", /^Master Matrix$/],
   ["/#/methodology", /^How ASI represents evidence$/],
 ] as const;
+
+test("architecture figures reflow and preserve experimental scope", async ({ page }, testInfo) => {
+  await page.goto("/#/research/reference-not-authority");
+  await expect(page.locator(".architecture-figure")).toHaveCount(3);
+  await expect(page.locator(".architecture-note")).toContainText("provided reference issuance, authorization, worker isolation, and output governance");
+  await expect(page.getByRole("link", { name: "View research repository" })).toHaveCount(0);
+  await expect(page.getByText("Article length", { exact: true })).toHaveCount(0);
+  await expect(page).toHaveTitle("Reference ≠ Authority | ASI-ARCH-001");
+  for (const figure of await page.locator(".architecture-figure").all()) {
+    await figure.scrollIntoViewIfNeeded();
+    expect(await figure.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
+  }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.locator(".architecture-figure").nth(1).screenshot({ path: testInfo.outputPath("control-loop.png") });
+});
 
 for (const [route, heading] of routes) test(`@smoke direct load and refresh ${route}`, async ({ page }) => {
   const errors: string[] = [];
