@@ -15,6 +15,8 @@ test("architecture figures reflow and preserve experimental scope", async ({ pag
   await expect(page.locator(".architecture-figure")).toHaveCount(3);
   await expect(page.locator(".architecture-note")).toContainText("provided reference issuance, authorization, worker isolation, and output governance");
   await expect(page.getByRole("link", { name: "View research repository" })).toHaveCount(0);
+  await expect(page.getByText("Article length", { exact: true })).toHaveCount(0);
+  await expect(page).toHaveTitle("Reference ≠ Authority | ASI-ARCH-001");
   for (const figure of await page.locator(".architecture-figure").all()) {
     await figure.scrollIntoViewIfNeeded();
     expect(await figure.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);

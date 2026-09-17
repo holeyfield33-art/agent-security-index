@@ -655,7 +655,7 @@ function ResearchDetailPage({ id }: { id: string }) {
           <dl className="grid gap-4 text-sm sm:grid-cols-3">
             <Info label="Research period" value={publication.researchPeriod} />
             <Info label="Research affiliation" value={publication.affiliation} />
-            <Info label="Article length" value={`${RESEARCH_001.wordCount.toLocaleString()} words · ${Math.ceil(RESEARCH_001.wordCount / 220)} min read`} />
+            {publication.slug === "asi-research-001" && <Info label="Article length" value={`${RESEARCH_001.wordCount.toLocaleString()} words · ${Math.ceil(RESEARCH_001.wordCount / 220)} min read`} />}
           </dl>
           <p className="text-sm leading-7 text-muted">{publication.qualification}</p>
           <p className="text-sm leading-7 text-muted">{publication.safetyNote}</p>
@@ -747,7 +747,7 @@ export function App() {
   useEffect(() => {
     const product = route.name === "product" ? PRODUCTS.find(item => item.id === route.id) : undefined;
     const attack = route.name === "attack" ? ATTACK_CLASSES.find(item => item.id === route.id) : undefined;
-    const detail = publication ? { title: "The Disclosure Gap | ASI Research 001", description: publication.metaDescription }
+    const detail = publication ? { title: `${publication.title} | ${publication.id}`, description: publication.metaDescription }
       : product ? { title: `${product.name} | Agent Security Index`, description: product.description }
       : attack ? { title: `${attack.id}: ${attack.name} | Agent Security Index`, description: attack.summary } : undefined;
     setPageMetadata(route.name, detail);
