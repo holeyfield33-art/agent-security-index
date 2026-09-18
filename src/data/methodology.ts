@@ -169,26 +169,35 @@ export const SOURCE_TYPE_HIERARCHY: MethodologyTerm<SourceType>[] = [
   },
 ];
 
+// Canonical definitions shared by the UI's tier and attack-evidence terminology.
+// README and export documentation repeat these verbatim; a consistency test guards drift.
+const EVIDENCE_DEFINITIONS: Record<EvidenceTier, string> = {
+  T0_theoretical: "Architecture-derived or threat-model evidence without a public proof of concept.",
+  T1_lab_poc: "A public proof of concept, benchmark, or controlled lab demonstration exists; independent reproduction is not implied.",
+  T2_field_incident: "A documented production incident or a verified CVE with a supporting advisory exists. A vulnerability disclosure or lab PoC alone does not qualify; CVE-backed status does not imply malicious exploitation in the wild.",
+  T3_widespread: "Multiple independent cases meeting T2 exist across products, vendors, or campaigns.",
+};
+
 export const ATTACK_EVIDENCE_LEVEL_MEANINGS: MethodologyTerm<AttackEvidenceLevel>[] = [
   {
     value: "theoretical",
     label: "Theoretical",
-    meaning: "The class is reasoned from architecture or threat modeling without a public working demonstration.",
+    meaning: EVIDENCE_DEFINITIONS.T0_theoretical,
   },
   {
     value: "lab-poc",
     label: "Lab PoC",
-    meaning: "The class has a public proof of concept, benchmark, or controlled reproduction.",
+    meaning: EVIDENCE_DEFINITIONS.T1_lab_poc,
   },
   {
     value: "field-observed",
     label: "Field observed",
-    meaning: "The class has been observed in a deployed product, public incident, or CVE-backed vulnerability.",
+    meaning: EVIDENCE_DEFINITIONS.T2_field_incident,
   },
   {
     value: "multiple-field-cases",
     label: "Multiple field cases",
-    meaning: "The class has multiple credible field cases or appears across products, ecosystems, or campaigns.",
+    meaning: EVIDENCE_DEFINITIONS.T3_widespread,
   },
 ];
 
@@ -196,21 +205,21 @@ export const EVIDENCE_TIER_MEANINGS: MethodologyTerm<EvidenceTier>[] = [
   {
     value: "T0_theoretical",
     label: "T0 theoretical",
-    meaning: "Architecture-derived or threat-model evidence without a public proof of concept.",
+    meaning: EVIDENCE_DEFINITIONS.T0_theoretical,
   },
   {
     value: "T1_lab_poc",
     label: "T1 lab PoC",
-    meaning: "A public proof of concept, benchmark, or lab reproduction exists.",
+    meaning: EVIDENCE_DEFINITIONS.T1_lab_poc,
   },
   {
     value: "T2_field_incident",
     label: "T2 field incident",
-    meaning: "A deployed product incident, vulnerability disclosure, or CVE-backed case exists.",
+    meaning: EVIDENCE_DEFINITIONS.T2_field_incident,
   },
   {
     value: "T3_widespread",
     label: "T3 widespread",
-    meaning: "Multiple credible field cases exist across products, vendors, or campaigns.",
+    meaning: EVIDENCE_DEFINITIONS.T3_widespread,
   },
 ];

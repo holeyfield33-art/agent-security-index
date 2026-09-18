@@ -1,5 +1,63 @@
 [
   {
+    "id": "src-air-plugin4shell",
+    "title": "Plugin4Shell: plugin SHA-pinning bypass disclosure",
+    "sourceType": "primary-disclosure",
+    "publisher": "AIR Security",
+    "url": "https://www.air.security/blog-posts/plugin4shell",
+    "publishedAt": "2026-09-17",
+    "authors": [
+      "Or Nevo",
+      "Dor Granat",
+      "Niv Hoffman"
+    ],
+    "notes": "Documented lab PoC; not ASI reproduction or confirmed malicious field exploitation. Product protection claims are not adopted.",
+    "accessedAt": "2026-09-18",
+    "supports": {
+      "attackClassIds": [
+        "AAC-10",
+        "AAC-05"
+      ],
+      "mitigationIds": [],
+      "productIds": []
+    }
+  },
+  {
+    "id": "src-codex-sha-checkout-fix",
+    "title": "Verify Git plugin SHA checkouts (PR #34644)",
+    "sourceType": "vendor-advisory",
+    "publisher": "OpenAI",
+    "url": "https://github.com/openai/codex/pull/34644",
+    "publishedAt": "2026-07-22",
+    "summary": "Vendor patch resolves HEAD after SHA-pinned checkout, rejects mismatches, and adds a regression test for a hash-named default branch. Ref-name checkouts retain their behavior.",
+    "accessedAt": "2026-09-18",
+    "supports": {
+      "attackClassIds": [
+        "AAC-10",
+        "AAC-05"
+      ],
+      "mitigationIds": [],
+      "productIds": []
+    }
+  },
+  {
+    "id": "src-codex-0146-release",
+    "title": "Codex 0.146.0 release notes",
+    "sourceType": "vendor-advisory",
+    "publisher": "OpenAI",
+    "url": "https://github.com/openai/codex/releases/tag/rust-v0.146.0",
+    "summary": "Release includes PR #34644, corroborating the reported Codex fixed version. This is not an ASI patch reproduction.",
+    "accessedAt": "2026-09-18",
+    "supports": {
+      "attackClassIds": [
+        "AAC-10",
+        "AAC-05"
+      ],
+      "mitigationIds": [],
+      "productIds": []
+    }
+  },
+  {
     "id": "src-deepseek-harness-cve-2026-82533",
     "title": "DeepSeek Harness < 0.1.2-alpha.1 Authentication Bypass via Host Header Spoofing",
     "sourceType": "primary-disclosure",

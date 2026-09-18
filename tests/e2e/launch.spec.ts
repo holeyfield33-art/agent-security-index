@@ -73,7 +73,7 @@ test("@smoke public catalog is JSON, complete and strictly valid", async ({ requ
   const catalog = await response.json();
   expect(evaluateCatalog(catalog, { strict: true }).status).toBe("ok");
   expect(catalog.attackClasses).toHaveLength(40);
-  expect(catalog.incidents).toHaveLength(23);
+  expect(catalog.incidents).toHaveLength(24);
   expect(catalog.products).toHaveLength(6);
 });
 
@@ -87,7 +87,7 @@ test("@hardening metadata changes and restores without fragment canonicals", asy
     await expect(page.locator('meta[name="robots"]')).not.toHaveAttribute("content", /noindex/);
   }
   await page.goto("/#/research/asi-research-001");
-  await expect(page).toHaveTitle("The Disclosure Gap | ASI Research 001");
+  await expect(page).toHaveTitle("The Disclosure Gap | ASI-RESEARCH-001");
   await page.goto("/#/methodology");
   await expect(page).toHaveTitle("Methodology | Agent Security Index");
 });

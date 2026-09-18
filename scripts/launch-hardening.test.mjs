@@ -8,9 +8,26 @@ const read = file => readFileSync(new URL(`../${file}`, import.meta.url), "utf8"
 const code = ts.transpileModule(read("src/lib/public-catalog.ts"), { compilerOptions: { module: ts.ModuleKind.ESNext } }).outputText;
 const { parsePublicCatalog } = await import(`data:text/javascript;base64,${Buffer.from(code).toString("base64")}`);
 
+test("README, export documentation and UI evidence levels match canonical tiers", async () => {
+  const compiled = ts.transpileModule(read("src/data/methodology.ts"), { compilerOptions: { module: ts.ModuleKind.ESNext } }).outputText;
+  const { EVIDENCE_TIER_MEANINGS: tiers, ATTACK_EVIDENCE_LEVEL_MEANINGS: levels } = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString("base64")}`);
+  const mappings = { T0_theoretical: "theoretical", T1_lab_poc: "lab-poc", T2_field_incident: "field-observed", T3_widespread: "multiple-field-cases" };
+  for (const tier of tiers) {
+    assert.equal(levels.find(level => level.value === mappings[tier.value]).meaning, tier.meaning);
+    for (const file of ["README.md", "public/export/README.md"]) {
+      assert(read(file).includes(`| ${tier.label} | ${tier.meaning} |`), `${file} differs from ${tier.value}`);
+    }
+  }
+  const catalog = JSON.parse(read("public/export/asi-catalog.json"));
+  const plugin4shell = catalog.incidents.find(incident => incident.id === "INC-501");
+  assert.equal(plugin4shell.evidenceTier, "T1_lab_poc");
+  assert.equal(plugin4shell.attackEvidenceLevel, "lab-poc");
+  assert.deepEqual(plugin4shell.attackClassIds, ["AAC-10", "AAC-05"]);
+});
+
 test("published catalog passes rendering guard; malformed records fail closed", () => {
   const catalog = JSON.parse(read("public/export/asi-catalog.json"));
-  assert.equal(parsePublicCatalog(catalog).incidents.length, 23);
+  assert.equal(parsePublicCatalog(catalog).incidents.length, 24);
   for (const bad of [null, {}, {incidents:[{}],sources:[]}, {incidents:[],sources:[{url:"javascript:alert(1)"}]}]) assert.throws(() => parsePublicCatalog(bad));
   const bad = structuredClone(catalog); bad.incidents[0].cveIds = {}; assert.throws(() => parsePublicCatalog(bad));
   const unsafe = structuredClone(catalog); unsafe.sources[0].url = "javascript:alert(1)"; assert.throws(() => parsePublicCatalog(unsafe));

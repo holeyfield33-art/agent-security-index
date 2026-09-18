@@ -20,3 +20,15 @@ node scripts/check-catalog-invariant.mjs --strict
 ```
 
 Gate reads `asi-catalog.json`; run assembly first to refresh it from split files and typed product fixtures.
+
+## Evidence tiers
+
+Canonical definitions: [methodology source](../../src/data/methodology.ts).
+The JSON tier identifiers retain these meanings; no schema change is introduced.
+
+| Tier | Meaning |
+|------|---------|
+| T0 theoretical | Architecture-derived or threat-model evidence without a public proof of concept. |
+| T1 lab PoC | A public proof of concept, benchmark, or controlled lab demonstration exists; independent reproduction is not implied. |
+| T2 field incident | A documented production incident or a verified CVE with a supporting advisory exists. A vulnerability disclosure or lab PoC alone does not qualify; CVE-backed status does not imply malicious exploitation in the wild. |
+| T3 widespread | Multiple independent cases meeting T2 exist across products, vendors, or campaigns. |

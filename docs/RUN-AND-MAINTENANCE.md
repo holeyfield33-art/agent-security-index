@@ -156,7 +156,7 @@ The initial Research 001 draft leaves all catalog counts, product evidence, and 
 | credible-secondary | Reporting on other evidence |
 | background | Context or standards, not incident proof by itself |
 
-Incident tiers are T0 theoretical, T1 lab/PoC, T2 field incident or CVE/advisory, T3 multiple independent field cases. Research on a real service can still be a controlled T1 demonstration. Confidence in a report is separate from the tier and from severity.
+Use the canonical evidence-tier definitions in [src/data/methodology.ts](../src/data/methodology.ts), repeated verbatim in the README and export documentation. Research on a real service can still be a controlled T1 demonstration. Confidence in a report is separate from the tier and from severity.
 
 The schema retains separate evidence statuses, but the external-first public surface has a stricter eligibility rule: each published coverage row requires documented, third-party-evaluated or reproduced status and resolving source IDs. Documented requires vendor documentation/advisory; third-party-evaluated requires independent evidence; reproduced requires public reproduction evidence. A product can instead have zero rows, displayed as "No mapped coverage yet." Unknown coverage is not converted to partial. Publisher products and public publisher vendor claims are rejected during assembly and validation. Overall product scores remain prohibited. The validator checks structural eligibility, not whether a source substantively proves the claim; human review remains necessary.
 

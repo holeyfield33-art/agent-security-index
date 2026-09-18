@@ -1,0 +1,48 @@
+[
+  {
+    "id": "INC-501",
+    "name": "Plugin4Shell SHA-pinning bypass (research PoC)",
+    "date": "2026-09-17",
+    "year": 2026,
+    "summary": "AIR reports a lab PoC: trusted marketplace/reference -> pinned commit/reference -> ambiguous Git checkout -> substituted artifact -> missing materialized-identity verification -> malicious plugin/skill execution with agent privileges. Auto-update supplies the zero-click path for an already-installed plugin.",
+    "affectedProduct": "Claude Code; OpenAI Codex; GitHub Copilot; Gemini CLI",
+    "affectedVersions": "Exact affected version ranges not established by the reviewed disclosure.",
+    "fixedIn": "AIR: Claude Code 2.1.179; Codex 0.146.0 (also corroborated by vendor release notes).",
+    "resolution": "AIR reports no Copilot fix and no planned Gemini CLI fix at disclosure. These are dated researcher statements, not independently verified current vendor status.",
+    "attackClassIds": [
+      "AAC-10",
+      "AAC-05"
+    ],
+    "cveIds": [],
+    "evidenceTier": "T1_lab_poc",
+    "attackEvidenceLevel": "lab-poc",
+    "confidence": "medium",
+    "primarySource": {
+      "title": "Plugin4Shell: plugin SHA-pinning bypass disclosure",
+      "url": "https://www.air.security/blog-posts/plugin4shell",
+      "kind": "primary-disclosure",
+      "accessed": "2026-09-18"
+    },
+    "primarySourceId": "src-air-plugin4shell",
+    "additionalSources": [
+      {
+        "title": "Verify Git plugin SHA checkouts (PR #34644)",
+        "url": "https://github.com/openai/codex/pull/34644",
+        "kind": "vendor-advisory",
+        "accessed": "2026-09-18"
+      },
+      {
+        "title": "Codex 0.146.0 release notes",
+        "url": "https://github.com/openai/codex/releases/tag/rust-v0.146.0",
+        "kind": "vendor-advisory",
+        "accessed": "2026-09-18"
+      }
+    ],
+    "additionalSourceIds": [
+      "src-codex-sha-checkout-fix",
+      "src-codex-0146-release"
+    ],
+    "classificationNotes": "Primary AAC-10: distribution/resolution substitutes an artifact. Secondary AAC-05: the existing class includes Skills and post-approval backend redefinition, matching benign-to-malicious substitution; no MCP protocol exploit is inferred. AAC-37 is not linked: a malicious SKILL.md or skill-specific payload is not established. AAC-19 is not linked: an update trigger is not delayed or call-count-gated activation. Status: documented primary disclosure, not independently reproduced by ASI. severity != evidence maturity; PoC RCE != observed exploitation. No verified CVE assignment was found as of 2026-09-18; an empty CVE list is not proof none exists. No confirmed malicious in-the-wild Plugin4Shell exploitation was established in the reviewed primary sources; other AIR campaigns are separate evidence.",
+    "architecturalLesson": "Materialized Identity Invariant: A security decision MUST be bound to the cryptographic identity of the artifact actually materialized for use, not merely to the identifier, reference, commit, locator, or expected digest requested before resolution. Integrity does not authenticate the expected identity. No mitigation validation or product coverage is inferred."
+  }
+]

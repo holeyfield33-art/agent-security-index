@@ -53,12 +53,14 @@ Legacy `AX-*` labels are retained only as aliases/source-fragment identifiers du
 
 ## Evidence tiers
 
+Canonical definitions: [methodology source](src/data/methodology.ts).
+
 | Tier | Meaning |
 |------|---------|
-| T0 · Theoretical | Architecture / literature only |
-| T1 · Lab / PoC | Public PoC or controlled demo |
-| T2 · Field incident | Production impact or CVE + advisory |
-| T3 · Widespread | Multiple independent field cases |
+| T0 theoretical | Architecture-derived or threat-model evidence without a public proof of concept. |
+| T1 lab PoC | A public proof of concept, benchmark, or controlled lab demonstration exists; independent reproduction is not implied. |
+| T2 field incident | A documented production incident or a verified CVE with a supporting advisory exists. A vulnerability disclosure or lab PoC alone does not qualify; CVE-backed status does not imply malicious exploitation in the wild. |
+| T3 widespread | Multiple independent cases meeting T2 exist across products, vendors, or campaigns. |
 
 ## Local development
 

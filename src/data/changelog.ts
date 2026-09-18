@@ -1,5 +1,14 @@
 import type { ChangelogEntry } from "./types.ts";
 export const CHANGELOG: ChangelogEntry[] = [
+{
+  "version": "2026.09.2",
+  "date": "2026-09-18",
+  "changes": [
+    "Added Plugin4Shell research PoC INC-501: primary AAC-10, secondary AAC-05; T1 lab evidence, no verified CVE or confirmed malicious field exploitation.",
+    "Recorded the Materialized Identity Invariant and AAC-37/AAC-19 exclusions; no product coverage or mitigation validation upgrade.",
+    "Research intake and limitations: docs/PLUGIN4SHELL-RESEARCH.md."
+  ]
+},
   {
     "version": "2026.09.1",
     "date": "2026-09-12",
