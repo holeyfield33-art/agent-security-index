@@ -80,10 +80,10 @@ expected identity and protection against changes between verification and use
 remain separate assumptions. Hashing alone cannot authenticate who approved an
 artifact or make an untrusted reference-to-hash mapping authoritative.
 
-The sibling Helios fixture models this proposition for static memory objects
-only. It does not reproduce Git resolution, validate vendor fixes, authenticate
-provenance, or add plugin verification. No product coverage record or mitigation
-validation flag changes with this intake.
+Any experimental demonstration of this invariant must remain separate from this
+ASI intake and must not be treated as product evidence, mitigation validation, or
+coverage proof. This research note does not rely on an author-owned product or
+project as evidence for the invariant.
 
 ## Maintenance and validation
 
