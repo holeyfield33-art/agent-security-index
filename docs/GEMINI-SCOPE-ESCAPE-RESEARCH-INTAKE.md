@@ -76,6 +76,21 @@ real-world impact does not establish a shared mechanism or root cause.
 
 **Pending taxonomy review against existing classes.**
 
+Initial matrix review, 2026-09-20: retain this intake without assigning an AAC.
+AAC-07 concerns permission growth beyond an approved grant; AAC-08 requires a
+privileged deputy acting for a lower-trust principal. Neither mechanism is yet
+established here. AAC-09 is relevant to exposed credentials but does not by itself
+explain evaluation scope. AAC-26 requires a request-forgery mechanism, and AAC-29
+requires a runtime sandbox escape; Internet reachability alone establishes neither.
+These are comparison candidates, not incident mappings. Existing Plugin4Shell
+mappings (primary AAC-10, secondary AAC-05) remain unchanged.
+
+Source review: Reuters was checked through its syndicated MarketScreener copy
+(the direct Reuters page was unavailable). Irregular's August article primarily
+discusses previously disclosed evaluation incidents; it is context, not a
+Gemini-specific reconstruction. FrontierCyber describes controlled evaluation
+instances of real systems, not authorization to attack unrelated companies.
+
 Do not create a new AAC identifier from this intake. First test whether existing
 classes already capture the relevant scope, authority, tool-use, containment, or
 target-identity mechanisms.
