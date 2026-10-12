@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import { ArchitectureNote001 } from "@/components/architecture-note-001";
+import { ExperimentResults001 } from "@/components/experiment-results-001";
 import { RESEARCH_001 } from "@/data/research-001.generated";
 import { researchLinkHref } from "@/lib/research-links";
 
@@ -12,11 +13,9 @@ function InlineText({ text }: { text: string }) {
   })}</>;
 }
 
-export function ResearchArticle() {
-  const isArchitectureNote = typeof window !== "undefined"
-    && window.location.hash.startsWith("#/research/reference-not-authority");
-
-  if (isArchitectureNote) return <ArchitectureNote001 />;
+export function ResearchArticle({ slug = "asi-research-001" }: { slug?: string }) {
+  if (slug === "reference-not-authority") return <ArchitectureNote001 />;
+  if (slug === "controlled-materialization-results") return <ExperimentResults001 />;
 
   return (
     <article className="research-article" aria-label="The Disclosure Gap full article">

@@ -6,6 +6,7 @@ import ts from "typescript";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { parseResearch } from "./research-markdown.mjs";
+import { parseExperiment } from "./experiment-markdown.mjs";
 
 function resolveAlias(name) {
   const base = `src/${name.slice(2)}`;
@@ -27,9 +28,10 @@ const { RESEARCH_001 } = loadTS("src/data/research-001.generated.ts");
 const { researchLinkHref } = loadTS("src/lib/research-links.ts");
 const disclosureGap = RESEARCH_PUBLICATIONS.find(p => p.slug === "asi-research-001");
 const architectureNote = RESEARCH_PUBLICATIONS.find(p => p.slug === "reference-not-authority");
+const experiment = RESEARCH_PUBLICATIONS.find(p => p.slug === "controlled-materialization-results");
 
 test("published study retains evidence limitations and no PDF or product claims", () => {
-  assert.equal(RESEARCH_PUBLICATIONS.length, 2);
+  assert.equal(RESEARCH_PUBLICATIONS.length, 3);
   assert(disclosureGap);
   const p = disclosureGap;
   assert.equal(p.status, "Published article");
@@ -50,11 +52,40 @@ test("architecture note is explicitly proposed research with experiment pending"
   assert.equal(architectureNote.id, "ASI-ARCH-001");
   assert.equal(architectureNote.status, "Architecture note");
   assert.equal(architectureNote.evidenceStatus, "Experiment pending");
-  assert.equal(architectureNote.repositoryUrl, null);
+  assert.match(architectureNote.repositoryUrl, /Asi-Research-v2\/tree\/[a-f0-9]{40}$/);
   assert.match(architectureNote.qualification, /not a validated or production-grade security system/i);
   assert.match(architectureNote.scope, /single-machine, multi-process/i);
   assert.match(architectureNote.scope, /stateful-agent memory/i);
   assert.match(architectureNote.safetyNote, /complete semantic provenance/i);
+});
+
+test("experiment results are a distinct bounded artifact with all coverage and immutable evidence", () => {
+  assert.equal(experiment.id, "ASI-EXPERIMENT-001");
+  assert.match(experiment.qualification, /not independent reproduction/);
+  assert.match(experiment.scope, /I-6.*I-9.*I-10/);
+  const { EXPERIMENT_001_ARTICLE } = loadTS("src/data/experiment-001.generated.ts");
+  assert.equal(EXPERIMENT_001_ARTICLE.title, experiment.title);
+  assert.equal(EXPERIMENT_001_ARTICLE.sections.length, 10);
+  const { ResearchArticle } = loadTS("src/components/research-article.tsx");
+  const html = renderToStaticMarkup(React.createElement(ResearchArticle, { slug: experiment.slug }));
+  assert.equal((html.match(/<h2 /g) ?? []).length, 10);
+  for (const id of ["T1", "T2", "T3", "T4", "T5", ...Array.from({length: 10}, (_, i) => `I-${i+1}`)]) assert(html.includes(id));
+  assert.match(html, /21 selected checks passed/);
+  assert.match(html, /not external independent reproduction/);
+  assert.match(html, /account.*billing/);
+  assert.match(html, /bb5b48bc535b23430ab439e584e2caebf1fb5115/);
+  assert.equal((html.match(/<table>/g) ?? []).length, 3);
+  for (const match of html.matchAll(/href="([^"]+)"/g)) assert(researchLinkHref(match[1]));
+  const architectureHtml = renderToStaticMarkup(React.createElement(ResearchArticle, {slug: architectureNote.slug}));
+  assert.match(architectureHtml, /Proposed architecture.*Experiment pending/);
+});
+
+test("results parser has its own ten-section contract and rejects unsafe or malformed markup", () => {
+  const fixture = "# Results\n\n## Subtitle\n\n" + Array.from({length:10}, (_,i) => `## ${i+1}. Section ${i+1}\n\nParagraph.\n`).join("\n");
+  assert.deepEqual(parseExperiment(fixture), parseExperiment(fixture.replace(/\n/g,"\r\n")));
+  assert.throws(() => parseExperiment(fixture + "\n<script>bad</script>"));
+  assert.throws(() => parseExperiment(fixture + "\n| A | B |\n| --- |\n| a | b |"));
+  assert.throws(() => parseExperiment(fixture.replace("## 5.", "## 9.")));
 });
 
 test("native article renders all 11 sections, links and qualified core claim", () => {

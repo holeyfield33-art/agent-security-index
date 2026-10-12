@@ -6,6 +6,7 @@ const routes = [
   ["/#/research", /^Research publications$/],
   ["/#/research/asi-research-001", /^The Disclosure Gap$/],
   ["/#/research/reference-not-authority", /^Reference ≠ Authority$/],
+  ["/#/research/controlled-materialization-results", /^Reference ≠ Authority: Experimental Results/],
   ["/#/matrix", /^Master Matrix$/],
   ["/#/methodology", /^How ASI represents evidence$/],
 ] as const;
@@ -14,7 +15,7 @@ test("architecture figures reflow and preserve experimental scope", async ({ pag
   await page.goto("/#/research/reference-not-authority");
   await expect(page.locator(".architecture-figure")).toHaveCount(3);
   await expect(page.locator(".architecture-note")).toContainText("provided reference issuance, authorization, worker isolation, and output governance");
-  await expect(page.getByRole("link", { name: "View research repository" })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "View research repository" })).toHaveAttribute("href", /Asi-Research-v2\/tree\/[a-f0-9]{40}$/);
   await expect(page.getByText("Article length", { exact: true })).toHaveCount(0);
   await expect(page).toHaveTitle("Reference ≠ Authority | ASI-ARCH-001");
   for (const figure of await page.locator(".architecture-figure").all()) {

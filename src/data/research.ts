@@ -3,6 +3,7 @@ export const RESEARCH_POSITIONING = "ASI Research publishes evidence-scoped secu
 export const RESEARCH_PUBLICATIONS = [
   {
     id: "ASI-RESEARCH-001",
+    readingLabel: "Read ASI Research 001",
     slug: "asi-research-001",
     title: "The Disclosure Gap",
     subtitle: "When Public AI Vulnerability Reporting Outlives the Fix",
@@ -21,6 +22,7 @@ export const RESEARCH_PUBLICATIONS = [
   },
   {
     id: "ASI-ARCH-001",
+    readingLabel: "Read Architecture Note 001",
     slug: "reference-not-authority",
     title: "Reference ≠ Authority",
     subtitle: "Opaque References and Controlled Materialization for AI Agent Data Security",
@@ -34,7 +36,26 @@ export const RESEARCH_PUBLICATIONS = [
     qualification: "This is a proposed architecture with an explicit adversarial threat model, not a validated or production-grade security system. Its strongest claims remain conditional on the V1 trusted computing base and must be tested experimentally against the five frozen invariants.",
     scope: "The initial experiment targets a single-machine, multi-process threat model with trusted reference issuance, Resolver, Representation Gate, controlled worker implementation, and OS process isolation. Stateful-agent memory, external providers, multi-user identity, kernel/root compromise, and malicious trusted components are not solved by V1.",
     safetyNote: "The note does not claim universal AI safety, perfect memory erasure, complete semantic provenance, protection from a compromised trusted computing base, or revocation of information already disclosed to a human or external system.",
-    repositoryUrl: null,
+    repositoryUrl: "https://github.com/holeyfield33-art/Asi-Research-v2/tree/4ac3224a5237937305596abe0d70d67290bc3575",
     methodologyUrl: "#/methodology",
+  },
+  {
+    id: "ASI-EXPERIMENT-001",
+    readingLabel: "Read Experiment 001 results",
+    slug: "controlled-materialization-results",
+    title: "Reference ≠ Authority: Experimental Results from a Controlled Materialization Boundary",
+    subtitle: "Experiment 001 — Selected deterministic control paths, measured locally",
+    status: "Experimental results",
+    evidenceStatus: "Local bounded evidence",
+    researchPeriod: "2026",
+    affiliation: "Agent Security Index",
+    summary: "A synthetic, single-machine implementation tests selected authorization, materialized identity, process-isolation, lineage and disclosure paths from Architecture Note 001. The frozen campaign passed 21 selected checks; three implementation threats remain untested.",
+    metaDescription: "Experiment 001 reports bounded local results for a controlled materialization boundary: 21 selected checks, authorized controls, explicit T1–T5 coverage, and all ten implementation-threat assessments without a production-security claim.",
+    coreClaim: "In the measured synthetic workflow, a scripted planner coordinated protected computation without receiving plaintext, and compute authorization did not automatically authorize disclosure.",
+    qualification: "Selected deterministic enforcement tests passed on the recorded Linux/WSL configuration. This is local execution and a distinct local evidence review, not independent reproduction, a real-model demonstration, or proof of the entire architecture.",
+    scope: "One synthetic protected type, uppercase operation, derivation level and controlled display sink. I-6 residual plaintext, I-9 sustained availability attacks and I-10 metadata inference remain untested; compromised trusted code, kernel/root attacks and stateful agents are outside scope.",
+    safetyNote: "No catalog mitigation validation, incident mapping, AAC change or product claim follows. Hosted CI did not start because of a billing lock. The original architecture note retains its historical status.",
+    repositoryUrl: "https://github.com/holeyfield33-art/Asi-Research-v2/tree/4ac3224a5237937305596abe0d70d67290bc3575",
+    methodologyUrl: "https://github.com/holeyfield33-art/Asi-Research-v2/blob/bb5b48bc535b23430ab439e584e2caebf1fb5115/docs/PROTOCOL.md",
   },
 ] as const;

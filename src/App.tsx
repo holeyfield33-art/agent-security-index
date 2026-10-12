@@ -631,7 +631,7 @@ function ResearchPage() {
             <p className="mt-6 text-sm leading-7 text-muted">{publication.summary}</p>
             <p className="mt-3 text-sm leading-7 text-muted">{publication.qualification}</p>
             <nav aria-label={`${publication.id} reading links`} className="mt-6 flex flex-wrap gap-x-6 gap-y-3 border-t border-border pt-5">
-              <a href={`#/research/${publication.slug}`} className="text-sm text-accent underline underline-offset-4">{publication.id === "ASI-ARCH-001" ? "Read Architecture Note 001" : "Read ASI Research 001"} →</a>
+              <a href={`#/research/${publication.slug}`} className="text-sm text-accent underline underline-offset-4">{publication.readingLabel} →</a>
               {publication.repositoryUrl && <a href={publication.repositoryUrl} className="text-sm text-accent underline underline-offset-4">View research repository</a>}
             </nav>
           </article>
@@ -664,7 +664,7 @@ function ResearchDetailPage({ id }: { id: string }) {
             <a href={publication.methodologyUrl}>View methodology</a>
           </nav>
         </div>
-        <ResearchArticle />
+        <ResearchArticle slug={publication.slug} />
         <a href="#/research" className="mt-10 inline-block text-sm text-accent underline underline-offset-4">Back to research</a>
       </Content>
     </>
