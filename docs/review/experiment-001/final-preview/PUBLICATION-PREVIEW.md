@@ -32,4 +32,4 @@ The operator subsequently approved committing, pushing and posting the article. 
 
 The preview server is left running at 127.0.0.1:4179. Playwright opened and inspected the article during capture. Automatic policy review rejected launching the user's default browser through PowerShell with the reason “blocked by policy”; Chrome and in-app browser surfaces were unavailable. Use the local article link above to open the visible preview manually.
 
-Screenshots establish appearance only. Review materials remain local.
+Screenshots establish appearance only. The review materials are committed under docs/review/experiment-001/final-preview/ and the Markdown image previews render from that repository path.
