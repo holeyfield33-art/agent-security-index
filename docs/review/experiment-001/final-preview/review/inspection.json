@@ -1,0 +1,763 @@
+{
+  "capturedAt": "2026-10-12T20:43:33.544Z",
+  "asiRevision": "6d44cb42055d71107048310158f3d35c185b9411",
+  "localCorrection": "src/index.css: desktop tables fit article column at min-width 768px",
+  "cssSha256": "f73a68f9517e15415f2294ed15dd2dc7f9ef1809a41c29b97ade27cf5b763987",
+  "researchRevision": "4ac3224a5237937305596abe0d70d67290bc3575",
+  "sha256": "b845aca97fe210bb2df0325118738bafa7b42919cb34395013a685bdd109de0b",
+  "words": 2145,
+  "headings": [
+    "1. Research question and prior architecture",
+    "2. Implementation and trust assumptions",
+    "3. Experimental setup and reproducibility",
+    "4. Five invariants and test methodology",
+    "5. Actual results and failures",
+    "6. Ten implementation-threat assessments",
+    "7. Observed limitations and unresolved questions",
+    "8. Interpretation and implications for agent security",
+    "9. Reproduction instructions and evidence links",
+    "10. Conclusion and future research"
+  ],
+  "inventory": [
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "home",
+      "path": "desktop/home.png",
+      "url": "http://127.0.0.1:4179/#/"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "home-full",
+      "path": "desktop/home-full.png",
+      "url": "http://127.0.0.1:4179/#/"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "research-listing",
+      "path": "desktop/research-listing.png",
+      "url": "http://127.0.0.1:4179/#/research"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "research-listing-full",
+      "path": "desktop/research-listing-full.png",
+      "url": "http://127.0.0.1:4179/#/research"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "architecture-note",
+      "path": "desktop/architecture-note.png",
+      "url": "http://127.0.0.1:4179/#/research/reference-not-authority"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "architecture-note-full",
+      "path": "desktop/architecture-note-full.png",
+      "url": "http://127.0.0.1:4179/#/research/reference-not-authority"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "architecture-diagram-1",
+      "path": "desktop/architecture-diagram-1.png",
+      "url": "http://127.0.0.1:4179/#/research/reference-not-authority"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "architecture-diagram-2",
+      "path": "desktop/architecture-diagram-2.png",
+      "url": "http://127.0.0.1:4179/#/research/reference-not-authority"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "architecture-diagram-3",
+      "path": "desktop/architecture-diagram-3.png",
+      "url": "http://127.0.0.1:4179/#/research/reference-not-authority"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "research-001",
+      "path": "desktop/research-001.png",
+      "url": "http://127.0.0.1:4179/#/research/asi-research-001"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "research-001-full",
+      "path": "desktop/research-001-full.png",
+      "url": "http://127.0.0.1:4179/#/research/asi-research-001"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "article-opening",
+      "path": "desktop/article-opening.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "article-status",
+      "path": "desktop/article-status.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "article-section-01",
+      "path": "desktop/article-section-01.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "article-section-02",
+      "path": "desktop/article-section-02.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "article-section-03",
+      "path": "desktop/article-section-03.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "article-section-04",
+      "path": "desktop/article-section-04.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "article-section-05",
+      "path": "desktop/article-section-05.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "article-section-06",
+      "path": "desktop/article-section-06.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "article-section-07",
+      "path": "desktop/article-section-07.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "article-section-08",
+      "path": "desktop/article-section-08.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "article-section-09",
+      "path": "desktop/article-section-09.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "article-section-10",
+      "path": "desktop/article-section-10.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "table-1-right",
+      "path": "desktop/table-1-right.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "table-2-right",
+      "path": "desktop/table-2-right.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "table-3-right",
+      "path": "desktop/table-3-right.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "name": "article-full",
+      "path": "desktop/article-full.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "home",
+      "path": "mobile/home.png",
+      "url": "http://127.0.0.1:4179/#/"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "home-full",
+      "path": "mobile/home-full.png",
+      "url": "http://127.0.0.1:4179/#/"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "research-listing",
+      "path": "mobile/research-listing.png",
+      "url": "http://127.0.0.1:4179/#/research"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "research-listing-full",
+      "path": "mobile/research-listing-full.png",
+      "url": "http://127.0.0.1:4179/#/research"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "architecture-note",
+      "path": "mobile/architecture-note.png",
+      "url": "http://127.0.0.1:4179/#/research/reference-not-authority"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "architecture-note-full",
+      "path": "mobile/architecture-note-full.png",
+      "url": "http://127.0.0.1:4179/#/research/reference-not-authority"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "architecture-diagram-1",
+      "path": "mobile/architecture-diagram-1.png",
+      "url": "http://127.0.0.1:4179/#/research/reference-not-authority"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "architecture-diagram-2",
+      "path": "mobile/architecture-diagram-2.png",
+      "url": "http://127.0.0.1:4179/#/research/reference-not-authority"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "architecture-diagram-3",
+      "path": "mobile/architecture-diagram-3.png",
+      "url": "http://127.0.0.1:4179/#/research/reference-not-authority"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "research-001",
+      "path": "mobile/research-001.png",
+      "url": "http://127.0.0.1:4179/#/research/asi-research-001"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "research-001-full",
+      "path": "mobile/research-001-full.png",
+      "url": "http://127.0.0.1:4179/#/research/asi-research-001"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "article-opening",
+      "path": "mobile/article-opening.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "article-status",
+      "path": "mobile/article-status.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "article-section-01",
+      "path": "mobile/article-section-01.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "article-section-02",
+      "path": "mobile/article-section-02.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "article-section-03",
+      "path": "mobile/article-section-03.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "article-section-04",
+      "path": "mobile/article-section-04.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "article-section-05",
+      "path": "mobile/article-section-05.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "article-section-06",
+      "path": "mobile/article-section-06.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "article-section-07",
+      "path": "mobile/article-section-07.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "article-section-08",
+      "path": "mobile/article-section-08.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "article-section-09",
+      "path": "mobile/article-section-09.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "article-section-10",
+      "path": "mobile/article-section-10.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "table-1-right",
+      "path": "mobile/table-1-right.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "table-2-right",
+      "path": "mobile/table-2-right.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "table-3-right",
+      "path": "mobile/table-3-right.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    },
+    {
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "name": "article-full",
+      "path": "mobile/article-full.png",
+      "url": "http://127.0.0.1:4179/#/research/controlled-materialization-results"
+    }
+  ],
+  "checks": [
+    {
+      "device": "desktop",
+      "name": "home",
+      "pageOverflow": false,
+      "brokenImages": 0
+    },
+    {
+      "device": "desktop",
+      "name": "research-listing",
+      "pageOverflow": false,
+      "brokenImages": 0
+    },
+    {
+      "device": "desktop",
+      "name": "architecture-note",
+      "pageOverflow": false,
+      "brokenImages": 0
+    },
+    {
+      "device": "desktop",
+      "name": "research-001",
+      "pageOverflow": false,
+      "brokenImages": 0
+    },
+    {
+      "device": "desktop",
+      "name": "experiment",
+      "pageOverflow": false,
+      "brokenImages": 0
+    },
+    {
+      "device": "desktop",
+      "name": "article-structure",
+      "sectionCount": 10,
+      "tableCount": 3,
+      "boundedDisclosure": 1
+    },
+    {
+      "device": "desktop",
+      "name": "table-1",
+      "keyboard": {
+        "tabIndex": 0,
+        "scrollLeft": 0,
+        "scrollWidth": 621,
+        "clientWidth": 621,
+        "right": 733
+      }
+    },
+    {
+      "device": "desktop",
+      "name": "table-2",
+      "keyboard": {
+        "tabIndex": 0,
+        "scrollLeft": 0,
+        "scrollWidth": 621,
+        "clientWidth": 621,
+        "right": 733
+      }
+    },
+    {
+      "device": "desktop",
+      "name": "table-3",
+      "keyboard": {
+        "tabIndex": 0,
+        "scrollLeft": 0,
+        "scrollWidth": 621,
+        "clientWidth": 621,
+        "right": 733
+      }
+    },
+    {
+      "device": "desktop",
+      "name": "direct-refresh",
+      "sections": 10
+    },
+    {
+      "device": "desktop",
+      "name": "back-navigation",
+      "passed": true
+    },
+    {
+      "device": "mobile",
+      "name": "home",
+      "pageOverflow": false,
+      "brokenImages": 0
+    },
+    {
+      "device": "mobile",
+      "name": "research-listing",
+      "pageOverflow": false,
+      "brokenImages": 0
+    },
+    {
+      "device": "mobile",
+      "name": "architecture-note",
+      "pageOverflow": false,
+      "brokenImages": 0
+    },
+    {
+      "device": "mobile",
+      "name": "research-001",
+      "pageOverflow": false,
+      "brokenImages": 0
+    },
+    {
+      "device": "mobile",
+      "name": "experiment",
+      "pageOverflow": false,
+      "brokenImages": 0
+    },
+    {
+      "device": "mobile",
+      "name": "article-structure",
+      "sectionCount": 10,
+      "tableCount": 3,
+      "boundedDisclosure": 1
+    },
+    {
+      "device": "mobile",
+      "name": "table-1",
+      "keyboard": {
+        "tabIndex": 0,
+        "scrollLeft": 40,
+        "scrollWidth": 680,
+        "clientWidth": 358,
+        "right": 374
+      }
+    },
+    {
+      "device": "mobile",
+      "name": "table-2",
+      "keyboard": {
+        "tabIndex": 0,
+        "scrollLeft": 40,
+        "scrollWidth": 680,
+        "clientWidth": 358,
+        "right": 374
+      }
+    },
+    {
+      "device": "mobile",
+      "name": "table-3",
+      "keyboard": {
+        "tabIndex": 0,
+        "scrollLeft": 40,
+        "scrollWidth": 680,
+        "clientWidth": 358,
+        "right": 374
+      }
+    },
+    {
+      "device": "mobile",
+      "name": "direct-refresh",
+      "sections": 10
+    },
+    {
+      "device": "mobile",
+      "name": "back-navigation",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "links": [
+    {
+      "url": "https://github.com/holeyfield33-art/Asi-Research-v2/tree/4ac3224a5237937305596abe0d70d67290bc3575",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "https://github.com/holeyfield33-art/Asi-Research-v2/blob/bb5b48bc535b23430ab439e584e2caebf1fb5115/docs/PROTOCOL.md",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "https://github.com/containers/bubblewrap#sandbox-security",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "https://github.com/holeyfield33-art/Asi-Research-v2/tree/bb5b48bc535b23430ab439e584e2caebf1fb5115",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "https://github.com/holeyfield33-art/Asi-Research-v2/blob/f5e603ee8f10953c8ca38601f7467eb77bf4cb06/results/experiment-001.json",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "https://github.com/holeyfield33-art/Asi-Research-v2/blob/f5e603ee8f10953c8ca38601f7467eb77bf4cb06/results/verification.json",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "url": "https://index.aletheia-core.com/#/research/reference-not-authority",
+      "status": 200,
+      "ok": true
+    }
+  ]
+}

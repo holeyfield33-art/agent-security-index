@@ -120,6 +120,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid #365a45; outline-offs
 .experiment-table-scroll th, .experiment-table-scroll td { text-align: left; vertical-align: top; padding: 12px; border-bottom: 1px solid #c5ccbc; overflow-wrap: anywhere; }
 .experiment-table-scroll th { background: #eef0e7; }
 .experiment-table-scroll:focus-visible { outline: 2px solid #3b5d43; outline-offset: 3px; }
+@media (min-width: 768px) {
+  .experiment-table-scroll table { min-width: 0; }
+}
 .architecture-figure { margin: 1.75rem 0; padding: 24px; border: 1px solid #c5ccbc; background: #eef0e7; }
 .figure-kicker { font: 10px/1.6 var(--font-mono); text-transform: uppercase; letter-spacing: .1em; color: #4b604e; margin-bottom: 18px; }
 .diagram-node { padding: 17px 19px; border: 1px solid #b6c1ad; background: #fffdfa; display: flex; flex-direction: column; gap: 7px; }

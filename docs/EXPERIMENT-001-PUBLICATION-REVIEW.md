@@ -1,6 +1,6 @@
 # Experiment 001 — publication review package
 
-Decision: **CONDITIONAL GO for review; no site publication or deployment authorized.**
+Decision at initial review: **CONDITIONAL GO for review.** On 2026-10-12, the human operator reviewed the article and expressly approved posting, committing and pushing it. This approval supersedes the former local-only release hold for this article. The bounded evidence labels and untested-threat disclosures remain required.
 
 Local branch: `research/experiment-001-results`, based on `cfd5ef9`.
 Research evidence package: `4ac3224a5237937305596abe0d70d67290bc3575` in
@@ -77,7 +77,7 @@ accept the bounded claims, untested threats and that infrastructure limitation.
 Independent reproduction remains future research, not a prerequisite invented
 after the measured scope was frozen.
 
-The user directive explicitly says to stop at the publication review gate, and
-`docs/ASI-PUBLICATION-STANDARDS.md` reserves merge/deploy approval to the human.
-This integration is committed locally for review. It is not pushed to a deployment
-branch or merged to main, and the live site is not changed.
+The earlier review directive stopped at the publication gate. The later human
+approval authorizes this scoped article release under `docs/ASI-PUBLICATION-STANDARDS.md`.
+The initial local review remains recorded above; deployment and live-site
+verification must be reported separately from local test results.
