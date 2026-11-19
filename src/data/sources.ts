@@ -720,5 +720,154 @@ export const SOURCES: Source[] = [
         "aws-agentcore-policy-guardrails"
       ]
     }
+  },
+{
+  "id": "src-excel-mcp-server-ghsa-j98m",
+  "title": "excel-mcp-server has a Path Traversal issue (GHSA-j98m-w3xp-9f56)",
+  "sourceType": "primary-disclosure",
+  "publisher": "GitHub / haris-musa/excel-mcp-server",
+  "url": "https://github.com/haris-musa/excel-mcp-server/security/advisories/GHSA-j98m-w3xp-9f56",
+  "publishedAt": "2026-04-14",
+  "accessedAt": "2026-11-19",
+  "notes": "PENDING REVIEW. Public advisory for an MCP file-tool path-traversal bug. Documented lab/advisory evidence; not ASI reproduction or confirmed field exploitation.",
+  "supports": {
+    "attackClassIds": [
+      "AAC-17"
+    ],
+    "mitigationIds": [],
+    "productIds": []
   }
+},
+{
+  "id": "src-excel-mcp-server-cve-2026-40576",
+  "title": "CVE-2026-40576",
+  "sourceType": "cve-nvd",
+  "publisher": "NVD",
+  "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-40576",
+  "accessedAt": "2026-11-19",
+  "notes": "PENDING REVIEW. NVD record aliasing GHSA-j98m-w3xp-9f56. CVE assignment is not evidence of in-the-wild exploitation.",
+  "supports": {
+    "attackClassIds": [
+      "AAC-17"
+    ],
+    "mitigationIds": [],
+    "productIds": []
+  }
+},
+{
+  "id": "src-excel-mcp-server-fix-f51340",
+  "title": "excel-mcp-server path-boundary fix commit",
+  "sourceType": "vendor-advisory",
+  "publisher": "haris-musa/excel-mcp-server",
+  "url": "https://github.com/haris-musa/excel-mcp-server/commit/f51340ecd5778952405044b203d3a2d4c8a46833",
+  "accessedAt": "2026-11-19",
+  "notes": "PENDING REVIEW. Fix commit cited by the advisory and by Mother-ship record PYSEC-2026-331. Not an ASI patch reproduction.",
+  "supports": {
+    "attackClassIds": [
+      "AAC-17"
+    ],
+    "mitigationIds": [],
+    "productIds": []
+  }
+},
+{
+  "id": "src-siyuan-mcp-asset-upload-ghsa-p23f",
+  "title": "SiYuan MCP asset.upload Reads Arbitrary Absolute File Paths (GHSA-p23f-cm6q-2qp8)",
+  "sourceType": "primary-disclosure",
+  "publisher": "GitHub / siyuan-note/siyuan",
+  "url": "https://github.com/siyuan-note/siyuan/security/advisories/GHSA-p23f-cm6q-2qp8",
+  "publishedAt": "2026-08-13",
+  "accessedAt": "2026-11-19",
+  "notes": "PENDING REVIEW. Public advisory for an MCP workspace-boundary bypass. Documented lab/advisory evidence; not ASI reproduction or confirmed field exploitation.",
+  "supports": {
+    "attackClassIds": [
+      "AAC-17"
+    ],
+    "mitigationIds": [],
+    "productIds": []
+  }
+},
+{
+  "id": "src-siyuan-mcp-asset-upload-fix-b26a4a",
+  "title": "Block sensitive files in MCP asset upload",
+  "sourceType": "vendor-advisory",
+  "publisher": "siyuan-note/siyuan",
+  "url": "https://github.com/siyuan-note/siyuan/commit/b26a4a307b8ae5067387ea76ce1fad6b7f4bf9e7",
+  "publishedAt": "2026-08-13",
+  "accessedAt": "2026-11-19",
+  "notes": "PENDING REVIEW. Commit message references GHSA-p23f-cm6q-2qp8. Not an ASI patch reproduction.",
+  "supports": {
+    "attackClassIds": [
+      "AAC-17"
+    ],
+    "mitigationIds": [],
+    "productIds": []
+  }
+},
+{
+  "id": "src-siyuan-v381-release",
+  "title": "SiYuan v3.8.1 release notes",
+  "sourceType": "vendor-advisory",
+  "publisher": "siyuan-note/siyuan",
+  "url": "https://github.com/siyuan-note/siyuan/releases/tag/v3.8.1",
+  "publishedAt": "2026-08-18",
+  "accessedAt": "2026-11-19",
+  "notes": "PENDING REVIEW. Tag v3.8.1 is a descendant of the fix commit and mentions security and MCP fixes. This corroborates the fixed version; it is not an ASI patch reproduction.",
+  "supports": {
+    "attackClassIds": [
+      "AAC-17"
+    ],
+    "mitigationIds": [],
+    "productIds": []
+  }
+},
+{
+  "id": "src-litellm-skills-zip-ghsa-5jmr",
+  "title": "LiteLLM: Arbitrary file write via path traversal in Skills archive extraction (GHSA-5jmr-gcrj-2c9q)",
+  "sourceType": "primary-disclosure",
+  "publisher": "GitHub / BerriAI/litellm",
+  "url": "https://github.com/BerriAI/litellm/security/advisories/GHSA-5jmr-gcrj-2c9q",
+  "publishedAt": "2026-07-22",
+  "accessedAt": "2026-11-19",
+  "notes": "PENDING REVIEW. Public advisory for skill-archive zip-slip. Documented lab/advisory evidence; not ASI reproduction or confirmed field exploitation.",
+  "supports": {
+    "attackClassIds": [
+      "AAC-17"
+    ],
+    "mitigationIds": [],
+    "productIds": []
+  }
+},
+{
+  "id": "src-litellm-skills-zip-cve-2026-59820",
+  "title": "CVE-2026-59820",
+  "sourceType": "cve-nvd",
+  "publisher": "NVD",
+  "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-59820",
+  "accessedAt": "2026-11-19",
+  "notes": "PENDING REVIEW. NVD record aliasing GHSA-5jmr-gcrj-2c9q. CVE assignment is not evidence of in-the-wild exploitation.",
+  "supports": {
+    "attackClassIds": [
+      "AAC-17"
+    ],
+    "mitigationIds": [],
+    "productIds": []
+  }
+},
+{
+  "id": "src-litellm-skills-zip-fix-6a15ad",
+  "title": "LiteLLM Skills archive path validation fix commit",
+  "sourceType": "vendor-advisory",
+  "publisher": "BerriAI/litellm",
+  "url": "https://github.com/BerriAI/litellm/commit/6a15adcd64137d37f73dee76dfe7481f8c2d9196",
+  "accessedAt": "2026-11-19",
+  "notes": "PENDING REVIEW. Fix commit cited by the advisory and by Mother-ship record PYSEC-2026-3477. Not an ASI patch reproduction.",
+  "supports": {
+    "attackClassIds": [
+      "AAC-17"
+    ],
+    "mitigationIds": [],
+    "productIds": []
+  }
+}
 ];

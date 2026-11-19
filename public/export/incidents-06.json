@@ -1,0 +1,141 @@
+[
+  {
+    "id": "INC-502",
+    "name": "excel-mcp-server path traversal in MCP file tools",
+    "date": "2026-04-14",
+    "year": 2026,
+    "summary": "The excel-mcp-server MCP tool handlers were intended to confine file operations to EXCEL_FILES_PATH. In SSE and Streamable-HTTP transport modes, get_excel_path() returned absolute filepath arguments unchanged and joined relative paths without resolving or checking the sandbox root, so a network caller could read, write, or overwrite files outside that directory. The GitHub advisory states the default network transport had no authentication and bound to all interfaces. This is a vendor advisory with a fix commit, not confirmed in-the-wild exploitation.",
+    "affectedProduct": "excel-mcp-server (PyPI)",
+    "affectedVersions": "<= 0.1.7",
+    "fixedIn": "0.1.8",
+    "attackClassIds": [
+      "AAC-17"
+    ],
+    "cveIds": [
+      "CVE-2026-40576"
+    ],
+    "evidenceTier": "T1_lab_poc",
+    "attackEvidenceLevel": "lab-poc",
+    "confidence": "medium",
+    "primarySource": {
+      "title": "excel-mcp-server has a Path Traversal issue (GHSA-j98m-w3xp-9f56)",
+      "url": "https://github.com/haris-musa/excel-mcp-server/security/advisories/GHSA-j98m-w3xp-9f56",
+      "kind": "primary-disclosure",
+      "accessed": "2026-11-19"
+    },
+    "primarySourceId": "src-excel-mcp-server-ghsa-j98m",
+    "additionalSources": [
+      {
+        "title": "CVE-2026-40576",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-40576",
+        "kind": "cve-nvd",
+        "accessed": "2026-11-19"
+      },
+      {
+        "title": "excel-mcp-server path-boundary fix commit",
+        "url": "https://github.com/haris-musa/excel-mcp-server/commit/f51340ecd5778952405044b203d3a2d4c8a46833",
+        "kind": "vendor-advisory",
+        "accessed": "2026-11-19"
+      }
+    ],
+    "additionalSourceIds": [
+      "src-excel-mcp-server-cve-2026-40576",
+      "src-excel-mcp-server-fix-f51340"
+    ],
+    "resolution": "The GitHub advisory and PyPA/OSV records identify 0.1.8 as the fixed release, with fix commit f51340ecd5778952405044b203d3a2d4c8a46833. This is not an ASI patch reproduction.",
+    "classificationNotes": "PENDING REVIEW \u2014 Mother-ship CWE-22 export proposal; not publication-qualified until human approval. Primary AAC-17: an MCP file-tool root (EXCEL_FILES_PATH) was escaped via absolute paths and unsanitized relative joins. No other AAC class is linked. Evidence is a public GitHub advisory plus CVE and a fix commit (T1 lab/advisory). A disclosure or CVE assignment is not T2 field exploitation; no confirmed malicious in-the-wild use was established in the reviewed sources. Status: documented advisory, not independently reproduced by ASI. Proposed from Mother-ship record PYSEC-2026-331.",
+    "architecturalLesson": "A declared tool root is not a filesystem boundary unless every path argument is resolved and checked against that root. Absolute paths and parent-directory segments must not bypass the check. No mitigation is marked validated."
+  },
+  {
+    "id": "INC-503",
+    "name": "SiYuan MCP asset.upload workspace-boundary bypass",
+    "date": "2026-08-13",
+    "year": 2026,
+    "summary": "SiYuan's native MCP tool asset.upload accepted a list of absolute file paths, normalized them with filepath.Abs, and passed them to InsertLocalAssets, which opened each path and copied it into the workspace assets directory. Unlike the file and unzip MCP tools, asset.upload performed no workspace or sensitive-path check. The advisory describes an attacker-influenced agent call as the reachability path and notes that the approval dialog did not show the real source path. This is a vendor advisory with a later fix, not confirmed in-the-wild exploitation.",
+    "affectedProduct": "SiYuan (github.com/siyuan-note/siyuan/kernel)",
+    "affectedVersions": "<= 3.8.0",
+    "fixedIn": "3.8.1",
+    "attackClassIds": [
+      "AAC-17"
+    ],
+    "cveIds": [],
+    "evidenceTier": "T1_lab_poc",
+    "attackEvidenceLevel": "lab-poc",
+    "confidence": "medium",
+    "primarySource": {
+      "title": "SiYuan MCP asset.upload Reads Arbitrary Absolute File Paths (GHSA-p23f-cm6q-2qp8)",
+      "url": "https://github.com/siyuan-note/siyuan/security/advisories/GHSA-p23f-cm6q-2qp8",
+      "kind": "primary-disclosure",
+      "accessed": "2026-11-19"
+    },
+    "primarySourceId": "src-siyuan-mcp-asset-upload-ghsa-p23f",
+    "additionalSources": [
+      {
+        "title": "Block sensitive files in MCP asset upload",
+        "url": "https://github.com/siyuan-note/siyuan/commit/b26a4a307b8ae5067387ea76ce1fad6b7f4bf9e7",
+        "kind": "vendor-advisory",
+        "accessed": "2026-11-19"
+      },
+      {
+        "title": "SiYuan v3.8.1 release notes",
+        "url": "https://github.com/siyuan-note/siyuan/releases/tag/v3.8.1",
+        "kind": "vendor-advisory",
+        "accessed": "2026-11-19"
+      }
+    ],
+    "additionalSourceIds": [
+      "src-siyuan-mcp-asset-upload-fix-b26a4a",
+      "src-siyuan-v381-release"
+    ],
+    "resolution": "The disclosure dated 2026-08-13 said the issue was unpatched at report time. Commit b26a4a307b8ae5067387ea76ce1fad6b7f4bf9e7 (2026-08-13, 'Block sensitive files in MCP asset upload') references this advisory. GitHub compare shows that commit is an ancestor of tag v3.8.1 (published 2026-08-18); the release notes mention security and MCP fixes. Go vulnerability GO-2026-6655 also lists that commit and the v3.8.1 tag. This is not an ASI patch reproduction. No CVE identifier was present in the reviewed Mother-ship aliases or the advisory identifiers checked on 2026-11-19; an empty CVE list is not proof none exists.",
+    "classificationNotes": "PENDING REVIEW \u2014 Mother-ship CWE-22 export proposal; not publication-qualified until human approval. Primary AAC-17: an MCP file tool broke out of the workspace root by accepting arbitrary absolute paths. Prompt injection is described by the advisory as a reachability path, not as the vulnerability mechanism, so AAC-01 is not linked. AAC-08 is not linked: the failure is a missing workspace boundary, not one principal inducing a higher-privilege deputy via confused identity. Evidence is a public GitHub advisory plus a fix commit (T1 lab/advisory). A disclosure is not T2 field exploitation; the advisory stated it was not in CISA KEV at report time, and no confirmed malicious in-the-wild use was established in the reviewed sources. Status: documented advisory, not independently reproduced by ASI. Proposed from Mother-ship record GO-2026-6655.",
+    "architecturalLesson": "Every MCP or agent file primitive that takes a path must enforce the same workspace and sensitive-path checks. A category-level approval that hides the source path is not an informed filesystem boundary. No mitigation is marked validated."
+  },
+  {
+    "id": "INC-504",
+    "name": "LiteLLM Skills archive path traversal",
+    "date": "2026-07-22",
+    "year": 2026,
+    "summary": "LiteLLM did not sufficiently validate file paths inside uploaded skill ZIP archives. An authenticated user whose key could reach the Skills or related LLM API routes could upload an archive whose entries resolved outside the intended extraction or staging directory, allowing an arbitrary file write and, depending on deployment and writable paths, possible code execution. This is a vendor advisory with a fix, not confirmed in-the-wild exploitation.",
+    "affectedProduct": "LiteLLM (PyPI litellm)",
+    "affectedVersions": "< 1.83.7-stable",
+    "fixedIn": "1.83.7-stable",
+    "attackClassIds": [
+      "AAC-17"
+    ],
+    "cveIds": [
+      "CVE-2026-59820"
+    ],
+    "evidenceTier": "T1_lab_poc",
+    "attackEvidenceLevel": "lab-poc",
+    "confidence": "medium",
+    "primarySource": {
+      "title": "LiteLLM: Arbitrary file write via path traversal in Skills archive extraction (GHSA-5jmr-gcrj-2c9q)",
+      "url": "https://github.com/BerriAI/litellm/security/advisories/GHSA-5jmr-gcrj-2c9q",
+      "kind": "primary-disclosure",
+      "accessed": "2026-11-19"
+    },
+    "primarySourceId": "src-litellm-skills-zip-ghsa-5jmr",
+    "additionalSources": [
+      {
+        "title": "CVE-2026-59820",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-59820",
+        "kind": "cve-nvd",
+        "accessed": "2026-11-19"
+      },
+      {
+        "title": "LiteLLM Skills archive path validation fix commit",
+        "url": "https://github.com/BerriAI/litellm/commit/6a15adcd64137d37f73dee76dfe7481f8c2d9196",
+        "kind": "vendor-advisory",
+        "accessed": "2026-11-19"
+      }
+    ],
+    "additionalSourceIds": [
+      "src-litellm-skills-zip-cve-2026-59820",
+      "src-litellm-skills-zip-fix-6a15ad"
+    ],
+    "resolution": "The GitHub advisory says the issue is fixed in 1.83.7-stable and points to commit 6a15adcd64137d37f73dee76dfe7481f8c2d9196 and the v1.83.7-stable release. This is not an ASI patch reproduction.",
+    "classificationNotes": "PENDING REVIEW \u2014 Mother-ship CWE-22 export proposal; not publication-qualified until human approval. Primary AAC-17: skill-archive extraction wrote paths outside the declared staging root. AAC-37 is not linked: the reviewed advisory describes zip-slip path entries, not a malicious SKILL.md or skill-specific payload. AAC-10 is not linked: this is an authenticated upload of a crafted archive, not a distribution or resolution substitution. Evidence is a public GitHub advisory plus CVE and a fix commit (T1 lab/advisory). A disclosure or CVE assignment is not T2 field exploitation; no confirmed malicious in-the-wild use was established in the reviewed sources. Status: documented advisory, not independently reproduced by ASI. Proposed from Mother-ship record PYSEC-2026-3477.",
+    "architecturalLesson": "Skill and plugin archives are untrusted path sources. Extraction must reject entries that resolve outside the staging directory even when the uploader is authenticated. No mitigation is marked validated."
+  }
+]
