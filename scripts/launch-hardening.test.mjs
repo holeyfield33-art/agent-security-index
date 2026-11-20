@@ -27,7 +27,7 @@ test("README, export documentation and UI evidence levels match canonical tiers"
 
 test("published catalog passes rendering guard; malformed records fail closed", () => {
   const catalog = JSON.parse(read("public/export/asi-catalog.json"));
-  assert.equal(parsePublicCatalog(catalog).incidents.length, 24);
+  assert.equal(parsePublicCatalog(catalog).incidents.length, 27);
   for (const bad of [null, {}, {incidents:[{}],sources:[]}, {incidents:[],sources:[{url:"javascript:alert(1)"}]}]) assert.throws(() => parsePublicCatalog(bad));
   const bad = structuredClone(catalog); bad.incidents[0].cveIds = {}; assert.throws(() => parsePublicCatalog(bad));
   const unsafe = structuredClone(catalog); unsafe.sources[0].url = "javascript:alert(1)"; assert.throws(() => parsePublicCatalog(unsafe));
