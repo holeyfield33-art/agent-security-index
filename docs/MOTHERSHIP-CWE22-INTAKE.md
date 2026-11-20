@@ -42,8 +42,11 @@ Publication status: **HOLD**. This draft does not authorize merge or deployment.
 Repository verification on 2026-11-20: the ASI PR head had a GitHub Actions
 `catalog` workflow with conclusion **failure** (run 44809591595); Vercel
 status was success, which is not a substitute for the catalog gate. Job logs
-were unavailable from the GitHub log endpoint. Do not merge until the failed
-workflow is diagnosed and passes on the final commit, and the evidence-tier
-question above is resolved. MOTHERSHIP PR #7 has no observed PR-triggered
+were unavailable from the GitHub log endpoint and the job returned no steps.
+The owner reports GitHub Actions billing remains blocked, so the workflow
+failure is **not attributable to code** on the evidence available. Do not
+present it as a failed test assertion. Offline checks can substitute for CI
+only when their commands, results and final commit SHA are recorded; the
+LiteLLM evidence-tier qualification remains an independent merge blocker. MOTHERSHIP PR #7 has no observed PR-triggered
 workflow runs on the checked head; its reported local tests are not an
 independent CI verification.
